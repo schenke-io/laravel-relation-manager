@@ -1,6 +1,6 @@
 <?php
 
-use SchenkeIo\LaravelRelationshipManager\Composer\ComposerWriteFilesCommand;
+use SchenkeIo\LaravelRelationManager\Composer\ComposerWriteFilesCommand;
 
 it('can verify if AssertModelRelationships is outdated', function () {
     expect(ComposerWriteFilesCommand::assertFileIsOk())->toBeBool();

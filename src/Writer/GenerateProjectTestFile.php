@@ -1,12 +1,12 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Writer;
+namespace SchenkeIo\LaravelRelationManager\Writer;
 
 use Nette;
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Data\ProjectData;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\InvalidClassException;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Data\ProjectData;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Exceptions\InvalidClassException;
 
 class GenerateProjectTestFile
 {
@@ -28,7 +28,7 @@ class GenerateProjectTestFile
         $file->addComment('rewrite this test-file on the console with: php artisan '.$projectData->signature);
         // https://laravel.com/docs/10.x/database-testing#resetting-the-database-after-each-test
         $migrationClass = 'Illuminate\Foundation\Testing\RefreshDatabase';
-        $assertClass = 'SchenkeIo\LaravelRelationshipManager\Phpunit\AssertModelRelationships';
+        $assertClass = 'SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelationships';
         $nameSpace = $file->addNamespace($nameSpace);
         $nameSpace->addUse($migrationClass);
         $nameSpace->addUse($assertClass);

@@ -1,6 +1,6 @@
 <?php
 
-use SchenkeIo\LaravelRelationshipManager\Define\PrimaryModel;
+use SchenkeIo\LaravelRelationManager\Define\PrimaryModel;
 
 it('`sayEach` function works', function () {
     $this->assertTrue(function_exists('sayEach'));

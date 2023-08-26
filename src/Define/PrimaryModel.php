@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Define;
+namespace SchenkeIo\LaravelRelationManager\Define;
 
 class PrimaryModel
 {

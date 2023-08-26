@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\database\Models;
+namespace SchenkeIo\LaravelRelationManager\Tests\database\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

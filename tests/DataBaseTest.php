@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests;
+namespace SchenkeIo\LaravelRelationManager\Tests;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 

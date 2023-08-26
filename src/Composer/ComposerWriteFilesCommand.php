@@ -1,19 +1,19 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Composer;
+namespace SchenkeIo\LaravelRelationManager\Composer;
 
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipsForPrimaryModel;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\DirectoryNotWritableException;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\AssertModelRelationships;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateAssertModelRelationshipsTrait;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateRelationshipsForPrimaryModelTrait;
-use SchenkeIo\LaravelRelationshipManager\Writer\SaveFileContent;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipsForPrimaryModel;
+use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
+use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelationships;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateAssertModelRelationshipsTrait;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateRelationshipsForPrimaryModelTrait;
+use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
 /**
  * is called by composer
- * SchenkeIo\\LaravelRelationshipManager\\Composer\\ComposerWriteFilesCommand::run
+ * SchenkeIo\\LaravelRelationManager\\Composer\\ComposerWriteFilesCommand::run
  */
 class ComposerWriteFilesCommand
 {

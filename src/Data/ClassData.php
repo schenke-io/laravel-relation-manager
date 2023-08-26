@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Data;
+namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Database\Eloquent\Model;
 use Nette\PhpGenerator\PhpFile;

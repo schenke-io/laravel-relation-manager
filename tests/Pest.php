@@ -1,5 +1,5 @@
 <?php
 
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 uses(TestCase::class)->in(__DIR__);

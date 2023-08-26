@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Define;
+namespace SchenkeIo\LaravelRelationManager\Tests\Define;
 
 class OneEmptyClass
 {

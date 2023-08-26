@@ -1,8 +1,8 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Writer;
+namespace SchenkeIo\LaravelRelationManager\Writer;
 
-use SchenkeIo\LaravelRelationshipManager\Exceptions\DirectoryNotWritableException;
+use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
 
 class SaveFileContent
 {

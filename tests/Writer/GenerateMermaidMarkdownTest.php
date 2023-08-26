@@ -1,12 +1,12 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Writer;
+namespace SchenkeIo\LaravelRelationManager\Tests\Writer;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Data\ProjectData;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateMermaidMarkdown;
+use SchenkeIo\LaravelRelationManager\Data\ProjectData;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateMermaidMarkdown;
 
 class GenerateMermaidMarkdownTest extends TestCase
 {

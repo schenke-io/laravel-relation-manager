@@ -1,10 +1,10 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Console;
+namespace SchenkeIo\LaravelRelationManager\Tests\Console;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Console\RelationshipBuilder;
-use SchenkeIo\LaravelRelationshipManager\Define\Project;
+use SchenkeIo\LaravelRelationManager\Console\RelationshipBuilder;
+use SchenkeIo\LaravelRelationManager\Define\Project;
 
 class RelationshipBuilderTest extends TestCase
 {

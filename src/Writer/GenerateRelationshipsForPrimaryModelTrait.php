@@ -1,16 +1,16 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Writer;
+namespace SchenkeIo\LaravelRelationManager\Writer;
 
 use Nette;
-use SchenkeIo\LaravelRelationshipManager\Data\ModelRelationData;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 
 class GenerateRelationshipsForPrimaryModelTrait
 {
     public static function getContent(): string
     {
-        $location = 'SchenkeIo\LaravelRelationshipManager\Define';
+        $location = 'SchenkeIo\LaravelRelationManager\Define';
         $file = new Nette\PhpGenerator\PhpFile;
         $file->addComment('## Description of all the possible relationships');
         $file->addComment("\n------\n");

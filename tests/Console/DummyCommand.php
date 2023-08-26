@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Console;
+namespace SchenkeIo\LaravelRelationManager\Tests\Console;
 
 use Illuminate\Console\Command;
-use SchenkeIo\LaravelRelationshipManager\Console\RelationshipBuilder;
+use SchenkeIo\LaravelRelationManager\Console\RelationshipBuilder;
 
 class DummyCommand extends Command
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Define;
+namespace SchenkeIo\LaravelRelationManager\Tests\Define;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Data\ModelRelationData;
-use SchenkeIo\LaravelRelationshipManager\Define\PrimaryModel;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipsForPrimaryModel;
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
+use SchenkeIo\LaravelRelationManager\Define\PrimaryModel;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipsForPrimaryModel;
 
 class RelationshipsForPrimaryModelTest extends TestCase
 {

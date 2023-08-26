@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Define;
+namespace SchenkeIo\LaravelRelationManager\Tests\Define;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 
 class RelationshipEnumTest extends TestCase
 {

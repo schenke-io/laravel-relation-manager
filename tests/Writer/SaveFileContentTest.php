@@ -1,10 +1,10 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Writer;
+namespace SchenkeIo\LaravelRelationManager\Tests\Writer;
 
 use PhpUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\DirectoryNotWritableException;
-use SchenkeIo\LaravelRelationshipManager\Writer\SaveFileContent;
+use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
+use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
 class SaveFileContentTest extends TestCase
 {

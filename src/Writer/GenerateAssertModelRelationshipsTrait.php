@@ -1,18 +1,18 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Writer;
+namespace SchenkeIo\LaravelRelationManager\Writer;
 
 use Nette;
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Data\ModelCountData;
-use SchenkeIo\LaravelRelationshipManager\Data\RelationData;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
+use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 
 class GenerateAssertModelRelationshipsTrait
 {
     public static function getContent(): string
     {
-        $location = 'SchenkeIo\LaravelRelationshipManager';
+        $location = 'SchenkeIo\LaravelRelationManager';
         $traitName = 'AssertModelRelationships';
         $file = new Nette\PhpGenerator\PhpFile;
 

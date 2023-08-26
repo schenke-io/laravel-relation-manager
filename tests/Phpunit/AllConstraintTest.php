@@ -1,20 +1,20 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Phpunit;
+namespace SchenkeIo\LaravelRelationManager\Tests\Phpunit;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use SchenkeIo\LaravelRelationshipManager\Data\ModelCountData;
-use SchenkeIo\LaravelRelationshipManager\Data\RelationData;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\ClassAgeConstraint;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\ModelConstraint;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\NoRelationshipConstraint;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\RelationshipCountConstraint;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\RelationshipExistsConstraint;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Single;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
+use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Phpunit\ClassAgeConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\ModelConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\NoRelationshipConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipCountConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipExistsConstraint;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class AllConstraintTest extends TestCase
 {

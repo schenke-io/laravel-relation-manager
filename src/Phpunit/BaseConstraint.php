@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Phpunit;
+namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
 use PHPUnit\Framework\Constraint\Constraint;
 

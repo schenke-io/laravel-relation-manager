@@ -1,15 +1,15 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Define;
+namespace SchenkeIo\LaravelRelationManager\Tests\Define;
 
 use Illuminate\Console\Command;
 use Mockery\MockInterface;
-use SchenkeIo\LaravelRelationshipManager\Data\ProjectData;
-use SchenkeIo\LaravelRelationshipManager\Define\Project;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\InvalidClassException;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Single;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Writer\SaveFileContent;
+use SchenkeIo\LaravelRelationManager\Data\ProjectData;
+use SchenkeIo\LaravelRelationManager\Define\Project;
+use SchenkeIo\LaravelRelationManager\Exceptions\InvalidClassException;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
 class ProjectTest extends TestCase
 {

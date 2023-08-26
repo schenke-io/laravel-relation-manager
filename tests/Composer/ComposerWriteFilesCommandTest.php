@@ -1,11 +1,11 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Composer;
+namespace SchenkeIo\LaravelRelationManager\Tests\Composer;
 
 use Mockery\MockInterface;
-use SchenkeIo\LaravelRelationshipManager\Composer\ComposerWriteFilesCommand;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Writer\SaveFileContent;
+use SchenkeIo\LaravelRelationManager\Composer\ComposerWriteFilesCommand;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
 class ComposerWriteFilesCommandTest extends TestCase
 {

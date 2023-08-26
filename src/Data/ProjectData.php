@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Data;
+namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Console\Command;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 use Spatie\LaravelData\Data;
 
 class ProjectData extends Data

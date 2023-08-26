@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Phpunit;
+namespace SchenkeIo\LaravelRelationManager\Tests\Phpunit;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\BaseConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\BaseConstraint;
 
 class BaseConstraintTest extends TestCase
 {

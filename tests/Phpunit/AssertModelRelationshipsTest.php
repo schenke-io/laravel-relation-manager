@@ -1,15 +1,15 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Phpunit;
+namespace SchenkeIo\LaravelRelationManager\Tests\Phpunit;
 
-use SchenkeIo\LaravelRelationshipManager\Phpunit\AssertModelRelationships;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\City;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Highway;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Region;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Single;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelationships;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\City;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Highway;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Region;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class AssertModelRelationshipsTest extends TestCase
 {

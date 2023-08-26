@@ -1,8 +1,8 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Data;
+namespace SchenkeIo\LaravelRelationManager\Data;
 
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 use Spatie\LaravelData\Data;
 
 class ModelRelationData extends Data

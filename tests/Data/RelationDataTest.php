@@ -1,11 +1,11 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Data;
+namespace SchenkeIo\LaravelRelationManager\Tests\Data;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Data\RelationData;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Country;
+use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
 
 class RelationDataTest extends TestCase
 {

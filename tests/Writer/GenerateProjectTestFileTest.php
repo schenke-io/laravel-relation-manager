@@ -1,12 +1,12 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Writer;
+namespace SchenkeIo\LaravelRelationManager\Tests\Writer;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Data\ProjectData;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\InvalidClassException;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateProjectTestFile;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Data\ProjectData;
+use SchenkeIo\LaravelRelationManager\Exceptions\InvalidClassException;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
 class GenerateProjectTestFileTest extends TestCase
 {

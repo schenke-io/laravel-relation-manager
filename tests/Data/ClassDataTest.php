@@ -1,15 +1,15 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Data;
+namespace SchenkeIo\LaravelRelationManager\Tests\Data;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\City;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Region;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Single;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\City;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Region;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class ClassDataTest extends TestCase
 {

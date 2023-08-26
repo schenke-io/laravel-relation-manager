@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Define;
+namespace SchenkeIo\LaravelRelationManager\Define;
 
 use Illuminate\Database\Eloquent\Relations;
 

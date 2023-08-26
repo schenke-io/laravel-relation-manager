@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Writer;
+namespace SchenkeIo\LaravelRelationManager\Writer;
 
-use SchenkeIo\LaravelRelationshipManager\Data\ProjectData;
-use SchenkeIo\LaravelRelationshipManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Data\ProjectData;
+use SchenkeIo\LaravelRelationManager\Data\RelationData;
 
 class GenerateMermaidMarkdown
 {

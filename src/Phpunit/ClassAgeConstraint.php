@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Phpunit;
+namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Data\RelationData;
 
 class ClassAgeConstraint extends BaseConstraint
 {

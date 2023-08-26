@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Data;
+namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Spatie\LaravelData\Data;
 

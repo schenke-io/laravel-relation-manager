@@ -1,9 +1,9 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Writer;
+namespace SchenkeIo\LaravelRelationManager\Tests\Writer;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateRelationshipsForPrimaryModelTrait;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateRelationshipsForPrimaryModelTrait;
 
 class GenerateRelationshipsForPrimaryModelTraitTest extends TestCase
 {

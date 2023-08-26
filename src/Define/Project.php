@@ -1,14 +1,14 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Define;
+namespace SchenkeIo\LaravelRelationManager\Define;
 
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Data\ProjectData;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\DirectoryNotWritableException;
-use SchenkeIo\LaravelRelationshipManager\Exceptions\InvalidClassException;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateMermaidMarkdown;
-use SchenkeIo\LaravelRelationshipManager\Writer\GenerateProjectTestFile;
-use SchenkeIo\LaravelRelationshipManager\Writer\SaveFileContent;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Data\ProjectData;
+use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
+use SchenkeIo\LaravelRelationManager\Exceptions\InvalidClassException;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateMermaidMarkdown;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
+use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
 class Project
 {

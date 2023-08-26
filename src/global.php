@@ -1,6 +1,6 @@
 <?php
 
-use SchenkeIo\LaravelRelationshipManager\Define\PrimaryModel;
+use SchenkeIo\LaravelRelationManager\Define\PrimaryModel;
 
 if (! function_exists('sayEach')) {
     /**

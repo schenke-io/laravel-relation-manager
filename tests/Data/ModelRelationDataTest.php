@@ -1,11 +1,11 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Data;
+namespace SchenkeIo\LaravelRelationManager\Tests\Data;
 
-use SchenkeIo\LaravelRelationshipManager\Data\ModelRelationData;
-use SchenkeIo\LaravelRelationshipManager\Define\Project;
-use SchenkeIo\LaravelRelationshipManager\Define\RelationshipEnum;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
+use SchenkeIo\LaravelRelationManager\Define\Project;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class ModelRelationDataTest extends TestCase
 {

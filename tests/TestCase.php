@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests;
+namespace SchenkeIo\LaravelRelationManager\Tests;
 
 use Illuminate\Contracts\Config\Repository;
 use Orchestra\Testbench\TestCase as Orchestra;

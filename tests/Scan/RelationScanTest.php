@@ -1,15 +1,15 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationshipManager\Tests\Scan;
+namespace SchenkeIo\LaravelRelationManager\Tests\Scan;
 
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use SchenkeIo\LaravelRelationshipManager\Data\ClassData;
-use SchenkeIo\LaravelRelationshipManager\Scan\RelationScan;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationshipManager\Tests\database\Models\Single;
-use SchenkeIo\LaravelRelationshipManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Scan\RelationScan;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
+use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class RelationScanTest extends TestCase
 {
