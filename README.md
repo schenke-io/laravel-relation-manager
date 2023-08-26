@@ -1,19 +1,19 @@
-# Simplify model relationships in Laravel
+# Simplify model relations in Laravel
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/laravel-relationship-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relationship-manager)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relationship-manager/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/laravel-relationship-manager/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relationship-manager/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schenke-io/laravel-relationship-manager/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relationship-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relationship-manager)
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
+[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
+[![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 
-This package helps you to write better tests around model relationships in Laravel. It validates methods
-and the database schema setup for all the modells.
+This package helps you to write better tests around model relations in Laravel. 
+It validates methods and the database schema setup for all the modells.
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require schenke-io/laravel-relationship-manager
+composer require schenke-io/laravel-relation-manager
 ```
 
 ## Usage
@@ -21,7 +21,7 @@ composer require schenke-io/laravel-relationship-manager
 ### Writing manual tests 
 
 You can enhance one of your tests with new assertions 
-related to model relationships. 
+related to model relations. 
 They will verify if the models have the 
 relations setup and are working with the database well (e.g. migrations).
 
