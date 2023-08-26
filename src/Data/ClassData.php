@@ -141,11 +141,12 @@ class ClassData extends Data
      */
     public function isFresherOrEqualThan(string $otherClass): bool
     {
+
         $other = new ClassData($otherClass);
         if (
             $this->isClass &&
             $other->isClass &&
-            ($this->fileAge <= $other->fileAge)
+            ($this->fileAge >= $other->fileAge)
         ) {
             return true;
         }

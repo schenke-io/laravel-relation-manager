@@ -16,7 +16,7 @@ enum RelationshipEnum
     case isSingle;
 
     /*
-     * standard speak
+     * standard  speak
      */
     case isOneToOne;
     case isOneToMany;
@@ -30,7 +30,7 @@ enum RelationshipEnum
     public function askForInverse(): bool
     {
         return match ($this) {
-            self::hasOne, self::hasMany => true,
+            self::hasOne, self::hasMany, self::isOneToOne, self::isOneToMany => true,
             default => false
         };
     }
@@ -50,7 +50,7 @@ enum RelationshipEnum
 
     public function hasInverse(bool $preventInverse = false): bool
     {
-        return self::noRelation == $this->getInverse($preventInverse);
+        return self::noRelation !== $this->getInverse($preventInverse);
     }
 
     public function hasPublicFunction(): bool

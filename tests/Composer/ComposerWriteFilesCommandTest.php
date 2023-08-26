@@ -4,11 +4,15 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Composer;
 
 use Mockery\MockInterface;
 use SchenkeIo\LaravelRelationManager\Composer\ComposerWriteFilesCommand;
+use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
 class ComposerWriteFilesCommandTest extends TestCase
 {
+    /**
+     * @throws DirectoryNotWritableException
+     */
     public function testRun()
     {
         /** @var SaveFileContent $saveFileContentMock */

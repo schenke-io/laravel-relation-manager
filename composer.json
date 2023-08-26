@@ -51,7 +51,7 @@
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "pint": "vendor/bin/pint",
-        "write-class": "SchenkeIo\\LaravelRelationshipManager\\ComposerWriteFilesCommand::run"
+        "write-class": "SchenkeIo\\LaravelRelationManager\\Composer\\ComposerWriteFilesCommand::run"
     },
     "config": {
         "sort-packages": true,

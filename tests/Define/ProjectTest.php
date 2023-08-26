@@ -17,7 +17,7 @@ class ProjectTest extends TestCase
     {
         /** @var Command $commandMock - Phpstorm overwriting */
         $commandMock = $this->mock(Command::class, function (MockInterface $mock) {
-            $mock->shouldReceive('warn')->once();
+            $mock->shouldReceive('warn')->times(2);
             $mock->shouldReceive('getName')->once();
         });
         /** @var SaveFileContent $saveFileContentMock */

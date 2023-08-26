@@ -38,7 +38,7 @@ trait RelationshipsForPrimaryModel
 
     public function belongsToMany(string $model): ModelRelationData
     {
-        return new ModelRelationData($this->model, $model, RelationshipEnum::belongsToMany, false);
+        return new ModelRelationData($this->model, $model, RelationshipEnum::belongsToMany, true);
     }
 
     public function isSingle(): ModelRelationData
@@ -46,18 +46,18 @@ trait RelationshipsForPrimaryModel
         return new ModelRelationData($this->model, null, RelationshipEnum::isSingle, false);
     }
 
-    public function isOneToOne(string $model): ModelRelationData
+    public function isOneToOne(string $model, bool $preventInverse = false): ModelRelationData
     {
-        return new ModelRelationData($this->model, $model, RelationshipEnum::isOneToOne, false);
+        return new ModelRelationData($this->model, $model, RelationshipEnum::isOneToOne, $preventInverse);
     }
 
-    public function isOneToMany(string $model): ModelRelationData
+    public function isOneToMany(string $model, bool $preventInverse = false): ModelRelationData
     {
-        return new ModelRelationData($this->model, $model, RelationshipEnum::isOneToMany, false);
+        return new ModelRelationData($this->model, $model, RelationshipEnum::isOneToMany, $preventInverse);
     }
 
     public function isManyToMany(string $model): ModelRelationData
     {
-        return new ModelRelationData($this->model, $model, RelationshipEnum::isManyToMany, false);
+        return new ModelRelationData($this->model, $model, RelationshipEnum::isManyToMany, true);
     }
 }
