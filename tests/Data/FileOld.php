@@ -1,1 +1,5 @@
-<?php class FileOld {}
+<?php
+
+class FileOld
+{
+}
