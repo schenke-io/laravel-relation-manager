@@ -14,11 +14,11 @@ class ClassAgeConstraint extends BaseConstraint
     {
         $this->expectation = sprintf(
             'class %s is older than %s',
-            $other->model1,
-            $other->model2
+            $other->model1,  // old
+            $other->model2   // new
         );
 
-        return ClassData::take($other->model1)->isFresherOrEqualThan($other->model2);
+        return ClassData::take($other->model2)->isFresherOrEqualThan($other->model1);
     }
 
     /**

@@ -44,6 +44,7 @@ class GenerateProjectTestFile
          */
         $method = $class->addMethod('testCommandFileIsOlderThanThisTestFile');
         $method->addComment('@return void');
+        $method->addComment('');
         $method->addComment('Since this class is written by the Command file '.$projectData->commandClassName);
         $method->addComment('it is risky when changes in the Command file are not transferred here');
         $method->addComment('To update this file just run: php artisan '.$projectData->signature);

@@ -46,6 +46,24 @@ class ClassDataTest extends TestCase
         $this->assertFalse(ClassData::take(Single::class)->isFresherOrEqualThan(''));
         $this->assertFalse(ClassData::take('')->isFresherOrEqualThan(Single::class));
         $this->assertTrue(ClassData::take(Single::class)->isFresherOrEqualThan(Single::class));
+
+        /*
+         * we overwrite two valid class files in this directory with 2 seconds difference and measure it
+         */
+
+        $fileNameOld = __DIR__.'/FileOld.php';
+        $fileNameNew = __DIR__.'/FileNew.php';
+        $namespace = 'SchenkeIo\LaravelRelationManager\Tests\Data';
+        file_put_contents($fileNameOld, "<?php namespace $namespace; class FileOld {}");
+        sleep(2);
+        file_put_contents($fileNameNew, "<?php namespace $namespace; class FileNew {}");
+
+        $classOld = ClassData::take(FileOld::class);
+        $classNew = ClassData::take(FileNew::class);
+
+        $this->assertTrue($classNew->isFresherOrEqualThan(FileOld::class));
+        $this->assertTrue($classNew->isFresherOrEqualThan(FileNew::class));
+        $this->assertFalse($classOld->isFresherOrEqualThan(FileNew::class));
     }
 
     public function testGetModelRelations()
