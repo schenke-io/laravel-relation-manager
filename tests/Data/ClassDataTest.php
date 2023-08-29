@@ -40,22 +40,6 @@ class ClassDataTest extends TestCase
         $this->assertEquals(-1, ClassData::take('')->getFileAge());
     }
 
-    private function writeClass(string $className): void
-    {
-        file_put_contents(__DIR__."/$className.php",
-            <<<php
-<?php
-
-namespace SchenkeIo\LaravelRelationManager\Tests\Data;
-
-class $className
-{
-}
-
-php
-        );
-    }
-
     public function testIsFresherOrEqualThan(): void
     {
         $this->assertFalse(ClassData::take('')->isFresherOrEqualThan(''));
@@ -66,10 +50,14 @@ php
         /*
          * we overwrite two valid class files in this directory with 2 seconds difference and measure it
          */
+        $timeOld = time() - 100;
+        $timeNew = $timeOld + 10;
+        touch(__DIR__.'/FileOld.php', $timeOld, $timeOld);
+        touch(__DIR__.'/FileNew.php', $timeNew, $timeNew);
 
-        $this->writeClass('FileOld');
-        sleep(2);
-        $this->writeClass('FileNew');
+        //        $this->writeClass('FileOld');
+        //        sleep(2);
+        //        $this->writeClass('FileNew');
 
         $classOld = ClassData::take(FileOld::class);
         $classNew = ClassData::take(FileNew::class);
