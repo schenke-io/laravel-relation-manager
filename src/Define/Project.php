@@ -62,11 +62,11 @@ class Project
     public function writeTestFileClassPhpunit(
         string $testFilePhpunit,
         bool $andRun = false,
-        string $baseTestFile = 'Tests/TestCase'
+        string $baseTestFile = 'Tests\TestCase'
     ): self {
         if ($testFilePhpunit == TestProjectTest::class) {
             $fileName = __DIR__.'/../../tests/Define/TestProjectTest.php';
-            $className = 'TestProjectTest';
+            $classShortName = 'TestProjectTest';
             $nameSpace = 'SchenkeIo\LaravelRelationManager\Tests\Define';
             $baseTestFile = 'SchenkeIo\LaravelRelationManager\Tests\TestCase';
             $isClass = true;
@@ -74,7 +74,7 @@ class Project
             $classData = ClassData::take($testFilePhpunit);
             $isClass = $classData->isClass;
             $fileName = $classData->fileName;
-            $className = $classData->className;
+            $classShortName = $classData->getShortNameWithClass(false);
             $nameSpace = $classData->nameSpace;
         }
 
@@ -83,7 +83,7 @@ class Project
                 $fileName,
                 GenerateProjectTestFile::getContent(
                     $this->projectData,
-                    $className,
+                    $classShortName,
                     $nameSpace,
                     $baseTestFile
                 )
