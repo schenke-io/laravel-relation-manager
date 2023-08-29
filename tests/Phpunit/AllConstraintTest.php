@@ -2,18 +2,18 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Phpunit;
 
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Country;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Single;
 use SchenkeIo\LaravelRelationManager\Phpunit\ClassAgeConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\ModelConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\NoRelationshipConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipCountConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipExistsConstraint;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class AllConstraintTest extends TestCase
@@ -24,16 +24,16 @@ class AllConstraintTest extends TestCase
     {
         $classAgeConstraint = new ClassAgeConstraint();
         $this->assertThat(
-            new RelationData(Country::class, Country::class),
+            new RelationData(Country::class, Country::class, RelationshipEnum::noRelation),
             $classAgeConstraint
         );
 
         $this->assertThat(
-            new RelationData(Country::class, ''),
+            new RelationData(Country::class, '', RelationshipEnum::noRelation),
             $this->logicalNot($classAgeConstraint)
         );
         $this->assertThat(
-            new RelationData('', ''),
+            new RelationData('', '', RelationshipEnum::noRelation),
             $this->logicalNot($classAgeConstraint)
         );
         $this->assertIsString($classAgeConstraint->toString());
@@ -58,7 +58,7 @@ class AllConstraintTest extends TestCase
     {
         $relationshipExistsConstraint = new RelationshipExistsConstraint();
         $this->assertThat(
-            new RelationData(Country::class, Capital::class, HasOne::class),
+            new RelationData(Country::class, Capital::class, RelationshipEnum::hasOne),
             $relationshipExistsConstraint
         );
         $this->assertIsString($relationshipExistsConstraint->toString());

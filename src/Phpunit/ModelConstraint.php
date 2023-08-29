@@ -9,7 +9,7 @@ class ModelConstraint extends BaseConstraint
     /**
      * @param  string  $other
      */
-    protected function matches($other): bool
+    protected function matches(mixed $other): bool
     {
         $this->expectation = "$other is a model";
 

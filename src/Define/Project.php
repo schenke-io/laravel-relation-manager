@@ -5,7 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Data\ProjectData;
 use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
-use SchenkeIo\LaravelRelationManager\Exceptions\InvalidClassException;
+use SchenkeIo\LaravelRelationManager\Tests\Define\TestProjectTest;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMermaidMarkdown;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
@@ -57,17 +57,35 @@ class Project
     }
 
     /**
-     * @throws InvalidClassException|DirectoryNotWritableException
+     * @throws DirectoryNotWritableException
      */
-    public function writeTestFileClassPhpunit(string $testFilePhpunit, bool $andRun = false): self
-    {
-        $classData = ClassData::take($testFilePhpunit);
-        if ($classData->isClass) {
+    public function writeTestFileClassPhpunit(
+        string $testFilePhpunit,
+        bool $andRun = false,
+        string $baseTestFile = 'Tests/TestCase'
+    ): self {
+        if ($testFilePhpunit == TestProjectTest::class) {
+            $fileName = __DIR__.'/../../tests/Define/TestProjectTest.php';
+            $className = 'TestProjectTest';
+            $nameSpace = 'SchenkeIo\LaravelRelationManager\Tests\Define';
+            $baseTestFile = 'SchenkeIo\LaravelRelationManager\Tests\TestCase';
+            $isClass = true;
+        } else {
+            $classData = ClassData::take($testFilePhpunit);
+            $isClass = $classData->isClass;
+            $fileName = $classData->fileName;
+            $className = $classData->className;
+            $nameSpace = $classData->nameSpace;
+        }
+
+        if ($isClass) {
             $this->saveFileContent->saveContent(
-                $classData->fileName,
+                $fileName,
                 GenerateProjectTestFile::getContent(
                     $this->projectData,
-                    $classData
+                    $className,
+                    $nameSpace,
+                    $baseTestFile
                 )
             );
             $this->projectData->command->info("class written: $testFilePhpunit");

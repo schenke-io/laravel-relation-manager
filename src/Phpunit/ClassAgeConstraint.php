@@ -10,7 +10,7 @@ class ClassAgeConstraint extends BaseConstraint
     /**
      * @param  RelationData  $other
      */
-    protected function matches($other): bool
+    protected function matches(mixed $other): bool
     {
         $this->expectation = sprintf(
             'class %s is older than %s',

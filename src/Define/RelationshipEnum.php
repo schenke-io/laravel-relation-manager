@@ -3,6 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Define;
 
 use Illuminate\Database\Eloquent\Relations;
+use Illuminate\Support\Str;
 
 enum RelationshipEnum
 {
@@ -64,7 +65,7 @@ enum RelationshipEnum
     public function hasAssertFunction(): bool
     {
         return match ($this) {
-            self::noRelation, self::isOneToOne, self::isOneToMany, self::isManyToMany => false,
+            self::noRelation, self::isSingle => false,
             default => true
         };
     }
@@ -91,5 +92,34 @@ enum RelationshipEnum
             self::belongsTo => Relations\BelongsTo::class,
             default => throw new \Exception('class unknown for '.$this->name)
         };
+    }
+
+    /**
+     *   the arrow points from the field "[model]_id to the model.id field
+     */
+    public function getMermaidLine(string $modelName1, string $modelName2): string
+    {
+        $tableName1 = Str::snake(Str::plural($modelName1));
+        $tableName2 = Str::snake(Str::plural($modelName2));
+        $names = [Str::snake($modelName1), Str::snake($modelName2)];
+        sort($names);
+        $tableName3 = implode('_', $names);
+
+        return match ($this) {
+            self::isOneToOne,
+            self::isOneToMany,
+            self::hasOne,
+            self::hasMany => "$tableName2 ---> $tableName1\n",
+            self::hasOneThrough,
+            self::hasManyThrough => "$tableName2-- through ---$tableName1\n",
+
+            self::isSingle => "$tableName1\n",
+
+            self::belongsToMany,
+            self::isManyToMany => "$tableName3 ---> $tableName1\n$tableName3 ---> $tableName2\n",
+
+            default => ''
+        };
+
     }
 }

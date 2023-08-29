@@ -3,13 +3,16 @@
 namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 
 class NoRelationshipConstraint extends BaseConstraint
 {
     /**
      * @param  string  $other Model name
+     *
+     * @throws LaravelNotLoadedException
      */
-    protected function matches($other): bool
+    protected function matches(mixed $other): bool
     {
         $relationshipCount = count(ClassData::take($other)->getModelRelations());
         $this->expectation = sprintf(

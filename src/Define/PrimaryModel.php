@@ -9,4 +9,9 @@ class PrimaryModel
     public function __construct(public string $model)
     {
     }
+
+    public static function model(string $model): PrimaryModel
+    {
+        return new PrimaryModel($model);
+    }
 }

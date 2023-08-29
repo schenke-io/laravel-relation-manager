@@ -42,6 +42,7 @@ class ComposerWriteFilesCommand
             ClassData::take(RelationshipsForPrimaryModel::class)->fileName,
             GenerateRelationshipsForPrimaryModelTrait::getContent()
         );
+
     }
 
     /**

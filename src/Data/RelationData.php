@@ -2,17 +2,15 @@
 
 namespace SchenkeIo\LaravelRelationManager\Data;
 
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 use Spatie\LaravelData\Data;
 
 class RelationData extends Data
 {
-    /**
-     * @param  string  $relationship class name from Illuminate\Database\Eloquent\Relations\*
-     */
     public function __construct(
         public string $model1,
         public string $model2,
-        public string $relationship = ''
+        public RelationshipEnum $relationship
     ) {
     }
 
@@ -29,6 +27,6 @@ class RelationData extends Data
         $name1 = ClassData::take($this->model1)->reflection->getShortName();
         $name2 = ClassData::take($this->model2)->reflection->getShortName();
 
-        return "$name1 ---- $name2\n";
+        return $this->relationship->getMermaidLine($name1, $name2);
     }
 }

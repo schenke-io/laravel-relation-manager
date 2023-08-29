@@ -12,7 +12,7 @@ class RelationshipCountConstraint extends BaseConstraint
     /**
      * @param  ModelCountData  $other
      */
-    protected function matches($other): bool
+    protected function matches(mixed $other): bool
     {
         $count = ClassData::getRelationCountOfModel($other->model);
         $this->expectation = sprintf(

@@ -7,9 +7,9 @@ use PHPUnit\Framework\TestCase;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Data\ProjectData;
 use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Country;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Single;
 
 class ProjectDataTest extends TestCase
 {

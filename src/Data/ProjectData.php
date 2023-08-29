@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Console\Command;
 use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Demo\DemoCommand;
 use Spatie\LaravelData\Data;
 
 class ProjectData extends Data
@@ -27,7 +28,7 @@ class ProjectData extends Data
      */
     public function __construct(
         public readonly array $modelRelations = [],
-        public readonly Command $command = new Command(),
+        public readonly Command|DemoCommand $command = new Command(),
         public readonly string $modelNamespace = 'App\Models',
         public readonly bool $strict = false
     ) {
@@ -79,7 +80,6 @@ class ProjectData extends Data
         } elseif ($currentValue === $relationship) {
             return null;
         } else {
-            //dump($relationship->name,$relationship->getClass());
             return sprintf(
                 '%s > %s: try to overwrite %s with %s',
                 $key1, $key2,

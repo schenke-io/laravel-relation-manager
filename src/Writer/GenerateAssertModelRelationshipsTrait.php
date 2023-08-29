@@ -26,6 +26,7 @@ class GenerateAssertModelRelationshipsTrait
         $nameSpace = $file->addNamespace($location.'\Phpunit');
         $nameSpace->addUse(ModelCountData::class);
         $nameSpace->addUse(RelationData::class);
+        $nameSpace->addUse(RelationshipEnum::class);
         $classWritten = [];
         foreach (RelationshipEnum::cases() as $case) {
             if ($case->askForModel()) {
@@ -54,7 +55,7 @@ class GenerateAssertModelRelationshipsTrait
         $method->addParameter('class2')->setType('string');
         $method->setReturnType('void');
         $method->addBody('\PHPUnit\Framework\assertThat(');
-        $method->addBody("    new RelationData(\$class1, \$class2, ''),");
+        $method->addBody('    new RelationData($class1, $class2, RelationshipEnum::noRelation),');
         $method->addBody('    new ClassAgeConstraint()');
         $method->addBody(');');
         /*
@@ -84,7 +85,7 @@ class GenerateAssertModelRelationshipsTrait
 
                 $relationClass = ClassData::take($case->getClass())->getShortNameWithClass();
                 $method->addBody('\PHPUnit\Framework\assertThat(');
-                $method->addBody("    new RelationData(\$modelFrom, \$modelTo, $relationClass),");
+                $method->addBody('    new RelationData($modelFrom, $modelTo, RelationshipEnum::'.$case->name.'),');
                 $method->addBody('    new RelationshipExistsConstraint()');
                 $method->addBody(');');
             }

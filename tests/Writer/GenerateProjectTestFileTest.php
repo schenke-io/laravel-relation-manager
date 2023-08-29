@@ -2,6 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Writer;
 
+use Nette\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Data\ProjectData;
@@ -15,12 +16,25 @@ class GenerateProjectTestFileTest extends TestCase
      */
     public function testGetContentInvalid()
     {
-        $this->expectException(InvalidClassException::class);
-        $this->assertIsString(GenerateProjectTestFile::getContent(new ProjectData([]), ClassData::take('')));
+        $this->expectException(InvalidArgumentException::class);
+        $this->assertIsString(GenerateProjectTestFile::getContent(
+            new ProjectData([]),
+            '',
+            '',
+            '')
+        );
     }
 
     public function testGetContentValid()
     {
-        $this->assertIsString(GenerateProjectTestFile::getContent(new ProjectData([]), ClassData::take(__CLASS__)));
+        $classData = ClassData::take(__CLASS__);
+        $this->assertIsString(
+            GenerateProjectTestFile::getContent(
+                new ProjectData([]),
+                $classData->reflection->getShortName(),
+                $classData->nameSpace,
+                'PHPUnit\Framework\TestCase'
+            )
+        );
     }
 }

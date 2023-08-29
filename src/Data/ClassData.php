@@ -3,8 +3,11 @@
 namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Nette\PhpGenerator\PhpFile;
 use ReflectionClass;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use Spatie\LaravelData\Data;
 
 class ClassData extends Data
@@ -21,6 +24,8 @@ class ClassData extends Data
 
     public readonly string $fileName;
 
+    public readonly string $nameSpace;
+
     public readonly int $fileAge;
 
     public readonly string $className;
@@ -35,14 +40,17 @@ class ClassData extends Data
             $this->isClass = false;
             $this->isModel = false;
             $this->className = '';
+            $this->nameSpace = '';
             $this->fileName = '';
             $this->fileAge = -1;
 
             return;
         }
+
         $this->isClass = true;
         $this->className = $this->reflection->getName();
         $this->fileName = $this->reflection->getFileName();
+        $this->nameSpace = $this->reflection->getNamespaceName();
         $this->fileAge = file_exists($this->fileName) ? filemtime($this->fileName) : -1;
 
         if (! $this->reflection->isSubclassOf(Model::class)) {
@@ -85,19 +93,28 @@ class ClassData extends Data
             return [];
         }
         $return = [];
+
+        try {
+            DB::connection();
+        } catch (\RuntimeException $e) {
+            throw new LaravelNotLoadedException('Laravel is not loaded');
+        }
+
         foreach ($this->reflection->getMethods() as $method) {
             if (str_starts_with(
                 $method->getReturnType() ?? 'null return',
                 'Illuminate\Database\Eloquent\Relations')) {
                 // https://laracasts.com/discuss/channels/eloquent/is-there-a-way-to-list-all-relationships-of-a-model
-                /*
+                /**
                  * get the Model class in the method
+                 *
+                 * @var Model $model
                  */
                 $model = new ($this->class);
                 $modelMethod = $model->{$method->name}();
                 $related = $modelMethod->getRelated();
                 $theOtherModel = ($related)::class;
-                $theOtherModel = ((new ($this->class))->{$method->name}()->getRelated())::class;
+                //                $theOtherModel = ((new ($this->class))->{$method->name}()->getRelated())::class;
                 $return[$theOtherModel] = $method->getReturnType();
             }
         }
@@ -105,20 +122,26 @@ class ClassData extends Data
         return $return;
     }
 
-    public static function getRelationNotFoundError(
+    /**
+     * returns text 'failed asserting that ....'
+     *
+     * @throws LaravelNotLoadedException
+     * @throws \Exception
+     */
+    public static function getRelationExpectation(
         string $class,
-        string $returnType,
+        RelationshipEnum $returnType,
         string $usesClass): string
     {
         $relations = ClassData::take($class)->getModelRelations();
         if (isset($relations[$usesClass])) {
-            if ($relations[$usesClass] == $returnType) {
+            if ($relations[$usesClass] == $returnType->getClass()) {
                 return '';
             } else {
-                return "expected link from $class to $usesClass was $returnType but found ".$relations[$usesClass];
+                return "$class has relation {$returnType->name} to $usesClass but found ".$relations[$usesClass];
             }
         } else {
-            return "no relation from $class to $usesClass found";
+            return "$class has a relation to $usesClass";
         }
     }
 

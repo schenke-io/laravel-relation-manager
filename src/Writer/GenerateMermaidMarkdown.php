@@ -27,11 +27,11 @@ flowchart $direction
 markdown;
         foreach ($projectData->getAllModels() as $baseModel => $relatedModels) {
             foreach ($relatedModels as $otherModel => $relation) {
-                $relationData = new RelationData($baseModel, $otherModel, $relation->name);
+                $relationData = new RelationData($baseModel, $otherModel, $relation);
                 $content .= $relationData->getMermaidLine();
             }
         }
-        $content .= "```\n";
+        $content .= "\n\n```\n";
 
         return $content;
     }

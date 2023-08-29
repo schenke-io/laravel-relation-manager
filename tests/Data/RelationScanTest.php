@@ -1,14 +1,13 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationManager\Tests\Scan;
+namespace SchenkeIo\LaravelRelationManager\Tests\Data;
 
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
-use SchenkeIo\LaravelRelationManager\Scan\RelationScan;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Country;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Single;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class RelationScanTest extends TestCase
@@ -18,7 +17,7 @@ class RelationScanTest extends TestCase
     public function testRelationCountOfModel()
     {
         $this->assertEquals(-1, ClassData::getRelationCountOfModel(''));
-        $this->assertEquals(-1, ClassData::getRelationCountOfModel(RelationScan::class));
+        $this->assertEquals(-1, ClassData::getRelationCountOfModel(RelationScanTest::class));
         //        $this->assertEquals(1, RelationScan::getRelationCountOfModel(Capital::class));
         $this->assertEquals(0, ClassData::getRelationCountOfModel(Single::class));
     }
@@ -26,9 +25,9 @@ class RelationScanTest extends TestCase
     public function testGetRelationNotFoundError()
     {
         $this->assertEquals('',
-            ClassData::getRelationNotFoundError(
+            ClassData::getRelationExpectation(
                 Country::class,
-                HasOne::class,
+                RelationshipEnum::hasOne,
                 Capital::class
             )
         );

@@ -2,13 +2,13 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Phpunit;
 
+use SchenkeIo\LaravelRelationManager\Demo\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Demo\Models\City;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Country;
+use SchenkeIo\LaravelRelationManager\Demo\Models\HighWay;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Region;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Single;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelationships;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\City;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Highway;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Region;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class AssertModelRelationshipsTest extends TestCase
@@ -57,7 +57,7 @@ class AssertModelRelationshipsTest extends TestCase
 
     public function testModelBelongsToMany()
     {
-        $this->assertModelBelongsToMany(City::class, Highway::class);
+        $this->assertModelBelongsToMany(City::class, HighWay::class);
     }
 
     public function testModelIsSingle()

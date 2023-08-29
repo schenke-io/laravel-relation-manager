@@ -13,14 +13,9 @@
 
 namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 
 trait AssertModelRelationships
 {
@@ -32,7 +27,7 @@ trait AssertModelRelationships
     public function assertFirstClassIsOlderThanSecondClass(string $class1, string $class2): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($class1, $class2, ''),
+            new RelationData($class1, $class2, RelationshipEnum::noRelation),
             new ClassAgeConstraint()
         );
     }
@@ -48,7 +43,7 @@ trait AssertModelRelationships
     public function assertModelHasOne(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($modelFrom, $modelTo, HasOne::class),
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::hasOne),
             new RelationshipExistsConstraint()
         );
     }
@@ -56,7 +51,7 @@ trait AssertModelRelationships
     public function assertModelHasMany(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($modelFrom, $modelTo, HasMany::class),
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::hasMany),
             new RelationshipExistsConstraint()
         );
     }
@@ -64,7 +59,7 @@ trait AssertModelRelationships
     public function assertModelHasOneThrough(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($modelFrom, $modelTo, HasOneThrough::class),
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::hasOneThrough),
             new RelationshipExistsConstraint()
         );
     }
@@ -72,7 +67,7 @@ trait AssertModelRelationships
     public function assertModelHasManyThrough(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($modelFrom, $modelTo, HasManyThrough::class),
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::hasManyThrough),
             new RelationshipExistsConstraint()
         );
     }
@@ -80,7 +75,7 @@ trait AssertModelRelationships
     public function assertModelBelongsToMany(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($modelFrom, $modelTo, BelongsToMany::class),
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::belongsToMany),
             new RelationshipExistsConstraint()
         );
     }
@@ -88,7 +83,7 @@ trait AssertModelRelationships
     public function assertModelBelongsTo(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new RelationData($modelFrom, $modelTo, BelongsTo::class),
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::belongsTo),
             new RelationshipExistsConstraint()
         );
     }
@@ -96,5 +91,29 @@ trait AssertModelRelationships
     public function assertModelIsSingle(string $model): void
     {
         \PHPUnit\Framework\assertThat($model, new NoRelationshipConstraint());
+    }
+
+    public function assertModelIsOneToOne(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::isOneToOne),
+            new RelationshipExistsConstraint()
+        );
+    }
+
+    public function assertModelIsOneToMany(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::isOneToMany),
+            new RelationshipExistsConstraint()
+        );
+    }
+
+    public function assertModelIsManyToMany(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new RelationData($modelFrom, $modelTo, RelationshipEnum::isManyToMany),
+            new RelationshipExistsConstraint()
+        );
     }
 }

@@ -4,11 +4,11 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Data;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Capital;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\City;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Country;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Region;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Capital;
+use SchenkeIo\LaravelRelationManager\Demo\Models\City;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Country;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Region;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Single;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class ClassDataTest extends TestCase
@@ -40,6 +40,22 @@ class ClassDataTest extends TestCase
         $this->assertEquals(-1, ClassData::take('')->getFileAge());
     }
 
+    private function writeClass(string $className): void
+    {
+        file_put_contents(__DIR__."/$className.php",
+            <<<php
+<?php
+
+namespace SchenkeIo\LaravelRelationManager\Tests\Data;
+
+class $className
+{
+}
+
+php
+        );
+    }
+
     public function testIsFresherOrEqualThan(): void
     {
         $this->assertFalse(ClassData::take('')->isFresherOrEqualThan(''));
@@ -51,12 +67,9 @@ class ClassDataTest extends TestCase
          * we overwrite two valid class files in this directory with 2 seconds difference and measure it
          */
 
-        $fileNameOld = __DIR__.'/FileOld.php';
-        $fileNameNew = __DIR__.'/FileNew.php';
-        $namespace = 'SchenkeIo\LaravelRelationManager\Tests\Data';
-        file_put_contents($fileNameOld, "<?php namespace $namespace; class FileOld {}");
+        $this->writeClass('FileOld');
         sleep(2);
-        file_put_contents($fileNameNew, "<?php namespace $namespace; class FileNew {}");
+        $this->writeClass('FileNew');
 
         $classOld = ClassData::take(FileOld::class);
         $classNew = ClassData::take(FileNew::class);

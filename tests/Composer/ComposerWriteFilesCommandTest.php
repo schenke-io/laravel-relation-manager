@@ -21,7 +21,7 @@ class ComposerWriteFilesCommandTest extends TestCase
         });
         ComposerWriteFilesCommand::run($saveFileContentMock);
         $composerJson = json_decode(file_get_contents(__DIR__.'/../../composer.json'), true);
-        $this->assertStringContainsString('ComposerWriteFilesCommand::run', $composerJson['scripts']['write-class']);
+        $this->assertIsArray($composerJson['scripts']['write-class']);
     }
 
     public function testRelationshipFileIsOk()

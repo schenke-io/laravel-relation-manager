@@ -6,8 +6,9 @@ use Illuminate\Console\Command;
 use Mockery\MockInterface;
 use SchenkeIo\LaravelRelationManager\Data\ProjectData;
 use SchenkeIo\LaravelRelationManager\Define\Project;
+use SchenkeIo\LaravelRelationManager\Demo\Models\Single;
+use SchenkeIo\LaravelRelationManager\Exceptions\DirectoryNotWritableException;
 use SchenkeIo\LaravelRelationManager\Exceptions\InvalidClassException;
-use SchenkeIo\LaravelRelationManager\Tests\database\Models\Single;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\SaveFileContent;
 
@@ -49,6 +50,9 @@ class ProjectTest extends TestCase
         $this->assertInstanceOf(Project::class, $project->addModelDirectories([]));
     }
 
+    /**
+     * @throws DirectoryNotWritableException
+     */
     public function testWriteMermaidMarkdown()
     {
         /** @var Command $commandMock - Phpstorm overwriting */
@@ -69,7 +73,7 @@ class ProjectTest extends TestCase
     }
 
     /**
-     * @throws InvalidClassException
+     * @throws DirectoryNotWritableException
      */
     public function testWriteTestFileClassPhpunitInvalidClass()
     {
