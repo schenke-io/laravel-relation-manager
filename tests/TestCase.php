@@ -5,6 +5,8 @@ namespace SchenkeIo\LaravelRelationManager\Tests;
 use Illuminate\Contracts\Config\Repository;
 use Orchestra\Testbench\TestCase as Orchestra;
 
+use function Orchestra\Testbench\workbench_path;
+
 class TestCase extends Orchestra
 {
     protected function setUp(): void
@@ -34,6 +36,6 @@ class TestCase extends Orchestra
 
     protected function defineDatabaseMigrations(): void
     {
-        $this->loadMigrationsFrom(__DIR__.'/database/migrations');
+        $this->loadMigrationsFrom(workbench_path('database/migrations'));
     }
 }

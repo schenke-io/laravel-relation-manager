@@ -3,12 +3,12 @@
 namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
-use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 
 class ClassAgeConstraint extends BaseConstraint
 {
     /**
-     * @param  RelationData  $other
+     * @param  ModelRelationData  $other
      */
     protected function matches(mixed $other): bool
     {

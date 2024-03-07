@@ -8,19 +8,19 @@ use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 class NoRelationshipConstraint extends BaseConstraint
 {
     /**
-     * @param  string  $other Model name
+     * @param  string  $other  Model name
      *
      * @throws LaravelNotLoadedException
      */
     protected function matches(mixed $other): bool
     {
-        $relationshipCount = count(ClassData::take($other)->getModelRelations());
+        $count = ClassData::getRelationCountOfModel($other);
         $this->expectation = sprintf(
             'model %s has %d relations but expected 0',
-            $other, $relationshipCount
+            $other, $count
         );
 
-        return $relationshipCount == 0;
+        return $count == 0;
     }
 
     /**

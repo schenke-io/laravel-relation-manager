@@ -3,10 +3,11 @@
 namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Nette\PhpGenerator\PhpFile;
 use ReflectionClass;
-use SchenkeIo\LaravelRelationManager\Define\RelationshipEnum;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use Spatie\LaravelData\Data;
 
@@ -30,7 +31,7 @@ class ClassData extends Data
 
     public readonly string $className;
 
-    public function __construct(protected string $class)
+    public function __construct(protected string $class, protected Filesystem $fileSystem = new Filesystem)
     {
         try {
             $this->reflection = new ReflectionClass($class);
@@ -51,7 +52,8 @@ class ClassData extends Data
         $this->className = $this->reflection->getName();
         $this->fileName = $this->reflection->getFileName();
         $this->nameSpace = $this->reflection->getNamespaceName();
-        $this->fileAge = file_exists($this->fileName) ? filemtime($this->fileName) : -1;
+        $this->fileAge = $this->fileSystem->exists($this->fileName) ?
+            $this->fileSystem->lastModified($this->fileName) : -1;
 
         if (! $this->reflection->isSubclassOf(Model::class)) {
             $this->isModel = false;
@@ -66,6 +68,19 @@ class ClassData extends Data
         return new ClassData($class);
     }
 
+    public static function newFromName(string $nameSpace, string $className): ClassData
+    {
+        // check if name is ok already
+        $classData = ClassData::take($className);
+        if ($classData->isClass) {
+            return $classData;
+        }
+        // assemble class name and try
+        $classNameNew = Str::finish($nameSpace, '\\').$className;
+
+        return ClassData::take($classNameNew);
+    }
+
     public static function newFromFileName(string $fileName): ClassData
     {
         $file = PhpFile::fromCode(file_get_contents($fileName));
@@ -74,6 +89,9 @@ class ClassData extends Data
         return new ClassData($class);
     }
 
+    /**
+     * @throws LaravelNotLoadedException
+     */
     public static function getRelationCountOfModel(string $model): int
     {
         $classData = new ClassData($model);
@@ -86,6 +104,8 @@ class ClassData extends Data
 
     /**
      * @return array<string, mixed>
+     *
+     * @throws LaravelNotLoadedException
      */
     public function getModelRelations(): array
     {
@@ -114,8 +134,7 @@ class ClassData extends Data
                 $modelMethod = $model->{$method->name}();
                 $related = $modelMethod->getRelated();
                 $theOtherModel = ($related)::class;
-                //                $theOtherModel = ((new ($this->class))->{$method->name}()->getRelated())::class;
-                $return[$theOtherModel] = $method->getReturnType();
+                $return[$theOtherModel] = class_basename($method->getReturnType()->getName());
             }
         }
 
@@ -126,19 +145,18 @@ class ClassData extends Data
      * returns text 'failed asserting that ....'
      *
      * @throws LaravelNotLoadedException
-     * @throws \Exception
      */
     public static function getRelationExpectation(
         string $class,
-        RelationshipEnum $returnType,
+        string $returnType,
         string $usesClass): string
     {
         $relations = ClassData::take($class)->getModelRelations();
         if (isset($relations[$usesClass])) {
-            if ($relations[$usesClass] == $returnType->getClass()) {
+            if ($relations[$usesClass] == $returnType) {
                 return '';
             } else {
-                return "$class has relation {$returnType->name} to $usesClass but found ".$relations[$usesClass];
+                return "$class has relation $returnType to $usesClass but found ".$relations[$usesClass];
             }
         } else {
             return "$class has a relation to $usesClass";
@@ -177,14 +195,9 @@ class ClassData extends Data
         return false;
     }
 
-    public function getShortNameWithClass(bool $withClass = true): string
+    public function getShortName(): string
     {
-        if ($this->isClass) {
-            return $this->reflection->getShortName().
-                ($withClass ? '::class' : '');
-        } else {
-            return '';
-        }
+        return $this->isClass ? $this->reflection->getShortName() : '';
     }
 
     public function getFileBase(): string

@@ -3,7 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
-use SchenkeIo\LaravelRelationManager\Data\RelationData;
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 
 // https://github.com/AntonioPrimera/phpunit-custom-assertions/blob/master/src/Constraints/FoldersExistConstraint.php
@@ -11,15 +11,16 @@ use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 class RelationshipExistsConstraint extends BaseConstraint
 {
     /**
-     * @param  RelationData  $other
+     * @param  ModelRelationData  $other
      *
      * @throws LaravelNotLoadedException
+     * @throws \Exception
      */
     protected function matches(mixed $other): bool
     {
         $this->expectation = ClassData::getRelationExpectation(
             $other->model1,
-            $other->relationship,
+            class_basename($other->relation->getClass()),
             $other->model2
         );
 

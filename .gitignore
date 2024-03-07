@@ -12,3 +12,7 @@ node_modules
 
 .badita.yaml
 phpunit-10.3.2.phar
+
+
+__old/
+

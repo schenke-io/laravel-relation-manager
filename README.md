@@ -5,8 +5,12 @@
 [![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 
-This package helps you to write better tests around model relations in Laravel. 
-It validates methods and the database schema setup for all the modells.
+This package allows for central definition of model
+relationships. Based from this definition a 
+test class is written wich either loose or strict verifies 
+if all models include the given relationships.
+It allows for a testd riven approach to handle 
+larger projects with many models and relationships.
 
 ## Installation
 
@@ -17,6 +21,40 @@ composer require schenke-io/laravel-relation-manager
 ```
 
 ## Usage
+
+The package works central with a console command 
+which when called writes the files and run the test.
+
+```php
+# app/Console/Commands/RelationWriteCommand
+
+use SchenkeIo\LaravelRelationManager\Facades\Relations;
+
+class RelationWriteCommand extends Command 
+{
+    protected $signature = 'relation:write';
+    protected $description = 'define and write the model relations';
+    
+    public function handle(): void
+    {       
+        Relations::config(
+            parameters: [
+                'modelNameSpace' => 'App\Models',  
+                'testClassFile' => base_path('tests/Feature/Models/TestRelations.php'),
+                'documentationFile' => base_path('docs/relationships.md'),
+            ],
+            commandClass: $this
+        );
+        
+        Relations::model('Country')
+            ->hasOne('Capital')
+            ->hasMany('Region');
+        
+        Relations::writeTest(strict: true)->writeMarkdown()->runTest();    
+    }    
+}
+
+```
 
 ### Writing manual tests 
 

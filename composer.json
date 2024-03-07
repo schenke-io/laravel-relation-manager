@@ -20,49 +20,72 @@
         "spatie/laravel-data": "^3.8.1"
     },
     "require-dev": {
-        "laravel/pint": "^1.0",
+        "larastan/larastan": "^2.0.1",
+        "laravel/pint": "^1.14",
+        "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.5",
-        "nunomaduro/larastan": "^2.0.1",
-        "orchestra/testbench": "^8.0",
-        "pestphp/pest": "^2.16",
+        "orchestra/testbench": "^8.21",
+        "pestphp/pest": "^2.34",
         "pestphp/pest-plugin-arch": "^2.0",
         "pestphp/pest-plugin-laravel": "^2.0",
         "pestphp/pest-plugin-type-coverage": "^2.1",
-        "phpstan/extension-installer": "^1.1",
-        "phpstan/phpstan-deprecation-rules": "^1.0",
-        "phpstan/phpstan-phpunit": "^1.0",
+        "phpunit/phpunit": "^10.1",
         "spatie/laravel-ray": "^1.26"
     },
     "autoload": {
         "psr-4": {
-            "SchenkeIo\\LaravelRelationManager\\": "src/",
-            "SchenkeIo\\LaravelRelationManager\\Demo\\": "demo/"
-        },
-        "files": [
-            "src/global.php"
-        ]
+            "SchenkeIo\\LaravelRelationManager\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "SchenkeIo\\LaravelRelationManager\\Tests\\": "tests/"
+            "SchenkeIo\\LaravelRelationManager\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/",
+            "Workbench\\Database\\Factories\\": "workbench/database/factories/",
+            "Workbench\\Database\\Seeders\\": "workbench/database/seeders/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "SchenkeIo\\LaravelRelationManager\\PackageServiceProvider"
+            ],
+            "aliases": {
+                "Relations": "SchenkeIo\\LaravelRelationManager\\Facades\\Relations"
+            }
         }
     },
     "scripts": {
-        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare",
+            "@php ./vendor/bin/testbench package:discover --ansi"
+        ],
         "analyse": "vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "pint": "vendor/bin/pint",
         "write-class": [
-            "SchenkeIo\\LaravelRelationManager\\Composer\\ComposerWriteFilesCommand::run",
-            "SchenkeIo\\LaravelRelationManager\\Demo\\DemoCommand::composerWrite"
-
+            "vendor/bin/testbench write:main-files",
+            "vendor/bin/testbench run:test-project"
         ],
         "release": [
-            "composer write-class",
             "composer pint",
-            "composer test",
-            "composer analyse"
+            "composer analyse",
+            "composer write-class",
+            "composer test"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve"
+        ],
+        "lint": [
+            "@php vendor/bin/pint",
+            "@php vendor/bin/phpstan analyse"
         ]
     },
     "config": {
