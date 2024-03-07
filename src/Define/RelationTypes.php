@@ -57,7 +57,7 @@ trait RelationTypes
     public function belongsToMany(bool $addReverseRelation): DefineRelation
     {
         return $this->buildRelation(
-            "",
+            '',
             $addReverseRelation,
             RelationsEnum::belongsToMany,
             RelationsEnum::belongsToMany

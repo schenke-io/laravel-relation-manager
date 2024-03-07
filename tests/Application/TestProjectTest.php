@@ -18,11 +18,10 @@ use Workbench\App\Console\Commands\RunTestProjectCommand;
 
 class TestProjectTest extends TestCase
 {
-    use RefreshDatabase;
     use AssertModelRelations;
+    use RefreshDatabase;
 
     /**
-     * @return void
      * @group GenerateProjectTestFile
      *
      * Since this class is written by the Command file Workbench\App\Console\Commands\RunTestProjectCommand
@@ -39,6 +38,7 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Capital
+     *
      * @group GenerateProjectTestFile
      */
     public function testModelCapitalHas_1StrictRelationshipAndWorks(): void
@@ -50,6 +50,7 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\City
+     *
      * @group GenerateProjectTestFile
      */
     public function testModelCityHas_3StrictRelationshipsAndWorks(): void
@@ -63,6 +64,7 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Country
+     *
      * @group GenerateProjectTestFile
      */
     public function testModelCountryHas_3StrictRelationshipsAndWorks(): void
@@ -76,6 +78,7 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Highway
+     *
      * @group GenerateProjectTestFile
      */
     public function testModelHighwayHas_1StrictRelationshipAndWorks(): void
@@ -87,6 +90,7 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Region
+     *
      * @group GenerateProjectTestFile
      */
     public function testModelRegionHas_3StrictRelationshipsAndWorks(): void
@@ -100,6 +104,7 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Single
+     *
      * @group GenerateProjectTestFile
      */
     public function testModelSingleHas_0StrictRelationshipsAndWorks(): void
