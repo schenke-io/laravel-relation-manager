@@ -45,7 +45,7 @@ class RunTestProjectCommand extends Command
         Relations::model('Single');
 
         Relations::writeTest(
-            testClassName: 'SchenkeIo\LaravelRelationManager\Tests\Application\TestProjectTest',
+            testClass: 'SchenkeIo\LaravelRelationManager\Tests\Application\TestProjectTest',
             extendedTestClass: 'SchenkeIo\LaravelRelationManager\Tests\TestCase',
             strict: true
         )

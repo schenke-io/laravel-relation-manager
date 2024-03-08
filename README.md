@@ -2,15 +2,21 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
+[![Coverage](https://img.shields.io/endpoint?url=https://otterwise.app/badge/github/schenke-io/laravel-relation-manager/fca0812c-2c3e-42b9-9d81-713f2c20769b)](https://otterwise.app/github/schenke-io/laravel-relation-manager)
 
-This package allows for central definition of model
-relationships. Based from this definition a 
-test class is written wich either loose or strict verifies 
-if all models include the given relationships.
-It allows for a testd riven approach to handle 
-larger projects with many models and relationships.
+This package simplifies managing complex Laravel projects 
+with many models and relationships. It offers:
+
++ **Centralized documentation:** Easily keep track of all model relationships in one place.
++ **Improved code quality:** Encourages test-driven development and ensures defined relationships are actually implemented.
++ **Automated tasks:**
+  + Lists all models and their relationships.
+  + Generates test files to verify relationships exist.
+  + Creates documentation files for defined relationships.
+
+This package streamlines your workflow, saving you time 
+and effort while maintaining clean and well-documented code.
 
 ## Installation
 
@@ -38,19 +44,22 @@ class RelationWriteCommand extends Command
     public function handle(): void
     {       
         Relations::config(
-            parameters: [
-                'modelNameSpace' => 'App\Models',  
-                'testClassFile' => base_path('tests/Feature/Models/TestRelations.php'),
-                'documentationFile' => base_path('docs/relationships.md'),
-            ],
-            commandClass: $this
+            command: $this,
+            modelNameSpace: 'App\Models'
         );
         
         Relations::model('Country')
-            ->hasOne('Capital')
-            ->hasMany('Region');
+            ->hasOne('Capital', true)
+            ->hasMany('Region', true);
         
-        Relations::writeTest(strict: true)->writeMarkdown()->runTest();    
+        Relations::writeTest(
+            testClass: 'Tests\Feature\ProjectRelationTest',
+            extendedTestClass: 'Tests\Test', 
+            strict: false
+        )
+            ->writeMarkdown(base_path('docu/relations.md'))
+            ->runTest();
+            ->showTable();
     }    
 }
 

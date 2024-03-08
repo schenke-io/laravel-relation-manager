@@ -26,6 +26,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 2
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -48,4 +50,9 @@ jobs:
         run: composer show -D
 
       - name: Execute tests
-        run: vendor/bin/pest --ci
+        run: vendor/bin/pest --ci  --coverage-clover=build/logs/clover.xml
+
+      - name: Upload Coverage
+        env:
+          OTTERWISE_TOKEN: ${{ secrets.OTTERWISE_TOKEN }}
+          run: bash <(curl -s https://raw.githubusercontent.com/getOtterWise/bash-uploader/main/uploader.sh)
