@@ -5,7 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Define;
 use SchenkeIo\LaravelRelationManager\Define\DefineRelation;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
-use Workbench\App\Models\Capital;
+use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
 use Workbench\App\Models\Country;
 
 class DefineRelationTest extends TestCase
@@ -20,8 +20,11 @@ class DefineRelationTest extends TestCase
     public function testBuildRelation()
     {
         ProjectContainer::clear();
-        $defineRelation = new DefineRelation(Country::class);
-        $defineRelation->hasOne(Capital::class, true);
-        $this->assertCount(2, ProjectContainer::getRelations());
+
+        $testCommand = new class extends RunTestProjectManagerCommand
+        {
+        };
+        $testCommand->buildRelations();
+        $this->assertCount(7, ProjectContainer::getRelations());
     }
 }

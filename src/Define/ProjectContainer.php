@@ -24,24 +24,29 @@ class ProjectContainer
 
     private static array $errors = [];
 
+    private static array $unknownModels = [];
+
     public static function clear(): void
     {
         self::$relations = [];
         self::$errors = [];
+        self::$unknownModels = [];
     }
 
     public static function addModel(string $modelName): void
     {
-        $className = self::getModelClass($modelName, 'first model');
+        $className = self::getModelClass($modelName);
         if ($className != '') {
             self::$relations[$className] = self::$relations[$className] ?? [];
+        } else {
+            self::$unknownModels[] = $modelName;
         }
     }
 
     public static function addRelation(string $modelFrom, string $modelTo, RelationsEnum $relation): void
     {
-        $classFrom = self::getModelClass($modelFrom, 'first model');
-        $classTo = self::getModelClass($modelTo, 'second model');
+        $classFrom = self::getModelClass($modelFrom);
+        $classTo = self::getModelClass($modelTo);
         if ($relation == RelationsEnum::morphTo) {
             $classTo = '';
         }
@@ -70,19 +75,18 @@ class ProjectContainer
         return self::$relations;
     }
 
-    public static function getModelClass(string $modelClass, string $errorInfo): string
+    public static function getUnknownModels(): array
+    {
+        return self::$unknownModels;
+    }
+
+    public static function getModelClass(string $modelClass): string
     {
         $class = ClassData::newFromName(config(self::CONFIG_KEY_MODEL_NAME_SPACE), $modelClass);
         if (! $class->isClass) {
-            self::addError(sprintf("%s - class '%s' not found in namespace '%s'",
-                $errorInfo, $modelClass, config(self::CONFIG_KEY_MODEL_NAME_SPACE)
-            ));
-
             return '';
         }
         if (! $class->isModel) {
-            self::addError(sprintf('%s is not a model', $modelClass));
-
             return '';
         }
 
@@ -145,7 +149,9 @@ class ProjectContainer
                 implode(', ', array_map(fn ($x) => class_basename($x), array_keys($modelSet))),
             ];
         }
-        ksort($return);
+        foreach (self::$unknownModels as $model) {
+            $return[] = ["$model (not defined)", ''];
+        }
 
         return $return;
     }

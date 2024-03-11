@@ -63,9 +63,9 @@ class ProjectContainerTest extends TestCase
     public static function dataProviderModels(): array
     {
         return [
-            'real model' => [Country::class, 'Workbench\App\Models\Country', 0],
-            'no class' => ['xxx', '', 1],
-            'wrong class' => [ProjectContainer::class, '', 1],
+            'real model' => [Country::class, 'Workbench\App\Models\Country', 0, 0],
+            'no class' => ['xxx', '', 0, 1],
+            'wrong class' => [ProjectContainer::class, '', 0, 1],
         ];
     }
 
@@ -74,11 +74,13 @@ class ProjectContainerTest extends TestCase
      *
      * @return void
      */
-    public function testGetModelClass(string $modelClass, string $result, int $errorCount)
+    public function testGetModelClass(string $modelClass, string $result, int $errorCount, int $unknownModelsCount)
     {
         ProjectContainer::clear();
         $this->assertEquals($result, ProjectContainer::getModelClass($modelClass, ''));
+        ProjectContainer::addModel($modelClass);
         $this->assertCount($errorCount, ProjectContainer::getErrors());
+        $this->assertCount($unknownModelsCount, ProjectContainer::getUnknownModels());
     }
 
     public function testGetRelationTable()

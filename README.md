@@ -33,7 +33,7 @@ which when called writes the files and run the test.
 ```php
 # app/Console/Commands/RelationWriteCommand
 
-use SchenkeIo\LaravelRelationManager\Facades\Relations;
+use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
 
 class RelationWriteCommand extends RelationManagerCommand 
 {
@@ -54,7 +54,7 @@ class RelationWriteCommand extends RelationManagerCommand
         // finally 
         $this->relationManager->writeTest(false)
           ->writeMarkdown()
-          ->runTest();
+          ->runTest()
           ->showModelTable();
                    
         
@@ -62,7 +62,10 @@ class RelationWriteCommand extends RelationManagerCommand
 }
 
 ```
-The following methods can be used:
+
+This command is called by default with `php artisan relation-manager:run`.
+
+The following methods can be used inside `handle()`:
 
 | method                  | parameter                                          | details                                                      |
 |-------------------------|----------------------------------------------------|--------------------------------------------------------------|

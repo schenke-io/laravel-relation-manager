@@ -17,7 +17,21 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
 
     public function handle(): void
     {
+        // separate because of testing
+        $this->buildRelations();
 
+        $this->relationManager->model('Green');
+
+        $this->relationManager
+            ->writeTest(strict: true)
+            ->runTest()
+            ->writeMarkdown()
+            ->showTables();
+
+    }
+
+    public function buildRelations(): void
+    {
         $this->relationManager->model('Capital');
 
         $this->relationManager->model('City')
@@ -42,11 +56,5 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
         $this->relationManager->model('Single');
 
         $this->relationManager->model('Capital')->morphOne('Location', true);
-
-        $this->relationManager->writeTest(strict: true)
-            ->runTest('vendor/bin/pest')
-            ->writeMarkdown(__DIR__.'/../../../docs/relations.md')
-            ->showTables();
-
     }
 }

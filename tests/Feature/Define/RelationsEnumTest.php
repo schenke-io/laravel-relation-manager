@@ -31,9 +31,9 @@ class RelationsEnumTest extends testCase
             $isRelation += ($case->isRelation() ? 1 : 0);
             $askForRelatedModel += ($case->askForRelatedModel() ? 1 : 0);
         }
-        $this->assertEquals(2, $askForInverseCountNormal);
+        $this->assertEquals(0, $askForInverseCountNormal);
         $this->assertEquals(0, $askForInverseCountPrevent);
-        $this->assertEquals(6, $hasInverseNormal);
+        $this->assertEquals(5, $hasInverseNormal);
         $this->assertEquals(0, $hasInversePrevent);
         $this->assertEquals(8, $hasPublicFunction);
         $this->assertEquals(10, $isRelation);

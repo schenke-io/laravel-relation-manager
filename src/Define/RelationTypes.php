@@ -54,13 +54,13 @@ trait RelationTypes
         );
     }
 
-    public function belongsToMany(bool $addReverseRelation): DefineRelation
+    public function belongsToMany(): DefineRelation
     {
         return $this->buildRelation(
             "",
-            $addReverseRelation,
+            false,
             RelationsEnum::belongsToMany,
-            RelationsEnum::belongsToMany
+            RelationsEnum::noRelation
         );
     }
 

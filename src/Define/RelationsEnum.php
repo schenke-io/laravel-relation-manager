@@ -54,7 +54,7 @@ enum RelationsEnum
         } else {
             return match ($this) {
                 self::hasOne, self::hasMany => self::belongsTo,
-                self::belongsToMany, self::isManyToMany => self::belongsToMany,
+                self::isManyToMany => self::belongsToMany,
                 self::morphOne, self::morphMany => self::morphTo,
                 default => self::noRelation
             };
