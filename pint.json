@@ -1,0 +1,7 @@
+{
+    "preset": "laravel",
+    "notPath": [
+        "src/Define/RelationTypes.php",
+        "tests/Application/TestProjectTest.php"
+    ]
+}

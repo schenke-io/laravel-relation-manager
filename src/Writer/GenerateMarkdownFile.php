@@ -12,8 +12,9 @@ class GenerateMarkdownFile
     {
     }
 
-    public function writeFile(string $markdownFile, Command $command): ?string
+    public function writeFile(Command $command): ?string
     {
+        $markdownFile = config(ProjectContainer::CONFIG_KEY_MARKDOWN_FILE);
         $mermaid = ProjectContainer::getMermaidCode();
         $table = ProjectContainer::getMarkdownRelationTable();
         $commandClass = get_class($command);

@@ -2,11 +2,20 @@
 
 namespace SchenkeIo\LaravelRelationManager\Define;
 
+use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 
 class ProjectContainer
 {
-    private static string $modelNameSpace = '';
+    public const CONFIG_KEY_MODEL_NAME_SPACE = 'relation-manager.modelNameSpace';
+
+    public const CONFIG_KEY_PROJECT_TEST_CLASS = 'relation-manager.projectTestClass';
+
+    public const CONFIG_KEY_EXTENDED_TEST_CLASS = 'relation-manager.extendedTestClass';
+
+    public const CONFIG_KEY_MARKDOWN_FILE = 'relation-manager.markdownFile';
+
+    public const CONFIG_KEY_TEST_COMMAND = 'relation-manager.testCommand';
 
     /**
      * @var array <string,mixed>
@@ -17,14 +26,8 @@ class ProjectContainer
 
     public static function clear(): void
     {
-        self::$modelNameSpace = '';
         self::$relations = [];
         self::$errors = [];
-    }
-
-    public static function setModelNameSpace(string $modelNameSpace): void
-    {
-        self::$modelNameSpace = $modelNameSpace;
     }
 
     public static function addModel(string $modelName): void
@@ -39,7 +42,10 @@ class ProjectContainer
     {
         $classFrom = self::getModelClass($modelFrom, 'first model');
         $classTo = self::getModelClass($modelTo, 'second model');
-        if ($classFrom != '' & $classTo != '') {
+        if ($relation == RelationsEnum::morphTo) {
+            $classTo = '';
+        }
+        if ($classFrom != '') {
             if (isset(self::$relations[$classFrom][$classTo])) {
                 if (self::$relations[$classFrom][$classTo] != $relation) {
                     self::addError(sprintf(
@@ -66,10 +72,10 @@ class ProjectContainer
 
     public static function getModelClass(string $modelClass, string $errorInfo): string
     {
-        $class = ClassData::newFromName(self::$modelNameSpace, $modelClass);
+        $class = ClassData::newFromName(config(self::CONFIG_KEY_MODEL_NAME_SPACE), $modelClass);
         if (! $class->isClass) {
             self::addError(sprintf("%s - class '%s' not found in namespace '%s'",
-                $errorInfo, $modelClass, self::$modelNameSpace
+                $errorInfo, $modelClass, config(self::CONFIG_KEY_MODEL_NAME_SPACE)
             ));
 
             return '';
@@ -91,6 +97,42 @@ class ProjectContainer
     public static function getErrors(): array
     {
         return self::$errors;
+    }
+
+    public static function getDatabaseTable(): array
+    {
+        $tables = [];
+        /*
+         * load all tables of each model
+         */
+        foreach (self::$relations as $primModel => $data) {
+            $tables[Str::snake(Str::plural(class_basename($primModel)))] = [];
+        }
+        foreach (self::getDatabaseData() as $table1 => $table1Data) {
+            ksort($table1Data);
+            /**
+             * @var RelationsEnum $relation
+             */
+            foreach ($table1Data as $table2 => $relation) {
+                if (strlen($table2) > 1) {
+                    if ($relation->isMorph()) {
+                        $tables[$table1][] = Str::singular($table1).'able_id';
+                        $tables[$table1][] = Str::singular($table1).'able_type';
+                    } else {
+                        $tables[$table1][] = Str::singular($table2).'_id';
+                    }
+                }
+            }
+        }
+        ksort($tables);
+        $return = [];
+        foreach ($tables as $table => $keys) {
+            $keys = array_unique($keys);
+            sort($keys);
+            $return[] = [$table, implode(', ', $keys)];
+        }
+
+        return $return;
     }
 
     public static function getRelationTable(): array
@@ -127,18 +169,7 @@ HTML;
     public static function getMermaidCode(): string
     {
         $return = '';
-        $tables = [];
-        foreach (self::$relations as $primModel => $modelSet) {
-            /**
-             * @var string $secModel
-             * @var RelationsEnum $relation
-             */
-            foreach ($modelSet as $secModel => $relation) {
-                $relation->setTableLinks($primModel, $secModel, $tables);
-                //                dump("$primModel => $secModel ({$relation->name})\n");
-                //                $return .= $relation->getMermaidLine($primModel, $secModel);
-            }
-        }
+        $tables = self::getDatabaseData();
         foreach ($tables as $table1 => $data) {
             foreach ($data as $table2 => $isSolid) {
                 $arrow = $isSolid ? '====>' : '---->';
@@ -147,5 +178,21 @@ HTML;
         }
 
         return $return;
+    }
+
+    public static function getDatabaseData(): array
+    {
+        $table = [];
+        foreach (self::$relations as $primModel => $modelSet) {
+            /**
+             * @var string $secModel
+             * @var RelationsEnum $relation
+             */
+            foreach ($modelSet as $secModel => $relation) {
+                $relation->setTableLinks($primModel, $secModel, $table);
+            }
+        }
+
+        return $table;
     }
 }

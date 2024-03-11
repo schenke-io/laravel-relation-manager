@@ -17,6 +17,10 @@ enum RelationsEnum
     case belongsTo;
     case isSingle;
 
+    case morphTo;
+    case morphOne;
+    case morphMany;
+
     /*
      * standard  speak
      */
@@ -32,6 +36,17 @@ enum RelationsEnum
         return self::inverse() != self::noRelation;
     }
 
+    public function askForRelatedModel(): bool
+    {
+        return match ($this) {
+            self::hasOne, self::hasMany,
+            self::isManyToMany,
+            self::hasOneThrough, self::hasManyThrough,
+            self::morphOne, self::morphMany => true,
+            default => false
+        };
+    }
+
     public function inverse(bool $preventInverse = false): self
     {
         if ($preventInverse) {
@@ -40,6 +55,7 @@ enum RelationsEnum
             return match ($this) {
                 self::hasOne, self::hasMany => self::belongsTo,
                 self::belongsToMany, self::isManyToMany => self::belongsToMany,
+                self::morphOne, self::morphMany => self::morphTo,
                 default => self::noRelation
             };
         }
@@ -50,10 +66,16 @@ enum RelationsEnum
         return $this->inverse($preventInverse) !== self::noRelation;
     }
 
+    /**
+     * can the relation be defined in a command
+     */
     public function hasPublicFunction(): bool
     {
         return match ($this) {
-            self::isSingle, self::belongsTo, self::noRelation => false,
+            self::isSingle,
+            self::belongsTo,
+            self::morphTo,
+            self::noRelation => false,
             default => true
         };
     }
@@ -79,39 +101,12 @@ enum RelationsEnum
             self::hasOneThrough => Relations\HasOneThrough::class,
             self::hasManyThrough => Relations\HasManyThrough::class,
             self::belongsTo => Relations\BelongsTo::class,
+            self::morphTo => Relations\MorphTo::class,
+            self::morphOne => Relations\MorphOne::class,
+            self::morphMany => Relations\MorphMany::class,
             default => throw new \Exception('class unknown for '.$this->name)
         };
     }
-
-    /**
-     *   the arrow points from the field "[model]_id to the model.id field
-     */
-    /* public function getMermaidLine(string $modelName1, string $modelName2): string
-     {
-         $modelName1 = ClassData::take($modelName1)->getShortName();
-         $modelName2 = ClassData::take($modelName2)->getShortName();
-
-         $tableName1 = Str::snake(Str::plural($modelName1));
-         $tableName2 = Str::snake(Str::plural($modelName1));
-
-         $names = [Str::snake($modelName1), Str::snake($modelName2)];
-         sort($names);
-         $tableName3 = implode('_', $names);
-
-         return match ($this) {
-             self::hasOne,
-             self::hasMany => "$tableName2 ---> $tableName1\n",
-             self::hasOneThrough,
-             self::hasManyThrough => "$tableName2-- through ---$tableName1\n",
-
-             self::isSingle => "$tableName1\n",
-
-             self::belongsToMany,
-             self::isManyToMany => "$tableName3 ---> $tableName1\n",
-
-             default => ''
-         };
-     }*/
 
     public function setTableLinks(string $modelName1, string $modelName2, array &$tables): void
     {
@@ -127,7 +122,9 @@ enum RelationsEnum
         switch ($this) {
             case self::hasOne:
             case self::hasMany:
-                $tables[$tableName2][$tableName1] = true;
+            case self::morphOne:
+            case self::morphMany:
+                $tables[$tableName2][$tableName1] = $this;
                 break;
             case self::hasOneThrough:
             case self::hasManyThrough:
@@ -135,23 +132,24 @@ enum RelationsEnum
                 break;
             case self::belongsToMany:
             case self::isManyToMany:
-                $tables[$tableName3][$tableName1] = true;
-                $tables[$tableName3][$tableName2] = true;
+                $tables[$tableName3][$tableName1] = $this;
+                $tables[$tableName3][$tableName2] = $this;
                 break;
             case self::belongsTo:
-                $tables[$tableName1][$tableName2] = true;
+                $tables[$tableName1][$tableName2] = $this;
+                break;
+            case self::morphTo:
+                $tables[$tableName1][null] = $this;
                 break;
             default:
                 echo sprintf("unknown link for %s to %s as %s\n", $tableName1, $tableName2, $this->name);
         }
     }
 
-    public function askForRelatedModel(): bool
+    public function isMorph(): bool
     {
         return match ($this) {
-            self::hasOne, self::hasMany,
-            self::isManyToMany,
-            self::hasOneThrough, self::hasManyThrough => true,
+            self::morphOne, self::morphMany => true,
             default => false
         };
     }

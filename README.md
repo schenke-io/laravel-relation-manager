@@ -1,22 +1,15 @@
-# Simplify model relations in Laravel
+# Laravel Relation Manager
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 [![Coverage](https://img.shields.io/endpoint?url=https://otterwise.app/badge/github/schenke-io/laravel-relation-manager/fca0812c-2c3e-42b9-9d81-713f2c20769b)](https://otterwise.app/github/schenke-io/laravel-relation-manager)
 
-This package simplifies managing complex Laravel projects 
-with many models and relationships. It offers:
-
-+ **Centralized documentation:** Easily keep track of all model relationships in one place.
-+ **Improved code quality:** Encourages test-driven development and ensures defined relationships are actually implemented.
-+ **Automated tasks:**
-  + Lists all models and their relationships.
-  + Generates test files to verify relationships exist.
-  + Creates documentation files for defined relationships.
-
-This package streamlines your workflow, saving you time 
-and effort while maintaining clean and well-documented code.
+Developing complex Laravel applications with many models can be difficult. 
+**Laravel Relation Manager** helps by bringing all your model relationships 
+together. It creates tests to make sure they work and documents them for 
+easy reference. This saves you time, improves code quality, 
+and keeps your project organized.
 
 ## Installation
 
@@ -25,6 +18,12 @@ You can install the package via composer:
 ```bash
 composer require schenke-io/laravel-relation-manager
 ```
+Install the config file of the package:
+
+```bash
+php artisan releation-manager:install
+```
+
 
 ## Usage
 
@@ -36,82 +35,44 @@ which when called writes the files and run the test.
 
 use SchenkeIo\LaravelRelationManager\Facades\Relations;
 
-class RelationWriteCommand extends Command 
+class RelationWriteCommand extends RelationManagerCommand 
 {
-    protected $signature = 'relation:write';
-    protected $description = 'define and write the model relations';
     
     public function handle(): void
     {       
-        Relations::config(
-            command: $this,
-            modelNameSpace: 'App\Models'
-        );
         
-        Relations::model('Country')
+        $this->relationManager->model('Country')
             ->hasOne('Capital', true)
             ->hasMany('Region', true);
+            
+        $this->relationManager->model('Region')
+            ->hasOne('City', true);
+            
+                        
+        // repeat this for any model    
+
+        // finally 
+        $this->relationManager->writeTest(false)
+          ->writeMarkdown()
+          ->runTest();
+          ->showModelTable();
+                   
         
-        Relations::writeTest(
-            testClass: 'Tests\Feature\ProjectRelationTest',
-            extendedTestClass: 'Tests\Test', 
-            strict: false
-        )
-            ->writeMarkdown(base_path('docu/relations.md'))
-            ->runTest();
-            ->showTable();
     }    
 }
 
 ```
+The following methods can be used:
 
-### Writing manual tests 
+| method                  | parameter                                          | details                                                      |
+|-------------------------|----------------------------------------------------|--------------------------------------------------------------|
+| model(string $model)    | name of the model                                  | the model name is relative to the model namespace configured |
+| writeTest(bool $strict) | false: define the minimum, true: define everything | write the test file as defined                               |
+| runTest                 | -                                                  | run the test file                                            |
+| writeMarkdown           | -                                                  | write a markdown file with the documentation                 |
+| showTables              | -                                                  | Show the information as a table in the console               |
+|                         |                                                    |                                                              |
 
-You can enhance one of your tests with new assertions 
-related to model relations. 
-They will verify if the models have the 
-relations setup and are working with the database well (e.g. migrations).
-
-
-In this example the test verifies the following:
-+ `Country::class` exists and is a model
-+ `Capital::class` exists and is a model
-+ in `Country::class` is a HasOne-relation to `Capital::class` which works with the database 
-
-
-```php
-# tests/Feature/ModelRelationTest.php 
-namespace Tests\Feature;
-
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use SchenkeIo\LaravelRelationshipManager\Phpunit\AssertModelRelationships;
-use App\Models\Country;
-use App\Models\Capital;
-use App\Models\Regions;
-
-class ModelRelationTest extends TestCase 
-{
-    use RefreshDatabase;
-    use AssertModelRelationships;
-    
-    public function testCountryRelationships()
-    {
-        $this->assertModelHasOne(Country::class, Capital::Class);
-    }
-}
-
-```
-Another way to write the test is using full class names like:
-```php
-
-...
-
-        $this->assertModelHasOne('App\Models\Country', 'App\Models\Capital');
-
-...        
-
-```
 
 
 ## Testing

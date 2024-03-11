@@ -7,13 +7,15 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Nette;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 
 class GenerateProjectTestFile
 {
-    public function __construct(protected Filesystem $filesystem = new Filesystem())
-    {
+    public function __construct(
+        protected Filesystem $filesystem = new Filesystem()
+    ) {
     }
 
     public static function testGroup(): string
@@ -21,13 +23,11 @@ class GenerateProjectTestFile
         return class_basename(__CLASS__);
     }
 
-    public function writeFile(
-        array $relations,
-        string $testProjectClass,
-        string $extendedTestClass,
-        Command $callingCommand,
-        bool $testStrict
-    ): ?string {
+    public function writeFile(Command $callingCommand, bool $testStrict): ?string
+    {
+        $relations = ProjectContainer::getRelations();
+        $testProjectClass = config(ProjectContainer::CONFIG_KEY_PROJECT_TEST_CLASS);
+        $extendedTestClass = config(ProjectContainer::CONFIG_KEY_EXTENDED_TEST_CLASS);
         $signature = $callingCommand->getName();
         $writerCallingClass = get_class($callingCommand);
         $rebuildCommand = (str_contains($signature, ':') ? 'php artisan ' : '').$signature;
@@ -108,9 +108,10 @@ class GenerateProjectTestFile
                 $method->addBody("\$this->assertIsSingle('$baseModel');");
             }
         }
-        $printer = new Nette\PhpGenerator\PsrPrinter;
         $fileName = ClassData::take($testProjectClass)->fileName;
         try {
+
+            $printer = new Nette\PhpGenerator\PsrPrinter;
             $this->filesystem->put($fileName, $printer->printFile($file));
 
             return null;

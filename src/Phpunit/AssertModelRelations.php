@@ -93,6 +93,30 @@ trait AssertModelRelations
         \PHPUnit\Framework\assertThat($model, new NoRelationshipConstraint());
     }
 
+    public function assertModelMorphTo(string $modelFrom): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new ModelRelationData($modelFrom, $modelFrom, RelationsEnum::morphTo),
+            new RelationshipExistsConstraint()
+        );
+    }
+
+    public function assertModelMorphOne(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new ModelRelationData($modelFrom, $modelTo, RelationsEnum::morphOne),
+            new RelationshipExistsConstraint()
+        );
+    }
+
+    public function assertModelMorphMany(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new ModelRelationData($modelFrom, $modelTo, RelationsEnum::morphMany),
+            new RelationshipExistsConstraint()
+        );
+    }
+
     public function assertModelIsManyToMany(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(

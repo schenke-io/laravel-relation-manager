@@ -8,25 +8,18 @@ use Illuminate\Support\Facades\Process;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
-class RelationsHandler
+class RelationManager
 {
-    private Command $command;
-
     /**
      * @mixin DefineRelation
      */
     public function __construct(
         protected Filesystem $fileSystem = new Filesystem,
         protected GenerateProjectTestFile $generateProjectTestFile = new GenerateProjectTestFile,
-        protected GenerateMarkdownFile $generateMarkdownFile = new GenerateMarkdownFile
+        protected GenerateMarkdownFile $generateMarkdownFile = new GenerateMarkdownFile,
+        protected Command $command = new Command()
     ) {
-        $this->command = new Command;
-    }
 
-    public function config(Command $command, string $modelNameSpace = 'App\Models'): void
-    {
-        ProjectContainer::setModelNameSpace($modelNameSpace);
-        $this->command = $command;
     }
 
     public function model(string $modelName): DefineRelation
@@ -34,10 +27,7 @@ class RelationsHandler
         return new DefineRelation($modelName);
     }
 
-    public function writeTest(
-        string $testClassName,
-        string $extendedTestClass,
-        bool $strict): self
+    public function writeTest(bool $strict): self
     {
         $hadErrors = false;
         foreach (ProjectContainer::getErrors() as $errorMsg) {
@@ -50,25 +40,20 @@ class RelationsHandler
             return $this;
         }
 
-        $result = $this->generateProjectTestFile->writeFile(
-            relations: ProjectContainer::getRelations(),
-            testProjectClass: $testClassName,
-            extendedTestClass: $extendedTestClass,
-            callingCommand: $this->command,
-            testStrict: $strict
-        );
+        $result = $this->generateProjectTestFile->writeFile($this->command, $strict);
         if (! is_null($result)) {
             $this->command->error($result);
 
             return $this;
         }
-        $this->command->info("test file written:  $testClassName");
+        $this->command->info('test file written');
 
         return $this;
     }
 
-    public function runTest(string $testCommand = 'php artisan test'): self
+    public function runTest(): self
     {
+        $testCommand = config(ProjectContainer::CONFIG_KEY_TEST_COMMAND);
         $command = "$testCommand --group=".GenerateProjectTestFile::testGroup();
         $this->command->info("running command:  $command");
         echo Process::run($command)->output();
@@ -76,25 +61,23 @@ class RelationsHandler
         return $this;
     }
 
-    public function showModelTable(): self
+    public function showTables(): self
     {
-        $this->command->table(['model', '... has relations to'], ProjectContainer::getRelationTable());
+        $this->command->table(['model', 'related models'], ProjectContainer::getRelationTable());
+        $this->command->table(['table', 'expected columns'], ProjectContainer::getDatabaseTable());
 
         return $this;
     }
 
-    public function writeMarkdown(string $markdownFile): self
+    public function writeMarkdown(): self
     {
-        $result = $this->generateMarkdownFile->writeFile(
-            markdownFile: $markdownFile,
-            command: $this->command
-        );
+        $result = $this->generateMarkdownFile->writeFile(command: $this->command);
         if (! is_null($result)) {
             $this->command->error($result);
 
             return $this;
         }
-        $this->command->info("markdown file written:  $markdownFile");
+        $this->command->info('markdown file written');
 
         return $this;
     }

@@ -2,6 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Data;
 
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
@@ -116,7 +117,7 @@ class ClassData extends Data
 
         try {
             DB::connection();
-        } catch (\RuntimeException $e) {
+        } catch (Exception $e) {
             throw new LaravelNotLoadedException('Laravel is not loaded');
         }
 
@@ -154,6 +155,7 @@ class ClassData extends Data
         $relations = ClassData::take($class)->getModelRelations();
         if (isset($relations[$usesClass])) {
             if ($relations[$usesClass] == $returnType) {
+                // expectation met, return OK
                 return '';
             } else {
                 return "$class has relation $returnType to $usesClass but found ".$relations[$usesClass];

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 class City extends Model
 {
@@ -24,5 +25,10 @@ class City extends Model
     public function country(): HasOneThrough
     {
         return $this->hasOneThrough(Country::class, Region::class);
+    }
+
+    public function location(): MorphOne
+    {
+        return $this->morphOne(Location::class, 'locationable');
     }
 }

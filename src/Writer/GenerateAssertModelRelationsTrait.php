@@ -3,7 +3,6 @@
 namespace SchenkeIo\LaravelRelationManager\Writer;
 
 use Nette;
-use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
@@ -77,13 +76,21 @@ class GenerateAssertModelRelationsTrait
                 $method->addParameter('model')->setType('string');
                 $method->setReturnType('void');
                 $method->addBody('\PHPUnit\Framework\assertThat($model, new NoRelationshipConstraint());');
+            } elseif ($case == RelationsEnum::morphTo) {
+                $method = $trait->addMethod($case->getAssertName());
+                $method->addParameter('modelFrom')->setType('string');
+                $method->setReturnType('void');
+                $method->addBody('\PHPUnit\Framework\assertThat(');
+                $method->addBody('    new ModelRelationData($modelFrom, $modelFrom, RelationsEnum::'.$case->name.'),');
+                $method->addBody('    new RelationshipExistsConstraint()');
+                $method->addBody(');');
+
             } elseif ($case->isRelation()) {
                 $method = $trait->addMethod($case->getAssertName());
                 $method->addParameter('modelFrom')->setType('string');
                 $method->addParameter('modelTo')->setType('string');
                 $method->setReturnType('void');
 
-                $relationClass = ClassData::take($case->getClass())->getShortName();
                 $method->addBody('\PHPUnit\Framework\assertThat(');
                 $method->addBody('    new ModelRelationData($modelFrom, $modelTo, RelationsEnum::'.$case->name.'),');
                 $method->addBody('    new RelationshipExistsConstraint()');

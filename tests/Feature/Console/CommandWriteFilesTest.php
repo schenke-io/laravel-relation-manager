@@ -16,6 +16,6 @@ class CommandWriteFilesTest extends TestCase
             $mock->expects('put')->zeroOrMoreTimes();
         });
         $writeCodeFiles = new WriteTraitFiles($mockFilesystem);
-        $writeCodeFiles->generate(false);
+        $writeCodeFiles->generate();
     }
 }

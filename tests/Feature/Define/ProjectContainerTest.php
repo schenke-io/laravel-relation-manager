@@ -7,6 +7,7 @@ use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\Country;
+use Workbench\App\Models\Location;
 
 class ProjectContainerTest extends TestCase
 {
@@ -22,7 +23,6 @@ class ProjectContainerTest extends TestCase
     public function testSetModelNameSpace()
     {
         ProjectContainer::clear();
-        ProjectContainer::setModelNameSpace('Workbench\App\Models');
         $this->assertEquals('Workbench\App\Models\Country', ProjectContainer::getModelClass('Country', ''));
     }
 
@@ -46,6 +46,10 @@ class ProjectContainerTest extends TestCase
         ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasMany);
         $this->assertCount(1, ProjectContainer::getRelations());
         $this->assertCount(1, ProjectContainer::getErrors());
+        // add morphTo
+        ProjectContainer::addRelation(Capital::class, Location::class, RelationsEnum::morphTo);
+        $this->assertCount(2, ProjectContainer::getRelations());
+        $this->assertCount(1, ProjectContainer::getErrors());
     }
 
     public function testAddError()
@@ -56,7 +60,7 @@ class ProjectContainerTest extends TestCase
         $this->assertCount(1, ProjectContainer::getErrors());
     }
 
-    public static function dataProviderModels()
+    public static function dataProviderModels(): array
     {
         return [
             'real model' => [Country::class, 'Workbench\App\Models\Country', 0],
@@ -84,5 +88,13 @@ class ProjectContainerTest extends TestCase
         $this->assertCount(1, ProjectContainer::getRelationTable());
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getMarkdownRelationTable()));
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getMermaidCode()));
+    }
+
+    public function testGetDatabaseTable()
+    {
+        ProjectContainer::clear();
+        ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
+        ProjectContainer::addRelation(Capital::class, Location::class, RelationsEnum::morphOne);
+        $this->assertCount(3, ProjectContainer::getDatabaseTable());
     }
 }

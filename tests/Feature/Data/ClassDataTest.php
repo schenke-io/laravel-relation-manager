@@ -12,6 +12,7 @@ use Workbench\App\Models\Capital;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Highway;
+use Workbench\App\Models\Location;
 use Workbench\App\Models\Region;
 use Workbench\App\Models\Single;
 
@@ -83,7 +84,7 @@ class ClassDataTest extends TestCase
         return [
             'data 1' => ['', ''],
             'data 2' => [Country::class, 'Country'],
-            'data 3' => [Country::class,  'Country'],
+            'data 3' => [Country::class, 'Country'],
         ];
     }
 
@@ -117,9 +118,11 @@ class ClassDataTest extends TestCase
     public static function dataProviderRelationExpectations(): array
     {
         return [
-            'ok' => [Country::class, 'HasOne', Capital::class, '//'],
+            'ok 1' => [Country::class, 'HasOne', Capital::class, '//'],
+            'ok 2' => [Location::class, 'MorphTo', Location::class, '//'],
             'relation not found' => [Country::class, 'HasOne', Highway::class, '/.{3,100}/'],
             'relation wrong' => [Country::class, 'hasOne', Highway::class, '/.{3,100}/'],
+            'relation twice' => [Country::class, 'hasOne', Capital::class, '/.{3,100}/'],
         ];
     }
 

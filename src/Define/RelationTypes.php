@@ -57,10 +57,30 @@ trait RelationTypes
     public function belongsToMany(bool $addReverseRelation): DefineRelation
     {
         return $this->buildRelation(
-            '',
+            "",
             $addReverseRelation,
             RelationsEnum::belongsToMany,
             RelationsEnum::belongsToMany
+        );
+    }
+
+    public function morphOne(string $modelName, bool $addReverseRelation): DefineRelation
+    {
+        return $this->buildRelation(
+            $modelName,
+            $addReverseRelation,
+            RelationsEnum::morphOne,
+            RelationsEnum::morphTo
+        );
+    }
+
+    public function morphMany(string $modelName, bool $addReverseRelation): DefineRelation
+    {
+        return $this->buildRelation(
+            $modelName,
+            $addReverseRelation,
+            RelationsEnum::morphMany,
+            RelationsEnum::morphTo
         );
     }
 

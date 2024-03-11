@@ -33,13 +33,16 @@ class RelationsEnumTest extends testCase
         }
         $this->assertEquals(2, $askForInverseCountNormal);
         $this->assertEquals(0, $askForInverseCountPrevent);
-        $this->assertEquals(4, $hasInverseNormal);
+        $this->assertEquals(6, $hasInverseNormal);
         $this->assertEquals(0, $hasInversePrevent);
-        $this->assertEquals(6, $hasPublicFunction);
-        $this->assertEquals(7, $isRelation);
-        $this->assertEquals(5, $askForRelatedModel);
+        $this->assertEquals(8, $hasPublicFunction);
+        $this->assertEquals(10, $isRelation);
+        $this->assertEquals(7, $askForRelatedModel);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function testGetClass()
     {
         foreach (RelationsEnum::cases() as $case) {

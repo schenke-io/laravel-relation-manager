@@ -9,12 +9,12 @@ use Mockery;
 use Mockery\MockInterface;
 use SchenkeIo\LaravelRelationManager\Define\DefineRelation;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
-use SchenkeIo\LaravelRelationManager\Define\RelationsHandler;
+use SchenkeIo\LaravelRelationManager\Define\RelationManager;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
-class RelationsHandlerTest extends TestCase
+class RelationManagerTest extends TestCase
 {
     public function testWriteTestErrors()
     {
@@ -32,8 +32,10 @@ class RelationsHandlerTest extends TestCase
         ProjectContainer::addError('1');
         ProjectContainer::addError('1');
 
-        $handler = new RelationsHandler($mockFilesystem);
-        $handler->config($mockCommand);
+        $handler = new RelationManager(
+            fileSystem: $mockFilesystem,
+            command: $mockCommand
+        );
         $handler->writeTest('', '', true);
     }
 
@@ -42,11 +44,15 @@ class RelationsHandlerTest extends TestCase
         ProjectContainer::clear();
         $mockGenerateProjectTestFile = Mockery::mock(GenerateProjectTestFile::class);
         $mockGenerateProjectTestFile->shouldReceive('writeFile')->once()->andReturn(null);
-        $handler = new RelationsHandler(new Filesystem(), $mockGenerateProjectTestFile);
+
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('info')->once();
-        $handler->config($mockCommand);
-        $handler->writeTest('', '', false);
+
+        $handler = new RelationManager(
+            generateProjectTestFile: $mockGenerateProjectTestFile,
+            command: $mockCommand
+        );
+        $handler->writeTest(false);
     }
 
     public function testWriteTestReturnError()
@@ -54,10 +60,15 @@ class RelationsHandlerTest extends TestCase
         ProjectContainer::clear();
         $mockGenerateProjectTestFile = Mockery::mock(GenerateProjectTestFile::class);
         $mockGenerateProjectTestFile->shouldReceive('writeFile')->once()->andReturn('error');
-        $handler = new RelationsHandler(new Filesystem(), $mockGenerateProjectTestFile);
+
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('error')->once();
-        $handler->config($mockCommand);
+
+        $handler = new RelationManager(
+            generateProjectTestFile: $mockGenerateProjectTestFile,
+            command: $mockCommand
+        );
+
         $handler->writeTest('', '', false);
     }
 
@@ -68,11 +79,10 @@ class RelationsHandlerTest extends TestCase
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('info')->once();
 
-        Process::fake([' --group=*' => Process::result(exitCode: 0)]);
+        Process::fake(['*' => Process::result(exitCode: 0)]);
 
-        $handler = new RelationsHandler();
-        $handler->config($mockCommand);
-        $handler->runTest('');
+        $handler = new RelationManager(command: $mockCommand);
+        $handler->runTest();
     }
 
     public function testRunTestFailure()
@@ -82,27 +92,24 @@ class RelationsHandlerTest extends TestCase
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('info')->once();
 
-        Process::fake([' --group=*' => Process::result(exitCode: 1)]);
+        Process::fake(['*' => Process::result(exitCode: 1)]);
 
-        $handler = new RelationsHandler();
-        $handler->config($mockCommand);
-        $handler->runTest('');
+        $handler = new RelationManager(command: $mockCommand);
+        $handler->runTest();
     }
 
     public function testModel()
     {
-        $handler = new RelationsHandler();
-        $handler->config(new Command());
+        $handler = new RelationManager();
         $this->assertInstanceOf(DefineRelation::class, $handler->model(''));
     }
 
     public function testShowModelTable()
     {
         $mockCommand = Mockery::mock(Command::class);
-        $mockCommand->shouldReceive('table')->once();
-        $handler = new RelationsHandler();
-        $handler->config($mockCommand);
-        $handler->showModelTable();
+        $mockCommand->shouldReceive('table')->twice();
+        $handler = new RelationManager(command: $mockCommand);
+        $handler->showTables();
     }
 
     public function testWriteMarkdownSuccess()
@@ -113,12 +120,10 @@ class RelationsHandlerTest extends TestCase
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('info')->once();
 
-        $handler = new RelationsHandler(
-            new Filesystem(),
-            new GenerateProjectTestFile(),
-            $mockGenerateMarkdownFile
+        $handler = new RelationManager(
+            generateMarkdownFile: $mockGenerateMarkdownFile,
+            command: $mockCommand
         );
-        $handler->config($mockCommand);
         $handler->writeMarkdown('');
     }
 
@@ -130,12 +135,10 @@ class RelationsHandlerTest extends TestCase
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('error')->once();
 
-        $handler = new RelationsHandler(
-            new Filesystem(),
-            new GenerateProjectTestFile(),
-            $mockGenerateMarkdownFile
+        $handler = new RelationManager(
+            generateMarkdownFile: $mockGenerateMarkdownFile,
+            command: $mockCommand
         );
-        $handler->config($mockCommand);
         $handler->writeMarkdown('');
     }
 }
