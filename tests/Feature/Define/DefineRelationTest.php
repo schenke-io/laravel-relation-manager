@@ -25,6 +25,6 @@ class DefineRelationTest extends TestCase
         {
         };
         $testCommand->buildRelations();
-        $this->assertCount(7, ProjectContainer::getRelations());
+        $this->assertCount(8, ProjectContainer::getRelations());
     }
 }

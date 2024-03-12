@@ -54,16 +54,6 @@ trait RelationTypes
         );
     }
 
-    public function belongsToMany(): DefineRelation
-    {
-        return $this->buildRelation(
-            "",
-            false,
-            RelationsEnum::belongsToMany,
-            RelationsEnum::noRelation
-        );
-    }
-
     public function morphOne(string $modelName, bool $addReverseRelation): DefineRelation
     {
         return $this->buildRelation(
@@ -81,6 +71,16 @@ trait RelationTypes
             $addReverseRelation,
             RelationsEnum::morphMany,
             RelationsEnum::morphTo
+        );
+    }
+
+    public function castEnum(string $modelName): DefineRelation
+    {
+        return $this->buildRelation(
+            $modelName,
+            false,
+            RelationsEnum::castEnum,
+            RelationsEnum::noRelation
         );
     }
 

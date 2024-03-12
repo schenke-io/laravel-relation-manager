@@ -2,6 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Define;
 
+use BackedEnum;
 use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
@@ -20,6 +21,11 @@ enum RelationsEnum
     case morphTo;
     case morphOne;
     case morphMany;
+
+    /*
+     * ENUM as integrer
+     */
+    case castEnum;
 
     /*
      * standard  speak
@@ -41,6 +47,7 @@ enum RelationsEnum
         return match ($this) {
             self::hasOne, self::hasMany,
             self::isManyToMany,
+            self::castEnum,
             self::hasOneThrough, self::hasManyThrough,
             self::morphOne, self::morphMany => true,
             default => false
@@ -74,6 +81,7 @@ enum RelationsEnum
         return match ($this) {
             self::isSingle,
             self::belongsTo,
+            self::belongsToMany,
             self::morphTo,
             self::noRelation => false,
             default => true
@@ -104,6 +112,7 @@ enum RelationsEnum
             self::morphTo => Relations\MorphTo::class,
             self::morphOne => Relations\MorphOne::class,
             self::morphMany => Relations\MorphMany::class,
+            self::castEnum => BackedEnum::class,
             default => throw new \Exception('class unknown for '.$this->name)
         };
     }
@@ -136,13 +145,14 @@ enum RelationsEnum
                 $tables[$tableName3][$tableName2] = $this;
                 break;
             case self::belongsTo:
+            case self::castEnum:
                 $tables[$tableName1][$tableName2] = $this;
                 break;
             case self::morphTo:
+            case self::isSingle:
+            case self::noRelation:
                 $tables[$tableName1][null] = $this;
                 break;
-            default:
-                echo sprintf("unknown link for %s to %s as %s\n", $tableName1, $tableName2, $this->name);
         }
     }
 

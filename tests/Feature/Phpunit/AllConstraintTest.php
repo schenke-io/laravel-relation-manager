@@ -7,7 +7,7 @@ use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
 use SchenkeIo\LaravelRelationManager\Phpunit\ClassAgeConstraint;
-use SchenkeIo\LaravelRelationManager\Phpunit\ModelConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\ModelBackedEnumConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\NoRelationshipConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipCountConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipExistsConstraint;
@@ -41,7 +41,7 @@ class AllConstraintTest extends TestCase
 
     public function testModelConstraint()
     {
-        $modelConstraint = new ModelConstraint();
+        $modelConstraint = new ModelBackedEnumConstraint();
         $this->assertThat(Country::class, $modelConstraint);
         $this->assertThat('', $this->logicalNot($modelConstraint));
         $this->assertIsString($modelConstraint->toString());

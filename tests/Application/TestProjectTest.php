@@ -43,7 +43,7 @@ class TestProjectTest extends TestCase
      */
     public function testModelCapitalHas_2StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\Capital");
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Capital");
         $this->assertModelBelongsTo('Workbench\App\Models\Capital', 'Workbench\App\Models\Country');
         $this->assertModelMorphOne('Workbench\App\Models\Capital', 'Workbench\App\Models\Location');
         $this->assertModelRelationCount('Workbench\App\Models\Capital', 2);
@@ -53,14 +53,15 @@ class TestProjectTest extends TestCase
      * Model Workbench\App\Models\City
      * @group GenerateProjectTestFile
      */
-    public function testModelCityHas_4StrictRelationshipsAndWorks(): void
+    public function testModelCityHas_5StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\City");
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\City");
         $this->assertModelIsManyToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
         $this->assertModelMorphOne('Workbench\App\Models\City', 'Workbench\App\Models\Location');
         $this->assertModelHasOneThrough('Workbench\App\Models\City', 'Workbench\App\Models\Country');
+        $this->assertModelCastEnum('Workbench\App\Models\City', 'Workbench\App\Models\Size');
         $this->assertModelBelongsTo('Workbench\App\Models\City', 'Workbench\App\Models\Region');
-        $this->assertModelRelationCount('Workbench\App\Models\City', 4);
+        $this->assertModelRelationCount('Workbench\App\Models\City', 5);
     }
 
     /**
@@ -69,7 +70,7 @@ class TestProjectTest extends TestCase
      */
     public function testModelCountryHas_3StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\Country");
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Country");
         $this->assertModelHasOne('Workbench\App\Models\Country', 'Workbench\App\Models\Capital');
         $this->assertModelHasMany('Workbench\App\Models\Country', 'Workbench\App\Models\Region');
         $this->assertModelHasManyThrough('Workbench\App\Models\Country', 'Workbench\App\Models\City');
@@ -82,7 +83,7 @@ class TestProjectTest extends TestCase
      */
     public function testModelHighwayHas_2StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\Highway");
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Highway");
         $this->assertModelBelongsToMany('Workbench\App\Models\Highway', 'Workbench\App\Models\City');
         $this->assertModelMorphMany('Workbench\App\Models\Highway', 'Workbench\App\Models\Location');
         $this->assertModelRelationCount('Workbench\App\Models\Highway', 2);
@@ -94,8 +95,8 @@ class TestProjectTest extends TestCase
      */
     public function testModelLocationHas_1StrictRelationshipAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\Location");
-        $this->assertModelMorphTo('Workbench\App\Models\Location', '');
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Location");
+        $this->assertModelMorphTo('Workbench\App\Models\Location');
         $this->assertModelRelationCount('Workbench\App\Models\Location', 1);
     }
 
@@ -105,7 +106,7 @@ class TestProjectTest extends TestCase
      */
     public function testModelRegionHas_3StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\Region");
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Region");
         $this->assertModelBelongsTo('Workbench\App\Models\Region', 'Workbench\App\Models\Country');
         $this->assertModelHasMany('Workbench\App\Models\Region', 'Workbench\App\Models\City');
         $this->assertModelHasOneThrough('Workbench\App\Models\Region', 'Workbench\App\Models\Capital');
@@ -118,7 +119,16 @@ class TestProjectTest extends TestCase
      */
     public function testModelSingleHas_0StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelWorks("Workbench\App\Models\Single");
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Single");
         $this->assertModelRelationCount('Workbench\App\Models\Single', 0);
+    }
+
+    /**
+     * Enum Workbench\App\Models\Size
+     * @group GenerateProjectTestFile
+     */
+    public function testBackedEnumSizeWorks(): void
+    {
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\Size");
     }
 }

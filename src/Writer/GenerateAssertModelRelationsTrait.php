@@ -42,10 +42,10 @@ class GenerateAssertModelRelationsTrait
         /*
          * does the model exists and works ?
          */
-        $method = $trait->addMethod('assertModelWorks');
+        $method = $trait->addMethod('assertModelBackedEnumWorks');
         $method->addParameter('model')->setType('string');
         $method->setReturnType('void');
-        $method->addBody('\PHPUnit\Framework\assertThat($model, new ModelConstraint());');
+        $method->addBody('\PHPUnit\Framework\assertThat($model, new ModelBackedEnumConstraint());');
         /*
          * check if first class is older than second
          */
@@ -84,6 +84,14 @@ class GenerateAssertModelRelationsTrait
                 $method->addBody('    new ModelRelationData($modelFrom, $modelFrom, RelationsEnum::'.$case->name.'),');
                 $method->addBody('    new RelationshipExistsConstraint()');
                 $method->addBody(');');
+                /*            } elseif ($case == RelationsEnum::castEnum) {
+                                $method = $trait->addMethod($case->getAssertName());
+                                $method->addParameter('modelFrom')->setType('string');
+                                $method->setReturnType('void');
+                                $method->addBody('\PHPUnit\Framework\assertThat(');
+                                $method->addBody('    new ModelRelationData($modelFrom, $modelFrom, RelationsEnum::'.$case->name.'),');
+                                $method->addBody('    new RelationshipExistsConstraint()');
+                                $method->addBody(');');*/
 
             } elseif ($case->isRelation()) {
                 $method = $trait->addMethod($case->getAssertName());

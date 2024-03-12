@@ -12,6 +12,10 @@ class City extends Model
 {
     public $timestamps = false;
 
+    protected $casts = [
+        'type' => Size::class,
+    ];
+
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);

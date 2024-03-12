@@ -17,7 +17,7 @@ class AssertModelRelationshipsTest extends TestCase
 
     public function testModelWorks()
     {
-        $this->assertModelWorks(Country::class);
+        $this->assertModelBackedEnumWorks(Country::class);
     }
 
     public function testFirstClassIsOlderThanSecondClass()

@@ -19,9 +19,9 @@ use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
 
 trait AssertModelRelations
 {
-    public function assertModelWorks(string $model): void
+    public function assertModelBackedEnumWorks(string $model): void
     {
-        \PHPUnit\Framework\assertThat($model, new ModelConstraint());
+        \PHPUnit\Framework\assertThat($model, new ModelBackedEnumConstraint());
     }
 
     public function assertFirstClassIsOlderThanSecondClass(string $class1, string $class2): void
@@ -113,6 +113,14 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, RelationsEnum::morphMany),
+            new RelationshipExistsConstraint()
+        );
+    }
+
+    public function assertModelCastEnum(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new ModelRelationData($modelFrom, $modelTo, RelationsEnum::castEnum),
             new RelationshipExistsConstraint()
         );
     }

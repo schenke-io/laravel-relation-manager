@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
+use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 
 // https://github.com/AntonioPrimera/phpunit-custom-assertions/blob/master/src/Constraints/FoldersExistConstraint.php
 
@@ -11,6 +12,8 @@ class RelationshipCountConstraint extends BaseConstraint
 {
     /**
      * @param  ModelCountData  $other
+     *
+     * @throws LaravelNotLoadedException
      */
     protected function matches(mixed $other): bool
     {

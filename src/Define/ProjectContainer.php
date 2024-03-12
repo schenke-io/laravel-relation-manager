@@ -35,7 +35,7 @@ class ProjectContainer
 
     public static function addModel(string $modelName): void
     {
-        $className = self::getModelClass($modelName);
+        $className = self::getModelEnumClass($modelName);
         if ($className != '') {
             self::$relations[$className] = self::$relations[$className] ?? [];
         } else {
@@ -46,7 +46,7 @@ class ProjectContainer
     public static function addRelation(string $modelFrom, string $modelTo, RelationsEnum $relation): void
     {
         $classFrom = self::getModelClass($modelFrom);
-        $classTo = self::getModelClass($modelTo);
+        $classTo = self::getModelEnumClass($modelTo);
         if ($relation == RelationsEnum::morphTo) {
             $classTo = '';
         }
@@ -93,6 +93,16 @@ class ProjectContainer
         return $class->className;
     }
 
+    public static function getModelEnumClass(string $class): string
+    {
+        $class = ClassData::newFromName(config(self::CONFIG_KEY_MODEL_NAME_SPACE), $class);
+        if ($class->isBackedEnum || $class->isModel) {
+            return $class->className;
+        }
+
+        return '';
+    }
+
     public static function addError(string $msg): void
     {
         self::$errors[] = $msg;
@@ -110,7 +120,12 @@ class ProjectContainer
          * load all tables of each model
          */
         foreach (self::$relations as $primModel => $data) {
-            $tables[Str::snake(Str::plural(class_basename($primModel)))] = [];
+            $primClass = ClassData::take($primModel);
+            $tableName = Str::snake(Str::plural(class_basename($primModel)));
+            if ($primClass->isBackedEnum) {
+                continue;
+            }
+            $tables[$tableName] = [];
         }
         foreach (self::getDatabaseData() as $table1 => $table1Data) {
             ksort($table1Data);
@@ -144,8 +159,9 @@ class ProjectContainer
         $return = [];
         foreach (self::$relations as $primModel => $modelSet) {
             ksort($modelSet);
+            $primClass = ClassData::take($primModel);
             $return[] = [
-                class_basename($primModel),
+                class_basename($primClass->className).($primClass->isBackedEnum ? ' (Enum)' : ''),
                 implode(', ', array_map(fn ($x) => class_basename($x), array_keys($modelSet))),
             ];
         }
@@ -178,8 +194,10 @@ HTML;
         $tables = self::getDatabaseData();
         foreach ($tables as $table1 => $data) {
             foreach ($data as $table2 => $isSolid) {
-                $arrow = $isSolid ? '====>' : '---->';
-                $return .= "$table1 $arrow $table2\n";
+                if ($table2) {
+                    $arrow = $isSolid ? '====>' : '---->';
+                    $return .= "$table1 $arrow $table2\n";
+                }
             }
         }
 

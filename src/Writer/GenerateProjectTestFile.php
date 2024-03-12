@@ -70,42 +70,52 @@ class GenerateProjectTestFile
          * loop over models
          */
         foreach ($relations as $baseModel => $relatedModels) {
-            $relCount = count($relatedModels);
-            $method = $class->addMethod(
-                'testModel'.
-                class_basename($baseModel).
-                "Has_$relCount".
-                ($testStrict ? 'Strict' : 'Tested').
-                'Relationship'.
-                ($relCount === 1 ? '' : 's').
-                'AndWorks'
-            );
-            $method->addComment('Model '.$baseModel);
-            $method->addComment('@group '.self::testGroup());
-            $method->setReturnType('void');
-            $method->addBody('$this->assertModelWorks("'.$baseModel.'");');
-            if (is_array($relatedModels)) {
-                $modelCount = 0;
-                /**
-                 * @var string $model2
-                 * @var RelationsEnum $relation
-                 */
-                foreach ($relatedModels as $model2 => $relation) {
-                    if ($relation == RelationsEnum::noRelation) {
-                        continue;
-                    }
-                    $assertName = $relation->getAssertName();
-                    $method->addBody("\$this->$assertName('$baseModel', '$model2');");
-                    $modelCount++;
-                }
-                if ($testStrict) {
-                    $method->addBody("\$this->assertModelRelationCount('$baseModel', $modelCount);");
-                }
+            $baseClass = ClassData::take($baseModel);
+            if ($baseClass->isBackedEnum) {
+                $method = $class->addMethod(
+                    'testBackedEnum'.
+                    class_basename($baseModel).'Works');
+                $method->addComment('Enum '.$baseModel);
+                $method->addComment('@group '.self::testGroup());
+                $method->setReturnType('void');
+                $method->addBody('$this->assertModelBackedEnumWorks("'.$baseModel.'");');
             } else {
-                /*
-                 * single
-                 */
-                $method->addBody("\$this->assertIsSingle('$baseModel');");
+
+                $relCount = count($relatedModels);
+                $method = $class->addMethod(
+                    'testModel'.
+                    class_basename($baseModel).
+                    "Has_$relCount".
+                    ($testStrict ? 'Strict' : 'Tested').
+                    'Relationship'.
+                    ($relCount === 1 ? '' : 's').
+                    'AndWorks'
+                );
+                $method->addComment('Model '.$baseModel);
+                $method->addComment('@group '.self::testGroup());
+                $method->setReturnType('void');
+                $method->addBody('$this->assertModelBackedEnumWorks("'.$baseModel.'");');
+                if (is_array($relatedModels)) {
+                    /*
+                     * walk all relations
+                     */
+                    $modelCount = 0;
+                    /**
+                     * @var string $model2
+                     * @var RelationsEnum $relation
+                     */
+                    foreach ($relatedModels as $model2 => $relation) {
+                        $assertName = $relation->getAssertName();
+                        $method->addBody("\$this->$assertName('$baseModel'".
+                            ($model2 ? ", '$model2'" : '').
+                            ');'
+                        );
+                        $modelCount++;
+                    }
+                    if ($testStrict) {
+                        $method->addBody("\$this->assertModelRelationCount('$baseModel', $modelCount);");
+                    }
+                }
             }
         }
         $fileName = ClassData::take($testProjectClass)->fileName;

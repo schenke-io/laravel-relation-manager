@@ -66,6 +66,7 @@ class ClassDataTest extends TestCase
     }
 
     /**
+     * @throws \ReflectionException
      * @throws LaravelNotLoadedException
      */
     public function testGetModelRelations()

@@ -24,11 +24,13 @@ Install the config file of the package:
 php artisan releation-manager:install
 ```
 
-
 ## Usage
 
-The package works central with a console command 
-which when called writes the files and run the test.
+This package's core functionality is provided by two components:
+1) **Configuration File**: The `config/relation-manager.php` file allows you to define directories, files and namespaces of your project.
+2) **Custom Relation Manager Command**: This command, which extends the `RelationManagerCommand` class, facilitates the configuration process.
+
+
 
 ```php
 # app/Console/Commands/RelationWriteCommand

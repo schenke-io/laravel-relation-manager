@@ -10,11 +10,9 @@ use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
+use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\Country;
-use Workbench\App\Models\Location;
-use Workbench\App\Models\Region;
-use Workbench\App\Models\Single;
 
 class GenerateProjectTestFileTest extends TestCase
 {
@@ -26,10 +24,7 @@ class GenerateProjectTestFileTest extends TestCase
     public function testWriteFileOk()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
-        ProjectContainer::addRelation(Country::class, Region::class, RelationsEnum::noRelation);
-        ProjectContainer::addRelation(Country::class, Location::class, RelationsEnum::morphMany);
-        ProjectContainer::addRelation(Single::class, '', RelationsEnum::isSingle);
+        (new RunTestProjectManagerCommand())->buildRelations();
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once();
