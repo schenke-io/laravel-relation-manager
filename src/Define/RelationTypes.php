@@ -74,13 +74,13 @@ trait RelationTypes
         );
     }
 
-    public function castEnum(string $modelName): DefineRelation
+    public function castEnum(string $modelName, bool $addReverseRelation): DefineRelation
     {
         return $this->buildRelation(
             $modelName,
-            false,
+            $addReverseRelation,
             RelationsEnum::castEnum,
-            RelationsEnum::noRelation
+            RelationsEnum::castEnumReverse
         );
     }
 

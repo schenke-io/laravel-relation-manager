@@ -13,7 +13,7 @@ use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Highway;
 use Workbench\App\Models\Location;
-use Workbench\App\Models\Region;
+use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Single;
 
 class ClassDataTest extends TestCase
@@ -72,7 +72,7 @@ class ClassDataTest extends TestCase
     public function testGetModelRelations()
     {
         $this->assertEquals(
-            [Capital::class, Region::class, City::class],
+            [Capital::class, GeoRegion::class, City::class],
             array_keys(
                 ClassData::take(Country::class)->getModelRelations()
             )

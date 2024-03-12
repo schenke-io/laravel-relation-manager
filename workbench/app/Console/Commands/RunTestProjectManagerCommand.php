@@ -6,7 +6,7 @@ use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Highway;
 use Workbench\App\Models\Location;
-use Workbench\App\Models\Region;
+use Workbench\App\Models\GeoRegion;
 
 /**
  * this command works without Laravel being loaded
@@ -32,7 +32,6 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
 
     public function buildRelations(): void
     {
-        $this->relationManager->model('Capital');
 
         $this->relationManager->model('City')
             ->isManyToMany('Highway', true)
@@ -42,12 +41,12 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
 
         $this->relationManager->model(Country::class)
             ->hasOne('Capital', true)
-            ->hasMany('Region', true)
+            ->hasMany(GeoRegion::class, true)
             ->hasManyThrough('City');
 
         $this->relationManager->model('Highway');
 
-        $this->relationManager->model(Region::class)
+        $this->relationManager->model(GeoRegion::class)
             ->hasMany('City', true)
             ->hasOneThrough('Capital');
 
@@ -56,6 +55,7 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
 
         $this->relationManager->model('Single');
 
-        $this->relationManager->model('Capital')->morphOne('Location', true);
+        $this->relationManager->model('Capital')
+            ->morphOne('Location', true);
     }
 }

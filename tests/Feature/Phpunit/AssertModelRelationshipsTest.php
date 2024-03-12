@@ -8,7 +8,7 @@ use Workbench\App\Models\Capital;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Highway;
-use Workbench\App\Models\Region;
+use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Single;
 
 class AssertModelRelationshipsTest extends TestCase
@@ -37,12 +37,12 @@ class AssertModelRelationshipsTest extends TestCase
 
     public function testModelHasMany()
     {
-        $this->assertModelHasMany(Country::class, Region::class);
+        $this->assertModelHasMany(Country::class, GeoRegion::class);
     }
 
     public function testModelHasOneThrough()
     {
-        $this->assertModelHasOneThrough(Region::class, Capital::class);
+        $this->assertModelHasOneThrough(GeoRegion::class, Capital::class);
     }
 
     public function testModelHasManyThrough()
@@ -52,7 +52,7 @@ class AssertModelRelationshipsTest extends TestCase
 
     public function testModelBelongsTo()
     {
-        $this->assertModelBelongsTo(Region::class, Country::class);
+        $this->assertModelBelongsTo(GeoRegion::class, Country::class);
     }
 
     public function testModelBelongsToMany()

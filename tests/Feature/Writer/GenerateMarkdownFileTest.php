@@ -13,7 +13,7 @@ use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Location;
-use Workbench\App\Models\Region;
+use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Single;
 
 class GenerateMarkdownFileTest extends TestCase
@@ -22,7 +22,7 @@ class GenerateMarkdownFileTest extends TestCase
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
-        ProjectContainer::addRelation(Country::class, Region::class, RelationsEnum::noRelation);
+        ProjectContainer::addRelation(Country::class, GeoRegion::class, RelationsEnum::noRelation);
         ProjectContainer::addRelation(Country::class, Location::class, RelationsEnum::morphMany);
         ProjectContainer::addRelation(Single::class, '', RelationsEnum::isSingle);
 

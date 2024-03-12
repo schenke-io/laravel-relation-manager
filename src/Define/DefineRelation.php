@@ -25,6 +25,9 @@ class DefineRelation
         if ($addReverseRelation) {
             ProjectContainer::addRelation($modelName, $this->primaryModel, $reverse);
         }
+        if($forward == RelationsEnum::castEnum){
+            ProjectContainer::addRelation($modelName, $this->primaryModel, RelationsEnum::castEnumReverse);
+        }
 
         return $this;
     }

@@ -26,6 +26,7 @@ enum RelationsEnum
      * ENUM as integrer
      */
     case castEnum;
+    case castEnumReverse;
 
     /*
      * standard  speak
@@ -83,6 +84,7 @@ enum RelationsEnum
             self::belongsTo,
             self::belongsToMany,
             self::morphTo,
+                self::castEnumReverse,
             self::noRelation => false,
             default => true
         };
@@ -151,6 +153,7 @@ enum RelationsEnum
             case self::morphTo:
             case self::isSingle:
             case self::noRelation:
+            case self::castEnumReverse:
                 $tables[$tableName1][null] = $this;
                 break;
         }

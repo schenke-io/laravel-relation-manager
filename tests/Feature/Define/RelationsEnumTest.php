@@ -47,7 +47,7 @@ class RelationsEnumTest extends testCase
         $this->assertEquals(5, $hasInverseNormal);
         $this->assertEquals(0, $hasInversePrevent);
         $this->assertEquals(8, $hasPublicFunction);
-        $this->assertEquals(11, $isRelation);
+        $this->assertEquals(12, $isRelation);
         $this->assertEquals(8, $askForRelatedModel);
     }
 
@@ -65,7 +65,7 @@ class RelationsEnumTest extends testCase
             }
             if ($case == RelationsEnum::castEnum) {
                 $this->assertStringContainsString('BackedEnum', $case->getClass());
-            } else {
+            } elseif($case != RelationsEnum::castEnumReverse) {
                 $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $case->getClass());
             }
         }
