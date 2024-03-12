@@ -12,8 +12,8 @@ use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\Country;
-use Workbench\App\Models\Location;
 use Workbench\App\Models\GeoRegion;
+use Workbench\App\Models\Location;
 use Workbench\App\Models\Single;
 
 class GenerateMarkdownFileTest extends TestCase

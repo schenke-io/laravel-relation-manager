@@ -4,9 +4,9 @@ namespace Workbench\App\Console\Commands;
 
 use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
 use Workbench\App\Models\Country;
+use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Highway;
 use Workbench\App\Models\Location;
-use Workbench\App\Models\GeoRegion;
 
 /**
  * this command works without Laravel being loaded

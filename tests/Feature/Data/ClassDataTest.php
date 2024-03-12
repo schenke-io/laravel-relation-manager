@@ -11,9 +11,9 @@ use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
+use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Highway;
 use Workbench\App\Models\Location;
-use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Single;
 
 class ClassDataTest extends TestCase

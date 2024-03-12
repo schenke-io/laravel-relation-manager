@@ -65,7 +65,7 @@ class RelationsEnumTest extends testCase
             }
             if ($case == RelationsEnum::castEnum) {
                 $this->assertStringContainsString('BackedEnum', $case->getClass());
-            } elseif($case != RelationsEnum::castEnumReverse) {
+            } elseif ($case != RelationsEnum::castEnumReverse) {
                 $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $case->getClass());
             }
         }

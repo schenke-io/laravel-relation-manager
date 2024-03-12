@@ -84,7 +84,7 @@ enum RelationsEnum
             self::belongsTo,
             self::belongsToMany,
             self::morphTo,
-                self::castEnumReverse,
+            self::castEnumReverse,
             self::noRelation => false,
             default => true
         };

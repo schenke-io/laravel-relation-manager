@@ -197,7 +197,7 @@ HTML;
             /** @var RelationsEnum $relation */
             foreach ($data as $table2 => $relation) {
                 if ($table2) {
-                    if($relation == RelationsEnum::castEnum) {
+                    if ($relation == RelationsEnum::castEnum) {
                         $enum = ucfirst(Str::singular($table2));
                         $return .= <<<txt
 $table1 -.-> $enum
@@ -205,9 +205,9 @@ $enum([$enum])
     style $enum fill:silver;
 
 txt;
-                    }elseif($relation->isMorph()){
+                    } elseif ($relation->isMorph()) {
                         $return .= "$table1 --> $table2\n";
-                    }else{
+                    } else {
                         $return .= "$table1 ==> $table2\n";
                     }
                 }

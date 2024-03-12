@@ -60,7 +60,7 @@ class TestProjectTest extends TestCase
         $this->assertModelMorphOne('Workbench\App\Models\City', 'Workbench\App\Models\Location');
         $this->assertModelHasOneThrough('Workbench\App\Models\City', 'Workbench\App\Models\Country');
         $this->assertModelCastEnum('Workbench\App\Models\City', 'Workbench\App\Models\Size');
-        $this->assertModelBelongsTo('Workbench\App\Models\City', 'Workbench\App\Models\Region');
+        $this->assertModelBelongsTo('Workbench\App\Models\City', 'Workbench\App\Models\GeoRegion');
         $this->assertModelRelationCount('Workbench\App\Models\City', 5);
     }
 
@@ -72,9 +72,22 @@ class TestProjectTest extends TestCase
     {
         $this->assertModelBackedEnumWorks("Workbench\App\Models\Country");
         $this->assertModelHasOne('Workbench\App\Models\Country', 'Workbench\App\Models\Capital');
-        $this->assertModelHasMany('Workbench\App\Models\Country', 'Workbench\App\Models\Region');
+        $this->assertModelHasMany('Workbench\App\Models\Country', 'Workbench\App\Models\GeoRegion');
         $this->assertModelHasManyThrough('Workbench\App\Models\Country', 'Workbench\App\Models\City');
         $this->assertModelRelationCount('Workbench\App\Models\Country', 3);
+    }
+
+    /**
+     * Model Workbench\App\Models\GeoRegion
+     * @group GenerateProjectTestFile
+     */
+    public function testModelGeoRegionHas_3StrictRelationshipsAndWorks(): void
+    {
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\GeoRegion");
+        $this->assertModelBelongsTo('Workbench\App\Models\GeoRegion', 'Workbench\App\Models\Country');
+        $this->assertModelHasMany('Workbench\App\Models\GeoRegion', 'Workbench\App\Models\City');
+        $this->assertModelHasOneThrough('Workbench\App\Models\GeoRegion', 'Workbench\App\Models\Capital');
+        $this->assertModelRelationCount('Workbench\App\Models\GeoRegion', 3);
     }
 
     /**
@@ -98,19 +111,6 @@ class TestProjectTest extends TestCase
         $this->assertModelBackedEnumWorks("Workbench\App\Models\Location");
         $this->assertModelMorphTo('Workbench\App\Models\Location');
         $this->assertModelRelationCount('Workbench\App\Models\Location', 1);
-    }
-
-    /**
-     * Model Workbench\App\Models\Region
-     * @group GenerateProjectTestFile
-     */
-    public function testModelRegionHas_3StrictRelationshipsAndWorks(): void
-    {
-        $this->assertModelBackedEnumWorks("Workbench\App\Models\Region");
-        $this->assertModelBelongsTo('Workbench\App\Models\Region', 'Workbench\App\Models\Country');
-        $this->assertModelHasMany('Workbench\App\Models\Region', 'Workbench\App\Models\City');
-        $this->assertModelHasOneThrough('Workbench\App\Models\Region', 'Workbench\App\Models\Capital');
-        $this->assertModelRelationCount('Workbench\App\Models\Region', 3);
     }
 
     /**
