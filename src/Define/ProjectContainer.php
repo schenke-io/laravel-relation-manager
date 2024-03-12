@@ -181,7 +181,7 @@ class ProjectContainer
 
         return <<<HTML
 <table>
-<tr><th>model</th><th>... has relations to</th></tr>
+<tr><th>model</th><th>related models</th></tr>
 $rows
 </table>
 HTML;
@@ -192,11 +192,24 @@ HTML;
     {
         $return = '';
         $tables = self::getDatabaseData();
+        $lines = '';
         foreach ($tables as $table1 => $data) {
-            foreach ($data as $table2 => $isSolid) {
+            /** @var RelationsEnum $relation */
+            foreach ($data as $table2 => $relation) {
                 if ($table2) {
-                    $arrow = $isSolid ? '====>' : '---->';
-                    $return .= "$table1 $arrow $table2\n";
+                    if ($relation == RelationsEnum::castEnum) {
+                        $enum = ucfirst(Str::singular($table2));
+                        $return .= <<<txt
+$table1 -.-> $enum
+$enum([$enum])
+    style $enum fill:silver;
+
+txt;
+                    } elseif ($relation->isMorph()) {
+                        $return .= "$table1 --> $table2\n";
+                    } else {
+                        $return .= "$table1 ==> $table2\n";
+                    }
                 }
             }
         }
