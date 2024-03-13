@@ -221,7 +221,7 @@ HTML;
             foreach ($data as $table2 => $relation) {
                 if ($table2) {
                     if ($relation == RelationsEnum::castEnum) {
-                        $enum = ucfirst(Str::singular($table2));
+                        $enum = ucfirst(Str::camel(Str::singular($table2)));
                         $return .= <<<txt
 $table1 -.-> $enum
 $enum([$enum])

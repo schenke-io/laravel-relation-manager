@@ -2,7 +2,7 @@
 
 namespace Workbench\App\Models;
 
-enum Size: int
+enum AreaSize: int
 {
     case Large = 1;
     case Medium = 2;

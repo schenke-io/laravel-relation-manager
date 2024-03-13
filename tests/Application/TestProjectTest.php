@@ -38,6 +38,15 @@ class TestProjectTest extends TestCase
     }
 
     /**
+     * Enum Workbench\App\Models\AreaSize
+     * @group GenerateProjectTestFile
+     */
+    public function testBackedEnumAreaSizeWorks(): void
+    {
+        $this->assertModelBackedEnumWorks("Workbench\App\Models\AreaSize");
+    }
+
+    /**
      * Model Workbench\App\Models\Capital
      * @group GenerateProjectTestFile
      */
@@ -59,7 +68,7 @@ class TestProjectTest extends TestCase
         $this->assertModelIsManyToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
         $this->assertModelMorphOne('Workbench\App\Models\City', 'Workbench\App\Models\Location');
         $this->assertModelHasOneThrough('Workbench\App\Models\City', 'Workbench\App\Models\Country');
-        $this->assertModelCastEnum('Workbench\App\Models\City', 'Workbench\App\Models\Size');
+        $this->assertModelCastEnum('Workbench\App\Models\City', 'Workbench\App\Models\AreaSize');
         $this->assertModelBelongsTo('Workbench\App\Models\City', 'Workbench\App\Models\GeoRegion');
         $this->assertModelRelationCount('Workbench\App\Models\City', 5);
     }
@@ -121,14 +130,5 @@ class TestProjectTest extends TestCase
     {
         $this->assertModelBackedEnumWorks("Workbench\App\Models\Single");
         $this->assertModelRelationCount('Workbench\App\Models\Single', 0);
-    }
-
-    /**
-     * Enum Workbench\App\Models\Size
-     * @group GenerateProjectTestFile
-     */
-    public function testBackedEnumSizeWorks(): void
-    {
-        $this->assertModelBackedEnumWorks("Workbench\App\Models\Size");
     }
 }

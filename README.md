@@ -21,7 +21,7 @@ composer require schenke-io/laravel-relation-manager
 Install the config file of the package:
 
 ```bash
-php artisan releation-manager:install
+php artisan relation-manager:install
 ```
 
 ## Usage

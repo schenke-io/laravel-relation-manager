@@ -13,7 +13,7 @@ class City extends Model
     public $timestamps = false;
 
     protected $casts = [
-        'type' => Size::class,
+        'type' => AreaSize::class,
     ];
 
     public function region(): BelongsTo
