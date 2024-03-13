@@ -18,7 +18,7 @@ class ProjectContainer
     public const CONFIG_KEY_TEST_COMMAND = 'relation-manager.testCommand';
 
     /**
-     * @var array <string,mixed>
+     * @var array <string,array <string,RelationsEnum>>
      */
     private static array $relations = [];
 
@@ -26,11 +26,14 @@ class ProjectContainer
 
     private static array $unknownModels = [];
 
+    private static array $morphToRelations = [];
+
     public static function clear(): void
     {
         self::$relations = [];
         self::$errors = [];
         self::$unknownModels = [];
+        self::$morphToRelations = [];
     }
 
     public static function addModel(string $modelName): void
@@ -48,6 +51,11 @@ class ProjectContainer
         $classFrom = self::getModelEnumClass($modelFrom);
         $classTo = self::getModelEnumClass($modelTo);
         if ($relation == RelationsEnum::morphTo) {
+            /*
+             * morphTo is one method covering all morphes
+             * we collect these separately and have this method be related to no model
+             */
+            self::$morphToRelations[$classFrom][] = class_basename($classTo);
             $classTo = '';
         }
         if ($classFrom != '') {
@@ -160,13 +168,28 @@ class ProjectContainer
         foreach (self::$relations as $primModel => $modelSet) {
             ksort($modelSet);
             $primClass = ClassData::take($primModel);
+            $directRelation = self::$morphToRelations[$primModel] ?? [];
+            sort($directRelation);
+            $indirectRelation = [];
+            /**
+             * @var RelationsEnum $relation
+             */
+            foreach ($modelSet as $secModel => $relation) {
+                if ($relation->isDirectRelation()) {
+                    $directRelation[] = class_basename($secModel);
+                } else {
+                    $indirectRelation[] = class_basename($secModel);
+                }
+            }
+
             $return[] = [
                 class_basename($primClass->className).($primClass->isBackedEnum ? ' (Enum)' : ''),
-                implode(', ', array_map(fn ($x) => class_basename($x), array_keys($modelSet))),
+                implode(', ', $directRelation),
+                implode(', ', $indirectRelation),
             ];
         }
         foreach (self::$unknownModels as $model) {
-            $return[] = ["$model (not defined)", ''];
+            $return[] = ["$model (not defined)", '', ''];
         }
 
         return $return;
@@ -175,13 +198,13 @@ class ProjectContainer
     public static function getMarkdownRelationTable(): string
     {
         $rows = '';
-        foreach (self::getRelationTable() as [$primModel, $relatedModels]) {
-            $rows .= "<tr><td>$primModel</td><td>$relatedModels</td></tr>\n";
+        foreach (self::getRelationTable() as $columns) {
+            $rows .= '<tr><td>'.implode('</td><td>', $columns)."</td></tr>\n";
         }
 
         return <<<HTML
 <table>
-<tr><th>model</th><th>related models</th></tr>
+<tr><th>model</th><th>direct related</th><th>indirect related</th></tr>
 $rows
 </table>
 HTML;

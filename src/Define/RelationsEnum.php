@@ -99,6 +99,17 @@ enum RelationsEnum
 
     }
 
+    public function isDirectRelation(): bool
+    {
+        return match ($this) {
+            self::hasOne, self::hasMany,
+            self::belongsTo,
+            self::morphOne, self::morphMany,
+            self::castEnum, self::castEnumReverse => true,
+            default => false
+        };
+    }
+
     /**
      * @throws \Exception
      */
