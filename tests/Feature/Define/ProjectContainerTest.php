@@ -5,7 +5,9 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Define;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use Workbench\App\Models\AreaSize;
 use Workbench\App\Models\Capital;
+use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Location;
 
@@ -97,6 +99,18 @@ class ProjectContainerTest extends TestCase
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
         ProjectContainer::addRelation(Capital::class, Location::class, RelationsEnum::morphOne);
-        $this->assertCount(3, ProjectContainer::getDatabaseTable());
+        ProjectContainer::addRelation(City::class, AreaSize::class, RelationsEnum::castEnum);
+        ProjectContainer::addRelation(AreaSize::class, City::class, RelationsEnum::castEnumReverse);
+        $this->assertCount(4, ProjectContainer::getDatabaseTable());
+    }
+
+    public function testGetMermaidCode()
+    {
+        ProjectContainer::clear();
+        ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
+        ProjectContainer::addRelation(Capital::class, Location::class, RelationsEnum::morphOne);
+        ProjectContainer::addRelation(City::class, AreaSize::class, RelationsEnum::castEnum);
+        ProjectContainer::addRelation(AreaSize::class, City::class, RelationsEnum::castEnumReverse);
+        $this->assertIsString(ProjectContainer::getMermaidCode());
     }
 }

@@ -126,6 +126,7 @@ enum RelationsEnum
             self::morphOne => Relations\MorphOne::class,
             self::morphMany => Relations\MorphMany::class,
             self::castEnum => BackedEnum::class,
+            self::castEnumReverse => '',
             default => throw new \Exception('class unknown for '.$this->name)
         };
     }

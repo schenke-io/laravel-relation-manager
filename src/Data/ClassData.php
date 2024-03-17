@@ -173,11 +173,13 @@ class ClassData extends Data
         /*
          * find enum casts
          */
-        $property = $this->reflection->getProperty('casts');
-        $casts = $property->getValue(new $this->class);
-        foreach ($casts as $name => $castClass) {
-            if (self::isBackedEnum($castClass)) {
-                $return[$castClass] = 'BackedEnum';
+        if ($this->isModel) {
+            $property = $this->reflection->getProperty('casts');
+            $casts = $property->getValue(new $this->class);
+            foreach ($casts as $name => $castClass) {
+                if (self::isBackedEnum($castClass)) {
+                    $return[$castClass] = 'BackedEnum';
+                }
             }
         }
 

@@ -20,7 +20,8 @@ class GenerateMarkdownFile
         }
 
         $mermaid = ProjectContainer::getMermaidCode();
-        $table = ProjectContainer::getMarkdownRelationTable();
+        $tableRelations = ProjectContainer::getMarkdownRelationTable();
+        $tableDatabase = ProjectContainer::getMarkdownDatabaseTable();
         $commandClass = get_class($command);
         $signature = $command->getName();
 
@@ -34,13 +35,18 @@ do not manually edit this file as it will be overwritten
 
 ## Model relations
 
-$table
+$tableRelations
 
 ## Table relations
 ```mermaid
 flowchart RL
 $mermaid
 ```
+
+## Database
+
+$tableDatabase
+
 markdown;
         try {
             $this->fileSystem->put($markdownFile, $markdown);

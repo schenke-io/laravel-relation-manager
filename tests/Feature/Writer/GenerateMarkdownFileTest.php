@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Writer;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
@@ -46,5 +47,20 @@ class GenerateMarkdownFileTest extends TestCase
         $return = $generator->writeFile(new Command(), true);
 
         $this->assertIsString($return);
+    }
+
+    public function testMarkdownFileNotDefined()
+    {
+        ProjectContainer::clear();
+        Config::set(ProjectContainer::CONFIG_KEY_MARKDOWN_FILE, '');
+        ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
+
+        $mockFilesystem = Mockery::mock(Filesystem::class);
+
+        $generator = new GenerateMarkdownFile($mockFilesystem);
+        $return = $generator->writeFile(new Command(), true);
+
+        $this->assertIsString($return);
+
     }
 }

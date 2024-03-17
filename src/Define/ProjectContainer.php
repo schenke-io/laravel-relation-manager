@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Writer\GetTable;
 
 class ProjectContainer
 {
@@ -195,20 +196,16 @@ class ProjectContainer
         return $return;
     }
 
+    public static function getMarkdownDatabaseTable(): string
+    {
+        return GetTable::header(['model', 'direct related', 'indirect related'])
+            ->getHtml(self::getDatabaseTable());
+    }
+
     public static function getMarkdownRelationTable(): string
     {
-        $rows = '';
-        foreach (self::getRelationTable() as $columns) {
-            $rows .= '<tr><td>'.implode('</td><td>', $columns)."</td></tr>\n";
-        }
-
-        return <<<HTML
-<table>
-<tr><th>model</th><th>direct related</th><th>indirect related</th></tr>
-$rows
-</table>
-HTML;
-
+        return GetTable::header(['model', 'direct related', 'indirect related'])
+            ->getHtml(self::getRelationTable());
     }
 
     public static function getMermaidCode(): string

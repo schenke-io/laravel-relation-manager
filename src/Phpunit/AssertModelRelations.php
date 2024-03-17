@@ -128,7 +128,7 @@ trait AssertModelRelations
     public function assertModelCastEnumReverse(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new ModelRelationData($modelFrom, $modelTo, RelationsEnum::castEnumReverse),
+            new ModelRelationData($modelTo, $modelFrom, RelationsEnum::castEnum),
             new RelationshipExistsConstraint()
         );
     }

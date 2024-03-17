@@ -76,6 +76,16 @@ class GenerateAssertModelRelationsTrait
                 $method->addParameter('model')->setType('string');
                 $method->setReturnType('void');
                 $method->addBody('\PHPUnit\Framework\assertThat($model, new NoRelationshipConstraint());');
+            } elseif ($case == RelationsEnum::castEnumReverse) {
+                // we flip the models and flip the enum
+                $method = $trait->addMethod($case->getAssertName());
+                $method->addParameter('modelFrom')->setType('string');
+                $method->addParameter('modelTo')->setType('string');
+                $method->setReturnType('void');
+                $method->addBody('\PHPUnit\Framework\assertThat(');
+                $method->addBody('    new ModelRelationData($modelTo, $modelFrom, RelationsEnum::castEnum),');
+                $method->addBody('    new RelationshipExistsConstraint()');
+                $method->addBody(');');
             } elseif ($case == RelationsEnum::morphTo) {
                 $method = $trait->addMethod($case->getAssertName());
                 $method->addParameter('modelFrom')->setType('string');
@@ -84,15 +94,6 @@ class GenerateAssertModelRelationsTrait
                 $method->addBody('    new ModelRelationData($modelFrom, $modelFrom, RelationsEnum::'.$case->name.'),');
                 $method->addBody('    new RelationshipExistsConstraint()');
                 $method->addBody(');');
-                /*            } elseif ($case == RelationsEnum::castEnum) {
-                                $method = $trait->addMethod($case->getAssertName());
-                                $method->addParameter('modelFrom')->setType('string');
-                                $method->setReturnType('void');
-                                $method->addBody('\PHPUnit\Framework\assertThat(');
-                                $method->addBody('    new ModelRelationData($modelFrom, $modelFrom, RelationsEnum::'.$case->name.'),');
-                                $method->addBody('    new RelationshipExistsConstraint()');
-                                $method->addBody(');');*/
-
             } elseif ($case->isRelation()) {
                 $method = $trait->addMethod($case->getAssertName());
                 $method->addParameter('modelFrom')->setType('string');

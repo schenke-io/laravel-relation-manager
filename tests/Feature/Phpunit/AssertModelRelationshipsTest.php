@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Phpunit;
 
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use Workbench\App\Models\AreaSize;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
@@ -63,5 +64,10 @@ class AssertModelRelationshipsTest extends TestCase
     public function testModelIsSingle()
     {
         $this->assertModelIsSingle(Single::class);
+    }
+
+    public function testModelCastEnumReverse()
+    {
+        $this->assertModelCastEnumReverse(AreaSize::class, City::class);
     }
 }
