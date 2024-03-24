@@ -17,3 +17,11 @@
 /UPGRADING.md       export-ignore
 /phpstan.neon.dist  export-ignore
 /phpstan-baseline.neon  export-ignore
+
+/.phpunit.cache/        export-ignore
+/build/                 export-ignore
+/config/                export-ignore
+/docs/                  export-ignore
+/resources/             export-ignore
+/tests/                 export-ignore
+/workbench/             export-ignore
