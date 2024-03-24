@@ -15,12 +15,12 @@
 /psalm.xml.dist     export-ignore
 /testbench.yaml     export-ignore
 /UPGRADING.md       export-ignore
-/phpstan.neon.dist  export-ignore
+/phpstan.dist.neon  export-ignore
 /phpstan-baseline.neon  export-ignore
 
 /.phpunit.cache/        export-ignore
 /build/                 export-ignore
-/config/                export-ignore
+# /config/                export-ignore
 /docs/                  export-ignore
 /resources/             export-ignore
 /tests/                 export-ignore
