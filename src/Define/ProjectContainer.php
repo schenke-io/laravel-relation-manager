@@ -18,6 +18,8 @@ class ProjectContainer
 
     public const CONFIG_KEY_TEST_COMMAND = 'relation-manager.testCommand';
 
+    public static string $mermaidDirection = 'TD';
+
     /**
      * @var array <string,array <string,RelationsEnum>>
      */

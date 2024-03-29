@@ -24,6 +24,7 @@ class GenerateMarkdownFile
         $tableDatabase = ProjectContainer::getMarkdownDatabaseTable();
         $commandClass = get_class($command);
         $signature = $command->getName();
+        $mermaidDirection = ProjectContainer::$mermaidDirection;
 
         $markdown = <<<markdown
 <!--
@@ -39,7 +40,7 @@ $tableRelations
 
 ## Table relations
 ```mermaid
-flowchart RL
+flowchart $mermaidDirection
 $mermaid
 ```
 

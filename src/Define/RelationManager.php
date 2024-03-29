@@ -69,8 +69,13 @@ class RelationManager
         return $this;
     }
 
-    public function writeMarkdown(): self
+    /**
+     * @param  string  $mermaidDirection  either TD = top-down or RL = right-left
+     * @return $this
+     */
+    public function writeMarkdown(string $mermaidDirection = 'TD'): self
     {
+        ProjectContainer::$mermaidDirection = $mermaidDirection;
         $result = $this->generateMarkdownFile->writeFile(command: $this->command);
         if (! is_null($result)) {
             $this->command->error($result);
