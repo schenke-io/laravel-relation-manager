@@ -8,9 +8,7 @@ use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 
 class GenerateMarkdownFile
 {
-    public function __construct(protected Filesystem $fileSystem = new Filesystem())
-    {
-    }
+    public function __construct(protected Filesystem $fileSystem = new Filesystem) {}
 
     public function writeFile(Command $command): ?string
     {
@@ -19,12 +17,11 @@ class GenerateMarkdownFile
             return "markdown file not found: $markdownFile";
         }
 
-        $mermaid = ProjectContainer::getMermaidCode();
+        $diagrammCode = ProjectContainer::getDiagrammCode();
         $tableRelations = ProjectContainer::getMarkdownRelationTable();
         $tableDatabase = ProjectContainer::getMarkdownDatabaseTable();
         $commandClass = get_class($command);
         $signature = $command->getName();
-        $mermaidDirection = ProjectContainer::$mermaidDirection;
 
         $markdown = <<<markdown
 <!--
@@ -39,10 +36,8 @@ do not manually edit this file as it will be overwritten
 $tableRelations
 
 ## Table relations
-```mermaid
-flowchart $mermaidDirection
-$mermaid
-```
+
+$diagrammCode
 
 ## Database
 

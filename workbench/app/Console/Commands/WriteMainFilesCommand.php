@@ -14,7 +14,7 @@ class WriteMainFilesCommand extends Command
 
     public function handle(): void
     {
-        (new WriteTraitFiles(new Filesystem()))->generate();
+        (new WriteTraitFiles(new Filesystem))->generate();
         $this->info('2 trait files written');
     }
 }

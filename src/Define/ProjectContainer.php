@@ -4,6 +4,8 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Writer\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Writer\GetDiagramm;
 use SchenkeIo\LaravelRelationManager\Writer\GetTable;
 
 class ProjectContainer
@@ -18,7 +20,9 @@ class ProjectContainer
 
     public const CONFIG_KEY_TEST_COMMAND = 'relation-manager.testCommand';
 
-    public static string $mermaidDirection = 'TD';
+    public const CONFIG_KEY_USE_MERMAID_DIAGRAMM = 'relation-manager.useMermaidDiagram';
+
+    public static DiagramDirection $diagrammDirection = DiagramDirection::LR;
 
     /**
      * @var array <string,array <string,RelationsEnum>>
@@ -55,7 +59,7 @@ class ProjectContainer
         $classTo = self::getModelEnumClass($modelTo);
         if ($relation == RelationsEnum::morphTo) {
             /*
-             * morphTo is one method covering all morphes
+             * morphTo is one method covering all morphs
              * we collect these separately and have this method be related to no model
              */
             self::$morphToRelations[$classFrom][] = class_basename($classTo);
@@ -210,33 +214,21 @@ class ProjectContainer
             ->getHtml(self::getRelationTable());
     }
 
-    public static function getMermaidCode(): string
+    public static function getDiagrammCode(): string
     {
-        $return = '';
-        $tables = self::getDatabaseData();
-        $lines = '';
-        foreach ($tables as $table1 => $data) {
-            /** @var RelationsEnum $relation */
-            foreach ($data as $table2 => $relation) {
-                if ($table2) {
-                    if ($relation == RelationsEnum::castEnum) {
-                        $enum = ucfirst(Str::camel(Str::singular($table2)));
-                        $return .= <<<txt
-$table1 -.-> $enum
-$enum([$enum])
-    style $enum fill:silver;
+        if (config(self::CONFIG_KEY_USE_MERMAID_DIAGRAMM)) {
+            return GetDiagramm::getMermaidCode(
+                self::getDatabaseData(),
+                self::$diagrammDirection
+            );
+        } else {
+            GetDiagramm::writeGraphvizFile(self::getDatabaseData(),
+                self::$diagrammDirection,
+                config(self::CONFIG_KEY_MARKDOWN_FILE));
 
-txt;
-                    } elseif ($relation->isMorph()) {
-                        $return .= "$table1 --> $table2\n";
-                    } else {
-                        $return .= "$table1 ==> $table2\n";
-                    }
-                }
-            }
+            return GetDiagramm::getGraphvizCode();
         }
 
-        return $return;
     }
 
     public static function getDatabaseData(): array

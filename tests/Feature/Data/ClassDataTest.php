@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Data;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
@@ -65,10 +66,6 @@ class ClassDataTest extends TestCase
         $this->assertTrue($classData->isFresherOrEqualThan(Capital::class));
     }
 
-    /**
-     * @throws \ReflectionException
-     * @throws LaravelNotLoadedException
-     */
     public function testGetModelRelations()
     {
         $this->assertEquals(
@@ -89,9 +86,8 @@ class ClassDataTest extends TestCase
         ];
     }
 
+    #[DataProvider('dataProviderGetShortNameWithClass')]
     /**
-     * @dataProvider dataProviderGetShortNameWithClass
-     *
      * @return void
      */
     public function testGetShortNameWithClass(string $classname, string $return)
@@ -108,7 +104,7 @@ class ClassDataTest extends TestCase
     }
 
     /**
-     * @throws LaravelNotLoadedException
+     * @throws LaravelNotLoadedException|\ReflectionException
      */
     public function testGetRelationCountOfModel()
     {
@@ -127,10 +123,9 @@ class ClassDataTest extends TestCase
         ];
     }
 
+    #[DataProvider('dataProviderRelationExpectations')]
     /**
-     * @dataProvider dataProviderRelationExpectations
-     *
-     * @throws LaravelNotLoadedException
+     * @throws LaravelNotLoadedException|\ReflectionException
      */
     public function testGetRelationExpectations(string $class, string $returnType, string $usesClass, string $regex): void
     {

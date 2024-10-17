@@ -21,9 +21,7 @@ class DefineRelationTest extends TestCase
     {
         ProjectContainer::clear();
 
-        $testCommand = new class extends RunTestProjectManagerCommand
-        {
-        };
+        $testCommand = new class extends RunTestProjectManagerCommand {};
         $testCommand->buildRelations();
         $this->assertCount(8, ProjectContainer::getRelations());
     }

@@ -20,9 +20,9 @@ class RelationManagerCommand extends Command
     {
         parent::__construct();
         $this->relationManager = new RelationManager(
-            new Filesystem(),
-            new GenerateProjectTestFile(),
-            new GenerateMarkdownFile(),
+            new Filesystem,
+            new GenerateProjectTestFile,
+            new GenerateMarkdownFile,
             $this
         );
     }

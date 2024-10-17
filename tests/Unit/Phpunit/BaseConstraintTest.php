@@ -9,7 +9,7 @@ class BaseConstraintTest extends TestCase
 {
     public function testBaseConstraint()
     {
-        $baseConstraint = new class() extends BaseConstraint
+        $baseConstraint = new class extends BaseConstraint
         {
             public function setExpectation($expectation): void
             {

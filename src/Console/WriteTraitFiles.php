@@ -11,9 +11,7 @@ use SchenkeIo\LaravelRelationManager\Writer\GenerateRelationTypesTrait;
 
 class WriteTraitFiles
 {
-    public function __construct(protected Filesystem $fileSystem)
-    {
-    }
+    public function __construct(protected Filesystem $fileSystem) {}
 
     public function generate(): void
     {

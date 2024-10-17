@@ -100,7 +100,7 @@ class RelationManagerTest extends TestCase
 
     public function testModel()
     {
-        $handler = new RelationManager();
+        $handler = new RelationManager;
         $this->assertInstanceOf(DefineRelation::class, $handler->model(''));
     }
 

@@ -2,6 +2,4 @@
 
 namespace SchenkeIo\LaravelRelationManager\Exceptions;
 
-class LaravelNotLoadedException extends \Exception
-{
-}
+class LaravelNotLoadedException extends \Exception {}

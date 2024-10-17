@@ -22,7 +22,7 @@ class AllConstraintTest extends TestCase
 
     public function testClassAgeConstraint()
     {
-        $classAgeConstraint = new ClassAgeConstraint();
+        $classAgeConstraint = new ClassAgeConstraint;
         $this->assertThat(
             new ModelRelationData(Country::class, Country::class),
             $classAgeConstraint
@@ -41,7 +41,7 @@ class AllConstraintTest extends TestCase
 
     public function testModelConstraint()
     {
-        $modelConstraint = new ModelBackedEnumConstraint();
+        $modelConstraint = new ModelBackedEnumConstraint;
         $this->assertThat(Country::class, $modelConstraint);
         $this->assertThat('', $this->logicalNot($modelConstraint));
         $this->assertIsString($modelConstraint->toString());
@@ -49,14 +49,14 @@ class AllConstraintTest extends TestCase
 
     public function testNoRelationshipConstraint()
     {
-        $noRelationshipConstraint = new NoRelationshipConstraint();
+        $noRelationshipConstraint = new NoRelationshipConstraint;
         $this->assertThat(Single::class, $noRelationshipConstraint);
         $this->assertIsString($noRelationshipConstraint->toString());
     }
 
     public function testRelationshipExistsConstraint()
     {
-        $relationshipExistsConstraint = new RelationshipExistsConstraint();
+        $relationshipExistsConstraint = new RelationshipExistsConstraint;
         $this->assertThat(
             new ModelRelationData(Country::class, Capital::class, RelationsEnum::hasOne),
             $relationshipExistsConstraint
@@ -66,7 +66,7 @@ class AllConstraintTest extends TestCase
 
     public function testRelationshipCountConstraint()
     {
-        $relationshipCountConstraint = new RelationshipCountConstraint();
+        $relationshipCountConstraint = new RelationshipCountConstraint;
         $this->assertThat(
             new ModelCountData(Country::class, 3),
             $relationshipCountConstraint

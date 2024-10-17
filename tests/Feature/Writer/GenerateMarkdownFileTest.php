@@ -31,7 +31,7 @@ class GenerateMarkdownFileTest extends TestCase
         $mockFilesystem->shouldReceive('put')->once();
 
         $generator = new GenerateMarkdownFile($mockFilesystem);
-        $return = $generator->writeFile(new Command(), true);
+        $return = $generator->writeFile(new Command, true);
         $this->assertNull($return);
     }
 
@@ -44,7 +44,7 @@ class GenerateMarkdownFileTest extends TestCase
         $mockFilesystem->shouldReceive('put')->once()->andThrow(Exception::class, 'test error');
 
         $generator = new GenerateMarkdownFile($mockFilesystem);
-        $return = $generator->writeFile(new Command(), true);
+        $return = $generator->writeFile(new Command, true);
 
         $this->assertIsString($return);
     }
@@ -58,9 +58,23 @@ class GenerateMarkdownFileTest extends TestCase
         $mockFilesystem = Mockery::mock(Filesystem::class);
 
         $generator = new GenerateMarkdownFile($mockFilesystem);
-        $return = $generator->writeFile(new Command(), true);
+        $return = $generator->writeFile(new Command, true);
 
         $this->assertIsString($return);
 
+    }
+
+    public function testDiagramGraphviz()
+    {
+        ProjectContainer::clear();
+        Config::set(ProjectContainer::CONFIG_KEY_USE_MERMAID_DIAGRAMM, true);
+        ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
+
+        $mockFilesystem = Mockery::mock(Filesystem::class);
+        $mockFilesystem->shouldReceive('put')->once();
+        $generator = new GenerateMarkdownFile($mockFilesystem);
+        $return = $generator->writeFile(new Command, true);
+
+        $this->assertNull($return);
     }
 }

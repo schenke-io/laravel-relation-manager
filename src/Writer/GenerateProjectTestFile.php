@@ -14,9 +14,8 @@ use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 class GenerateProjectTestFile
 {
     public function __construct(
-        protected Filesystem $filesystem = new Filesystem()
-    ) {
-    }
+        protected Filesystem $filesystem = new Filesystem
+    ) {}
 
     public static function testGroup(): string
     {
@@ -55,7 +54,6 @@ class GenerateProjectTestFile
          */
         $method = $class->addMethod('testCommandFileIsOlderThanThisTestFile');
         $method->addComment('@return void');
-        $method->addComment('@group '.self::testGroup());
         $method->addComment('');
         $method->addComment('Since this class is written by the Command file '.$writerCallingClass);
         $method->addComment('it is risky when changes in the Command file are not transferred here');
@@ -76,7 +74,6 @@ class GenerateProjectTestFile
                     'testBackedEnum'.
                     class_basename($baseModel).'Works');
                 $method->addComment('Enum '.$baseModel);
-                $method->addComment('@group '.self::testGroup());
                 $method->setReturnType('void');
                 $method->addBody('$this->assertModelBackedEnumWorks("'.$baseModel.'");');
             } else {
@@ -92,7 +89,6 @@ class GenerateProjectTestFile
                     'AndWorks'
                 );
                 $method->addComment('Model '.$baseModel);
-                $method->addComment('@group '.self::testGroup());
                 $method->setReturnType('void');
                 $method->addBody('$this->assertModelBackedEnumWorks("'.$baseModel.'");');
                 if (is_array($relatedModels)) {

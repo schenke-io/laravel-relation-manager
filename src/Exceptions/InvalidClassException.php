@@ -2,6 +2,4 @@
 
 namespace SchenkeIo\LaravelRelationManager\Exceptions;
 
-class InvalidClassException extends \Exception
-{
-}
+class InvalidClassException extends \Exception {}

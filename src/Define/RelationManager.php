@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
+use SchenkeIo\LaravelRelationManager\Writer\DiagramDirection;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
@@ -17,10 +18,8 @@ class RelationManager
         protected Filesystem $fileSystem = new Filesystem,
         protected GenerateProjectTestFile $generateProjectTestFile = new GenerateProjectTestFile,
         protected GenerateMarkdownFile $generateMarkdownFile = new GenerateMarkdownFile,
-        protected Command $command = new Command()
-    ) {
-
-    }
+        protected Command $command = new Command
+    ) {}
 
     public function model(string $modelName): DefineRelation
     {
@@ -70,12 +69,12 @@ class RelationManager
     }
 
     /**
-     * @param  string  $mermaidDirection  either TD = top-down or RL = right-left
+     * @param  bool  $diagrammDirectionTd  either true = top-down or false = right-left
      * @return $this
      */
-    public function writeMarkdown(string $mermaidDirection = 'TD'): self
+    public function writeMarkdown(bool $diagrammDirectionTd = true): self
     {
-        ProjectContainer::$mermaidDirection = $mermaidDirection;
+        ProjectContainer::$diagrammDirection = DiagramDirection::fromBool($diagrammDirectionTd);
         $result = $this->generateMarkdownFile->writeFile(command: $this->command);
         if (! is_null($result)) {
             $this->command->error($result);

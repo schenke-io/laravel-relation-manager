@@ -23,7 +23,6 @@ class TestProjectTest extends TestCase
 
     /**
      * @return void
-     * @group GenerateProjectTestFile
      *
      * Since this class is written by the Command file Workbench\App\Console\Commands\RunTestProjectManagerCommand
      * it is risky when changes in the Command file are not transferred here
@@ -39,7 +38,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Enum Workbench\App\Models\AreaSize
-     * @group GenerateProjectTestFile
      */
     public function testBackedEnumAreaSizeWorks(): void
     {
@@ -48,7 +46,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Capital
-     * @group GenerateProjectTestFile
      */
     public function testModelCapitalHas_2StrictRelationshipsAndWorks(): void
     {
@@ -60,7 +57,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\City
-     * @group GenerateProjectTestFile
      */
     public function testModelCityHas_5StrictRelationshipsAndWorks(): void
     {
@@ -75,7 +71,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Country
-     * @group GenerateProjectTestFile
      */
     public function testModelCountryHas_3StrictRelationshipsAndWorks(): void
     {
@@ -88,7 +83,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\GeoRegion
-     * @group GenerateProjectTestFile
      */
     public function testModelGeoRegionHas_3StrictRelationshipsAndWorks(): void
     {
@@ -101,7 +95,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Highway
-     * @group GenerateProjectTestFile
      */
     public function testModelHighwayHas_2StrictRelationshipsAndWorks(): void
     {
@@ -113,7 +106,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Location
-     * @group GenerateProjectTestFile
      */
     public function testModelLocationHas_1StrictRelationshipAndWorks(): void
     {
@@ -124,7 +116,6 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Single
-     * @group GenerateProjectTestFile
      */
     public function testModelSingleHas_0StrictRelationshipsAndWorks(): void
     {

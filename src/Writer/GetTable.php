@@ -4,9 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Writer;
 
 final class GetTable
 {
-    public function __construct(public array $header)
-    {
-    }
+    public function __construct(public array $header) {}
 
     public static function header(array $header): self
     {

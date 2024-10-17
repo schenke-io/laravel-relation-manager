@@ -24,13 +24,13 @@ class GenerateProjectTestFileTest extends TestCase
     public function testWriteFileOk()
     {
         ProjectContainer::clear();
-        (new RunTestProjectManagerCommand())->buildRelations();
+        (new RunTestProjectManagerCommand)->buildRelations();
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once();
 
         $generator = new GenerateProjectTestFile($mockFilesystem);
-        $return = $generator->writeFile(new Command(), true);
+        $return = $generator->writeFile(new Command, true);
         $this->assertNull($return);
     }
 
@@ -43,7 +43,7 @@ class GenerateProjectTestFileTest extends TestCase
         $mockFilesystem->shouldReceive('put')->once()->andThrow(Exception::class, 'test error');
 
         $generator = new GenerateProjectTestFile($mockFilesystem);
-        $return = $generator->writeFile(new Command(), true);
+        $return = $generator->writeFile(new Command, true);
 
         $this->assertIsString($return);
     }
