@@ -12,10 +12,6 @@ class City extends Model
 {
     public $timestamps = false;
 
-    protected $casts = [
-        'type' => AreaSize::class,
-    ];
-
     public function region(): BelongsTo
     {
         return $this->belongsTo(GeoRegion::class);

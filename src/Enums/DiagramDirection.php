@@ -1,6 +1,6 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationManager\Writer;
+namespace SchenkeIo\LaravelRelationManager\Enums;
 
 enum DiagramDirection
 {

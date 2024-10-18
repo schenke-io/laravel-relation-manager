@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
-use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
+use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
@@ -37,7 +37,7 @@ class GenerateProjectTestFileTest extends TestCase
     public function testWriteFileException()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, RelationsEnum::hasOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once()->andThrow(Exception::class, 'test error');

@@ -1,6 +1,6 @@
 <?php
 
-namespace Workbench\App\Models;
+namespace Workbench\App\Enums;
 
 enum AreaSize: int
 {

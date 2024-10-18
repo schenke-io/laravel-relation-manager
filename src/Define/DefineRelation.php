@@ -2,6 +2,8 @@
 
 namespace SchenkeIo\LaravelRelationManager\Define;
 
+use SchenkeIo\LaravelRelationManager\Enums\Relations;
+
 class DefineRelation
 {
     use RelationTypes;
@@ -17,16 +19,13 @@ class DefineRelation
     private function buildRelation(
         string $modelName,
         bool $addReverseRelation,
-        RelationsEnum $forward,
-        RelationsEnum $reverse
+        Relations $forward,
+        Relations $reverse
     ): self {
         ProjectContainer::addModel($modelName);
         ProjectContainer::addRelation($this->primaryModel, $modelName, $forward);
         if ($addReverseRelation) {
             ProjectContainer::addRelation($modelName, $this->primaryModel, $reverse);
-        }
-        if ($forward == RelationsEnum::castEnum) {
-            ProjectContainer::addRelation($modelName, $this->primaryModel, RelationsEnum::castEnumReverse);
         }
 
         return $this;

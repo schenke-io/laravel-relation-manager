@@ -4,7 +4,9 @@ namespace SchenkeIo\LaravelRelationManager\Writer;
 
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
-use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
+use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Enums\DiagramSyntax;
+use SchenkeIo\LaravelRelationManager\Enums\Relations;
 
 class GetDiagramm
 {
@@ -12,7 +14,7 @@ class GetDiagramm
 
     public static function getMermaidCode(array $databaseData, DiagramDirection $diagrammDirection): string
     {
-        return self::getDiagrammCode(DigramSyntax::Mermaid, $databaseData, $diagrammDirection);
+        return self::getDiagrammCode(DiagramSyntax::Mermaid, $databaseData, $diagrammDirection);
     }
 
     public static function getGraphvizCode(): string
@@ -26,7 +28,7 @@ class GetDiagramm
         string $markdownFileName,
         Filesystem $fileSystem = new Filesystem
     ): void {
-        $dot = self::getDiagrammCode(DigramSyntax::Dot, $databaseData, $diagrammDirection);
+        $dot = self::getDiagrammCode(DiagramSyntax::Dot, $databaseData, $diagrammDirection);
         $dotFile = dirname($markdownFileName).'/'.self::GRAPHVIZ_BASENAME.'.dot';
         $pngFile = dirname($markdownFileName).'/'.self::GRAPHVIZ_BASENAME.'.png';
         // write the dot file
@@ -37,17 +39,15 @@ class GetDiagramm
         Process::run("dot -Tpng {$dotFile} -o {$pngFile}");
     }
 
-    public static function getDiagrammCode(DigramSyntax $style, array $databaseData, DiagramDirection $diagrammDirection): string
+    public static function getDiagrammCode(DiagramSyntax $style, array $databaseData, DiagramDirection $diagrammDirection): string
     {
         $return = $style->start($diagrammDirection);
 
         foreach ($databaseData as $table1 => $data) {
-            /** @var RelationsEnum $relation */
+            /** @var Relations $relation */
             foreach ($data as $table2 => $relation) {
                 if ($table2) {
-                    if ($relation == RelationsEnum::castEnum) {
-                        $return .= $style->enum($table1, $table2);
-                    } elseif ($relation->isMorph()) {
+                    if ($relation->isMorph()) {
                         $return .= $style->morph($table1, $table2);
                     } else {
                         $return .= $style->normal($table1, $table2);

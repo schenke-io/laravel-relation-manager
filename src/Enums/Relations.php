@@ -1,13 +1,12 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationManager\Define;
+namespace SchenkeIo\LaravelRelationManager\Enums;
 
-use BackedEnum;
-use Illuminate\Database\Eloquent\Relations;
+use Illuminate\Database\Eloquent\Relations as EloquentRelations;
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 
-enum RelationsEnum
+enum Relations
 {
     case noRelation;
     case hasOne;  // inverse:  belongsTo
@@ -21,12 +20,6 @@ enum RelationsEnum
     case morphTo;
     case morphOne;
     case morphMany;
-
-    /*
-     * ENUM as integrer
-     */
-    case castEnum;
-    case castEnumReverse;
 
     /*
      * standard  speak
@@ -48,7 +41,6 @@ enum RelationsEnum
         return match ($this) {
             self::hasOne, self::hasMany,
             self::isManyToMany,
-            self::castEnum,
             self::hasOneThrough, self::hasManyThrough,
             self::morphOne, self::morphMany => true,
             default => false
@@ -84,7 +76,6 @@ enum RelationsEnum
             self::belongsTo,
             self::belongsToMany,
             self::morphTo,
-            self::castEnumReverse,
             self::noRelation => false,
             default => true
         };
@@ -104,8 +95,7 @@ enum RelationsEnum
         return match ($this) {
             self::hasOne, self::hasMany,
             self::belongsTo,
-            self::morphOne, self::morphMany,
-            self::castEnum, self::castEnumReverse => true,
+            self::morphOne, self::morphMany => true,
             default => false
         };
     }
@@ -116,17 +106,15 @@ enum RelationsEnum
     public function getClass(): ?string
     {
         return match ($this) {
-            self::hasOne => Relations\HasOne::class,
-            self::hasMany => Relations\HasMany::class,
-            self::belongsToMany, self::isManyToMany => Relations\BelongsToMany::class,
-            self::hasOneThrough => Relations\HasOneThrough::class,
-            self::hasManyThrough => Relations\HasManyThrough::class,
-            self::belongsTo => Relations\BelongsTo::class,
-            self::morphTo => Relations\MorphTo::class,
-            self::morphOne => Relations\MorphOne::class,
-            self::morphMany => Relations\MorphMany::class,
-            self::castEnum => BackedEnum::class,
-            self::castEnumReverse => '',
+            self::hasOne => EloquentRelations\HasOne::class,
+            self::hasMany => EloquentRelations\HasMany::class,
+            self::belongsToMany, self::isManyToMany => EloquentRelations\BelongsToMany::class,
+            self::hasOneThrough => EloquentRelations\HasOneThrough::class,
+            self::hasManyThrough => EloquentRelations\HasManyThrough::class,
+            self::belongsTo => EloquentRelations\BelongsTo::class,
+            self::morphTo => EloquentRelations\MorphTo::class,
+            self::morphOne => EloquentRelations\MorphOne::class,
+            self::morphMany => EloquentRelations\MorphMany::class,
             default => throw new \Exception('class unknown for '.$this->name)
         };
     }
@@ -159,13 +147,11 @@ enum RelationsEnum
                 $tables[$tableName3][$tableName2] = $this;
                 break;
             case self::belongsTo:
-            case self::castEnum:
                 $tables[$tableName1][$tableName2] = $this;
                 break;
             case self::morphTo:
             case self::isSingle:
             case self::noRelation:
-            case self::castEnumReverse:
                 $tables[$tableName1][null] = $this;
                 break;
         }

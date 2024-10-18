@@ -36,8 +36,7 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
         $this->relationManager->model('City')
             ->isManyToMany('Highway', true)
             ->morphOne('Location', true)
-            ->hasOneThrough('Country')
-            ->castEnum('AreaSize');
+            ->hasOneThrough('Country');
 
         $this->relationManager->model(Country::class)
             ->hasOne('Capital', true)

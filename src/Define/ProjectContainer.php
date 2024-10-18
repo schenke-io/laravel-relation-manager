@@ -4,7 +4,8 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
-use SchenkeIo\LaravelRelationManager\Writer\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Writer\GetDiagramm;
 use SchenkeIo\LaravelRelationManager\Writer\GetTable;
 
@@ -25,7 +26,7 @@ class ProjectContainer
     public static DiagramDirection $diagrammDirection = DiagramDirection::LR;
 
     /**
-     * @var array <string,array <string,RelationsEnum>>
+     * @var array <string,array <string,Relations>>
      */
     private static array $relations = [];
 
@@ -45,7 +46,7 @@ class ProjectContainer
 
     public static function addModel(string $modelName): void
     {
-        $className = self::getModelEnumClass($modelName);
+        $className = self::getModelClass($modelName);
         if ($className != '') {
             self::$relations[$className] = self::$relations[$className] ?? [];
         } else {
@@ -53,11 +54,11 @@ class ProjectContainer
         }
     }
 
-    public static function addRelation(string $modelFrom, string $modelTo, RelationsEnum $relation): void
+    public static function addRelation(string $modelFrom, string $modelTo, Relations $relation): void
     {
-        $classFrom = self::getModelEnumClass($modelFrom);
-        $classTo = self::getModelEnumClass($modelTo);
-        if ($relation == RelationsEnum::morphTo) {
+        $classFrom = self::getModelClass($modelFrom);
+        $classTo = self::getModelClass($modelTo);
+        if ($relation == Relations::morphTo) {
             /*
              * morphTo is one method covering all morphs
              * we collect these separately and have this method be related to no model
@@ -108,16 +109,6 @@ class ProjectContainer
         return $class->className;
     }
 
-    public static function getModelEnumClass(string $class): string
-    {
-        $class = ClassData::newFromName(config(self::CONFIG_KEY_MODEL_NAME_SPACE), $class);
-        if ($class->isBackedEnum || $class->isModel) {
-            return $class->className;
-        }
-
-        return '';
-    }
-
     public static function addError(string $msg): void
     {
         self::$errors[] = $msg;
@@ -137,15 +128,12 @@ class ProjectContainer
         foreach (self::$relations as $primModel => $data) {
             $primClass = ClassData::take($primModel);
             $tableName = Str::snake(Str::plural(class_basename($primModel)));
-            if ($primClass->isBackedEnum) {
-                continue;
-            }
             $tables[$tableName] = [];
         }
         foreach (self::getDatabaseData() as $table1 => $table1Data) {
             ksort($table1Data);
             /**
-             * @var RelationsEnum $relation
+             * @var Relations $relation
              */
             foreach ($table1Data as $table2 => $relation) {
                 if (strlen($table2) > 1) {
@@ -179,7 +167,7 @@ class ProjectContainer
             sort($directRelation);
             $indirectRelation = [];
             /**
-             * @var RelationsEnum $relation
+             * @var Relations $relation
              */
             foreach ($modelSet as $secModel => $relation) {
                 if ($relation->isDirectRelation()) {
@@ -190,7 +178,7 @@ class ProjectContainer
             }
 
             $return[] = [
-                class_basename($primClass->className).($primClass->isBackedEnum ? ' (Enum)' : ''),
+                class_basename($primClass->className),
                 implode(', ', $directRelation),
                 implode(', ', $indirectRelation),
             ];
@@ -237,7 +225,7 @@ class ProjectContainer
         foreach (self::$relations as $primModel => $modelSet) {
             /**
              * @var string $secModel
-             * @var RelationsEnum $relation
+             * @var Relations $relation
              */
             foreach ($modelSet as $secModel => $relation) {
                 $relation->setTableLinks($primModel, $secModel, $table);

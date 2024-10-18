@@ -4,7 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 
-class ModelBackedEnumConstraint extends BaseConstraint
+class ModelConstraint extends BaseConstraint
 {
     /**
      * @param  string  $other
@@ -13,7 +13,7 @@ class ModelBackedEnumConstraint extends BaseConstraint
     {
         $this->expectation = "$other is a model";
 
-        return ClassData::take($other)->isModelOrBackedEnum;
+        return ClassData::take($other)->isModel;
     }
 
     /**

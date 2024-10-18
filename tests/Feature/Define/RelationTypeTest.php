@@ -2,22 +2,22 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Define;
 
-use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
+use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 
-class RelationsEnumTest extends testCase
+class RelationTypeTest extends testCase
 {
     public function testGetAssertName()
     {
-        $this->assertEquals('assertModelHasOne', RelationsEnum::hasOne->getAssertName());
+        $this->assertEquals('assertModelHasOne', Relations::hasOne->getAssertName());
     }
 
     public function testSetTableLinks()
     {
         $tables = [];
-        foreach (RelationsEnum::cases() as $case) {
+        foreach (Relations::cases() as $case) {
             $case->setTableLinks(Country::class, City::class, $tables);
         }
         $this->assertCount(3, $tables);
@@ -33,7 +33,7 @@ class RelationsEnumTest extends testCase
         $isRelation = 0;
         $askForRelatedModel = 0;
 
-        foreach (RelationsEnum::cases() as $case) {
+        foreach (Relations::cases() as $case) {
             $askForInverseCountNormal += ($case->inverse(false)->askForInverse() ? 1 : 0);
             $askForInverseCountPrevent += ($case->inverse(true)->askForInverse() ? 1 : 0);
             $hasInverseNormal += ($case->hasInverse(false) ? 1 : 0);
@@ -46,9 +46,9 @@ class RelationsEnumTest extends testCase
         $this->assertEquals(0, $askForInverseCountPrevent);
         $this->assertEquals(5, $hasInverseNormal);
         $this->assertEquals(0, $hasInversePrevent);
-        $this->assertEquals(8, $hasPublicFunction);
-        $this->assertEquals(12, $isRelation);
-        $this->assertEquals(8, $askForRelatedModel);
+        $this->assertEquals(7, $hasPublicFunction);
+        $this->assertEquals(10, $isRelation);
+        $this->assertEquals(7, $askForRelatedModel);
     }
 
     /**
@@ -56,18 +56,14 @@ class RelationsEnumTest extends testCase
      */
     public function testGetClass()
     {
-        foreach (RelationsEnum::cases() as $case) {
-            if ($case == RelationsEnum::noRelation && $case) {
+        foreach (Relations::cases() as $case) {
+            if ($case == Relations::noRelation) {
                 continue;
             }
-            if ($case == RelationsEnum::isSingle && $case) {
+            if ($case == Relations::isSingle) {
                 continue;
             }
-            if ($case == RelationsEnum::castEnum) {
-                $this->assertStringContainsString('BackedEnum', $case->getClass());
-            } elseif ($case != RelationsEnum::castEnumReverse) {
-                $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $case->getClass());
-            }
+            $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $case->getClass());
         }
     }
 }

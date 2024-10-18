@@ -3,25 +3,25 @@
 namespace SchenkeIo\LaravelRelationManager\Tests\Unit\Define;
 
 use PHPUnit\Framework\TestCase;
-use SchenkeIo\LaravelRelationManager\Define\RelationsEnum;
+use SchenkeIo\LaravelRelationManager\Enums\Relations;
 
-class RelationshipEnumTest extends TestCase
+class RelationsTest extends TestCase
 {
     public function testAllRelationshipFunctions()
     {
-        foreach (RelationsEnum::cases() as $case) {
+        foreach (Relations::cases() as $case) {
             $this->assertIsString($case->getAssertName());
             $this->assertIsBool($case->hasPublicFunction());
             $this->assertIsBool($case->askForInverse());
-            $this->assertInstanceOf(RelationsEnum::class, $case->inverse(true));
-            $this->assertInstanceOf(RelationsEnum::class, $case->inverse(false));
+            $this->assertInstanceOf(Relations::class, $case->inverse(true));
+            $this->assertInstanceOf(Relations::class, $case->inverse(false));
         }
     }
 
     public function testGetClass()
     {
-        $this->assertIsString(RelationsEnum::hasOne->getClass());
+        $this->assertIsString(Relations::hasOne->getClass());
         $this->expectException('Exception');
-        RelationsEnum::noRelation->getClass();
+        Relations::noRelation->getClass();
     }
 }

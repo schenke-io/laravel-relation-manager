@@ -2,7 +2,6 @@
 
 namespace SchenkeIo\LaravelRelationManager\Data;
 
-use BackedEnum;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
@@ -25,10 +24,6 @@ class ClassData extends Data
 
     public readonly bool $isModel;
 
-    public readonly bool $isBackedEnum;
-
-    public readonly bool $isModelOrBackedEnum;
-
     public readonly string $fileName;
 
     public readonly string $nameSpace;
@@ -46,8 +41,6 @@ class ClassData extends Data
             $this->classError = $e->getMessage();
             $this->isClass = false;
             $this->isModel = false;
-            $this->isBackedEnum = false;
-            $this->isModelOrBackedEnum = false;
             $this->className = '';
             $this->nameSpace = '';
             $this->fileName = '';
@@ -65,31 +58,11 @@ class ClassData extends Data
 
         if ($this->reflection->isSubclassOf(Model::class)) {
             $this->isModel = true;
-            $this->isBackedEnum = false;
-            $this->isModelOrBackedEnum = true;
-        } elseif (self::isBackedEnum($class)) {
-            $this->isModel = false;
-            $this->isBackedEnum = true;
-            $this->isModelOrBackedEnum = true;
         } else {
             $this->isModel = false;
-            $this->isBackedEnum = false;
-            $this->isModelOrBackedEnum = false;
             $this->modelError = "the class $class is no subclass of ".Model::class;
         }
 
-    }
-
-    public static function isBackedEnum($class): bool
-    {
-        if (! class_exists($class)) {
-            return false;
-        }
-
-        $reflection = new ReflectionClass($class);
-
-        // Check if the class implements the BackedEnum interface (PHP 8.1+)
-        return interface_exists(BackedEnum::class) && $reflection->implementsInterface(BackedEnum::class);
     }
 
     public static function take(string $class): ClassData
@@ -139,10 +112,10 @@ class ClassData extends Data
      */
     public function getModelRelations(): array
     {
-        if (! $this->isModelOrBackedEnum) {
-            return [];
-        }
         $return = [];
+        if (! $this->isModel) {
+            return $return;
+        }
 
         try {
             DB::connection();
@@ -168,18 +141,6 @@ class ClassData extends Data
                 $related = $modelMethod->getRelated();
                 $theOtherModel = ($related)::class;
                 $return[$theOtherModel] = class_basename($method->getReturnType()->getName());
-            }
-        }
-        /*
-         * find enum casts
-         */
-        if ($this->isModel) {
-            $property = $this->reflection->getProperty('casts');
-            $casts = $property->getValue(new $this->class);
-            foreach ($casts as $name => $castClass) {
-                if (self::isBackedEnum($castClass)) {
-                    $return[$castClass] = 'BackedEnum';
-                }
             }
         }
 

@@ -5,7 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
-use SchenkeIo\LaravelRelationManager\Writer\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
