@@ -13,8 +13,8 @@ use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\Country;
-use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Location;
+use Workbench\App\Models\Region;
 use Workbench\App\Models\Single;
 
 class GenerateMarkdownFileTest extends TestCase
@@ -23,7 +23,7 @@ class GenerateMarkdownFileTest extends TestCase
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
-        ProjectContainer::addRelation(Country::class, GeoRegion::class, Relations::noRelation);
+        ProjectContainer::addRelation(Country::class, Region::class, Relations::noRelation);
         ProjectContainer::addRelation(Country::class, Location::class, Relations::morphMany);
         ProjectContainer::addRelation(Single::class, '', Relations::isSingle);
 
@@ -58,7 +58,7 @@ class GenerateMarkdownFileTest extends TestCase
         $mockFilesystem = Mockery::mock(Filesystem::class);
 
         $generator = new GenerateMarkdownFile($mockFilesystem);
-        $return = $generator->writeFile(new Command, true);
+        $return = $generator->writeFile(new Command);
 
         $this->assertIsString($return);
 

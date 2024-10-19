@@ -62,8 +62,8 @@ class RelationManager
 
     public function showTables(): self
     {
-        $this->command->table(['model', 'direct related', 'indirect related'], ProjectContainer::getRelationTable());
-        $this->command->table(['table', 'expected columns'], ProjectContainer::getDatabaseTable());
+        $this->command->table(...ProjectContainer::getRelationTable());
+        $this->command->table(...ProjectContainer::getDatabaseTable());
 
         return $this;
     }

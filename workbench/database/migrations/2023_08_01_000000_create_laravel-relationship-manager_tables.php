@@ -43,6 +43,10 @@ return new class extends Migration
             $table->integer('city_id');
             $table->integer('highway_id');
         });
+        Schema::create('locations', function (Blueprint $table) {
+            $table->integer('locationable_id');
+            $table->string('locationable_type');
+        });
     }
 
     /**

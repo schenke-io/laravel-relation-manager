@@ -85,7 +85,7 @@ class ProjectContainerTest extends TestCase
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
-        $this->assertCount(1, ProjectContainer::getRelationTable());
+        $this->assertCount(2, ProjectContainer::getRelationTable());
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getMarkdownRelationTable()));
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getDiagrammCode()));
     }

@@ -4,9 +4,9 @@ namespace Workbench\App\Console\Commands;
 
 use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
 use Workbench\App\Models\Country;
-use Workbench\App\Models\GeoRegion;
 use Workbench\App\Models\Highway;
 use Workbench\App\Models\Location;
+use Workbench\App\Models\Region;
 
 /**
  * this command works without Laravel being loaded
@@ -23,10 +23,10 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
         $this->relationManager->model('Green');
 
         $this->relationManager
-            ->writeTest(strict: true)
-            ->runTest()
             ->writeMarkdown()
-            ->showTables();
+            ->showTables()
+            ->writeTest(strict: true)
+            ->runTest();
 
     }
 
@@ -40,12 +40,12 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
 
         $this->relationManager->model(Country::class)
             ->hasOne('Capital', true)
-            ->hasMany(GeoRegion::class, true)
+            ->hasMany(Region::class, true)
             ->hasManyThrough('City');
 
         $this->relationManager->model('Highway');
 
-        $this->relationManager->model(GeoRegion::class)
+        $this->relationManager->model(Region::class)
             ->hasMany('City', true)
             ->hasOneThrough('Capital');
 

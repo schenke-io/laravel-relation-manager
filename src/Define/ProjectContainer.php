@@ -23,6 +23,8 @@ class ProjectContainer
 
     public const CONFIG_KEY_USE_MERMAID_DIAGRAMM = 'relation-manager.useMermaidDiagram';
 
+    public const CONFIG_KEY_TEST_DATABASE = 'relation-manager.testDatabase';
+
     public static DiagramDirection $diagrammDirection = DiagramDirection::LR;
 
     /**
@@ -119,7 +121,7 @@ class ProjectContainer
         return self::$errors;
     }
 
-    public static function getDatabaseTable(): array
+    public static function getTableFields(): array
     {
         $tables = [];
         /*
@@ -151,10 +153,20 @@ class ProjectContainer
         foreach ($tables as $table => $keys) {
             $keys = array_unique($keys);
             sort($keys);
-            $return[] = [$table, implode(', ', $keys)];
+            $return[$table] = $keys;
         }
 
         return $return;
+    }
+
+    public static function getDatabaseTable(): array
+    {
+        $return = [];
+        foreach (self::getTableFields() as $table => $fields) {
+            $return[] = [$table, implode(', ', $fields)];
+        }
+
+        return [['table', 'required fields'], $return];
     }
 
     public static function getRelationTable(): array
@@ -187,19 +199,17 @@ class ProjectContainer
             $return[] = ["$model (not defined)", '', ''];
         }
 
-        return $return;
+        return [['model', 'direct', 'indirect'], $return];
     }
 
     public static function getMarkdownDatabaseTable(): string
     {
-        return GetTable::header(['model', 'direct related', 'indirect related'])
-            ->getHtml(self::getDatabaseTable());
+        return GetTable::getHtml(self::getDatabaseTable());
     }
 
     public static function getMarkdownRelationTable(): string
     {
-        return GetTable::header(['model', 'direct related', 'indirect related'])
-            ->getHtml(self::getRelationTable());
+        return GetTable::getHtml(self::getRelationTable());
     }
 
     public static function getDiagrammCode(): string

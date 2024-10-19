@@ -51,4 +51,8 @@ return [
      *          Graphviz to be installed on the system generating the documentation.
      */
     'useMermaidDiagram' => true,
+    /*
+     * When true the existence of tables and key fields in the database is tested
+     */
+    'testDatabase' => true,
 ];

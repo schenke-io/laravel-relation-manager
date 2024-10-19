@@ -18,11 +18,11 @@ class Country extends Model
 
     public function regions(): HasMany
     {
-        return $this->hasMany(GeoRegion::class);
+        return $this->hasMany(Region::class);
     }
 
     public function cities(): HasManyThrough
     {
-        return $this->hasManyThrough(City::class, GeoRegion::class);
+        return $this->hasManyThrough(City::class, Region::class);
     }
 }

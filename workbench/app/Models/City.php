@@ -14,7 +14,7 @@ class City extends Model
 
     public function region(): BelongsTo
     {
-        return $this->belongsTo(GeoRegion::class);
+        return $this->belongsTo(Region::class);
     }
 
     public function highways(): BelongsToMany
@@ -24,7 +24,7 @@ class City extends Model
 
     public function country(): HasOneThrough
     {
-        return $this->hasOneThrough(Country::class, GeoRegion::class);
+        return $this->hasOneThrough(Country::class, Region::class);
     }
 
     public function location(): MorphOne

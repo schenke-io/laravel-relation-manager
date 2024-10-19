@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Writer;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Config;
 use Mockery;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
@@ -25,7 +26,7 @@ class GenerateProjectTestFileTest extends TestCase
     {
         ProjectContainer::clear();
         (new RunTestProjectManagerCommand)->buildRelations();
-
+        Config::set(ProjectContainer::CONFIG_KEY_TEST_DATABASE, true);
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once();
 

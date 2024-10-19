@@ -5,8 +5,10 @@ namespace SchenkeIo\LaravelRelationManager\Writer;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Schema;
 use Nette;
 use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\TestDox;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
@@ -46,6 +48,8 @@ class GenerateProjectTestFile
         $nameSpace->addUse($writerCallingClass);
         $nameSpace->addUse($extendedTestClass);
         $nameSpace->addUse(Group::class);
+        $nameSpace->addUse(Schema::class);
+        $nameSpace->addUse(TestDox::class);
 
         $class = $nameSpace->addClass(class_basename($testProjectClass));
         $class->setExtends($extendedTestClass);
@@ -108,6 +112,29 @@ class GenerateProjectTestFile
             }
 
         }
+        /*
+         * loop over tables and keys
+         */
+
+        $testDatabase = config(ProjectContainer::CONFIG_KEY_TEST_DATABASE);
+        $tableFields = [];
+        if (config(ProjectContainer::CONFIG_KEY_TEST_DATABASE)) {
+            $tableFields = ProjectContainer::getTableFields();
+        }
+
+        foreach ($tableFields as $table => $fields) {
+            $method = $class->addMethod("testDatabaseTable_{$table}Exists");
+            $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
+            $method->addAttribute(TestDox::class, ["table $table exists"]);
+            $method->addBody("\$this->assertTrue(Schema::hasTable('$table'));");
+            foreach ($fields as $field) {
+                $method = $class->addMethod("testDatabaseField_{$field}ExistsIn_{$table}");
+                $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
+                $method->addAttribute(TestDox::class, ["table $table has field $field"]);
+                $method->addBody("\$this->assertTrue(Schema::hasColumn('$table','$field'));");
+            }
+        }
+
         $fileName = ClassData::take($testProjectClass)->fileName;
         try {
 

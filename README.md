@@ -53,8 +53,7 @@ class RelationWriteCommand extends RelationManagerCommand
         
         $this->relationManager->model('Country')
             ->hasOne('Capital', true)
-            ->hasMany('Region', true)
-            ->castEnum('Size');
+            ->hasMany('Region', true);
             
         $this->relationManager->model('Region')
             ->hasMany('City', true);
@@ -63,10 +62,11 @@ class RelationWriteCommand extends RelationManagerCommand
         // repeat this for any model    
 
         // finally 
-        $this->relationManager->writeTest(false)
-          ->writeMarkdown()
-          ->runTest()
-          ->showModelTable();
+        $this->relationManager
+            ->writeMarkdown()
+            ->showTables()
+            ->writeTest(strict: true)
+            ->runTest();
                    
         
     }    
@@ -87,7 +87,19 @@ The following methods can be used inside `handle()`:
 | showTables         | -                                                  | Show the information as a table in the console               |
 |                    |                                                    |                                                              |
 
+## Configuration
 
+The configuration file `config/relation-manager.php` has the following keys available.
+
+| Key               | Definition                                            |
+|-------------------|-------------------------------------------------------|
+| modelNameSpace    | namespace of the models                               |
+| projectTestClass  | name of the class which will be written               |
+| extendedTestClass | from which class the test file should be extended     |
+| markdownFile      | location where the markdown file should be written to |
+| testCommand       | command to call the tests                             |
+| useMermaidDiagram | define the diagram writing technology                 |
+| testDatabase      | test the database as well                             |
 
 ## Testing
 
