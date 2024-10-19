@@ -12,6 +12,7 @@
 namespace SchenkeIo\LaravelRelationManager\Tests\Application;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use PHPUnit\Framework\Attributes\Group;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
@@ -28,6 +29,7 @@ class TestProjectTest extends TestCase
      * it is risky when changes in the Command file are not transferred here
      * To update this file just run: php artisan run:test-project
      */
+    #[Group('GenerateProjectTestFile')]
     public function testCommandFileIsOlderThanThisTestFile(): void
     {
         $this->assertFirstClassIsOlderThanSecondClass(
@@ -38,8 +40,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Capital
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelCapitalHas_2StrictRelationshipsAndWorks(): void
     {
         $this->assertModelBelongsTo('Workbench\App\Models\Capital', 'Workbench\App\Models\Country');
@@ -49,8 +51,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\City
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelCityHas_4StrictRelationshipsAndWorks(): void
     {
         $this->assertModelIsManyToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
@@ -62,8 +64,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Country
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelCountryHas_3StrictRelationshipsAndWorks(): void
     {
         $this->assertModelHasOne('Workbench\App\Models\Country', 'Workbench\App\Models\Capital');
@@ -74,8 +76,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\GeoRegion
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelGeoRegionHas_3StrictRelationshipsAndWorks(): void
     {
         $this->assertModelBelongsTo('Workbench\App\Models\GeoRegion', 'Workbench\App\Models\Country');
@@ -86,8 +88,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Highway
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelHighwayHas_2StrictRelationshipsAndWorks(): void
     {
         $this->assertModelBelongsToMany('Workbench\App\Models\Highway', 'Workbench\App\Models\City');
@@ -97,8 +99,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Location
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelLocationHas_1StrictRelationshipAndWorks(): void
     {
         $this->assertModelMorphTo('Workbench\App\Models\Location');
@@ -107,8 +109,8 @@ class TestProjectTest extends TestCase
 
     /**
      * Model Workbench\App\Models\Single
-     * #[Group("GenerateProjectTestFile")]
      */
+    #[Group('GenerateProjectTestFile')]
     public function testModelSingleHas_0StrictRelationshipsAndWorks(): void
     {
         $this->assertModelRelationCount('Workbench\App\Models\Single', 0);

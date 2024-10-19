@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Nette;
+use PHPUnit\Framework\Attributes\Group;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
@@ -44,6 +45,7 @@ class GenerateProjectTestFile
         $nameSpace->addUse($assertClass);
         $nameSpace->addUse($writerCallingClass);
         $nameSpace->addUse($extendedTestClass);
+        $nameSpace->addUse(Group::class);
 
         $class = $nameSpace->addClass(class_basename($testProjectClass));
         $class->setExtends($extendedTestClass);
@@ -58,6 +60,7 @@ class GenerateProjectTestFile
         $method->addComment('Since this class is written by the Command file '.$writerCallingClass);
         $method->addComment('it is risky when changes in the Command file are not transferred here');
         $method->addComment('To update this file just run: '.$rebuildCommand);
+        $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
         $method->setReturnType('void');
         $shortCommandClassName = class_basename($writerCallingClass).'::class';
         $method->addBody('$this->assertFirstClassIsOlderThanSecondClass(');
@@ -80,7 +83,7 @@ class GenerateProjectTestFile
                 'AndWorks'
             );
             $method->addComment('Model '.$baseModel);
-            $method->addComment('#[Group("'.GenerateProjectTestFile::testGroup().'")]');
+            $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
             $method->setReturnType('void');
             if (is_array($relatedModels)) {
                 /*
