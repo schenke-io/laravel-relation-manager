@@ -119,106 +119,56 @@ class TestProjectTest extends TestCase
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table capitals exists')]
-    public function testDatabaseTable_capitalsExists()
+    public function testDatabaseTable_capitals()
     {
         $this->assertTrue(Schema::hasTable('capitals'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table capitals has field country_id')]
-    public function testDatabaseField_country_idExistsIn_capitals()
-    {
         $this->assertTrue(Schema::hasColumn('capitals','country_id'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table cities exists')]
-    public function testDatabaseTable_citiesExists()
+    public function testDatabaseTable_cities()
     {
         $this->assertTrue(Schema::hasTable('cities'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table cities has field region_id')]
-    public function testDatabaseField_region_idExistsIn_cities()
-    {
         $this->assertTrue(Schema::hasColumn('cities','region_id'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table city_highway exists')]
-    public function testDatabaseTable_city_highwayExists()
+    public function testDatabaseTable_city_highway()
     {
         $this->assertTrue(Schema::hasTable('city_highway'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table city_highway has field city_id')]
-    public function testDatabaseField_city_idExistsIn_city_highway()
-    {
         $this->assertTrue(Schema::hasColumn('city_highway','city_id'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table city_highway has field highway_id')]
-    public function testDatabaseField_highway_idExistsIn_city_highway()
-    {
         $this->assertTrue(Schema::hasColumn('city_highway','highway_id'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table countries exists')]
-    public function testDatabaseTable_countriesExists()
+    public function testDatabaseTable_countries()
     {
         $this->assertTrue(Schema::hasTable('countries'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table highways exists')]
-    public function testDatabaseTable_highwaysExists()
+    public function testDatabaseTable_highways()
     {
         $this->assertTrue(Schema::hasTable('highways'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table locations exists')]
-    public function testDatabaseTable_locationsExists()
+    public function testDatabaseTable_locations()
     {
         $this->assertTrue(Schema::hasTable('locations'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table locations has field locationable_id')]
-    public function testDatabaseField_locationable_idExistsIn_locations()
-    {
         $this->assertTrue(Schema::hasColumn('locations','locationable_id'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table locations has field locationable_type')]
-    public function testDatabaseField_locationable_typeExistsIn_locations()
-    {
         $this->assertTrue(Schema::hasColumn('locations','locationable_type'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table regions exists')]
-    public function testDatabaseTable_regionsExists()
+    public function testDatabaseTable_regions()
     {
         $this->assertTrue(Schema::hasTable('regions'));
-    }
-
-    #[Group('GenerateProjectTestFile')]
-    #[TestDox('table regions has field country_id')]
-    public function testDatabaseField_country_idExistsIn_regions()
-    {
         $this->assertTrue(Schema::hasColumn('regions','country_id'));
     }
 
     #[Group('GenerateProjectTestFile')]
-    #[TestDox('table singles exists')]
-    public function testDatabaseTable_singlesExists()
+    public function testDatabaseTable_singles()
     {
         $this->assertTrue(Schema::hasTable('singles'));
     }

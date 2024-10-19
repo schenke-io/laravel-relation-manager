@@ -123,14 +123,10 @@ class GenerateProjectTestFile
         }
 
         foreach ($tableFields as $table => $fields) {
-            $method = $class->addMethod("testDatabaseTable_{$table}Exists");
+            $method = $class->addMethod("testDatabaseTable_{$table}");
             $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
-            $method->addAttribute(TestDox::class, ["table $table exists"]);
             $method->addBody("\$this->assertTrue(Schema::hasTable('$table'));");
             foreach ($fields as $field) {
-                $method = $class->addMethod("testDatabaseField_{$field}ExistsIn_{$table}");
-                $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
-                $method->addAttribute(TestDox::class, ["table $table has field $field"]);
                 $method->addBody("\$this->assertTrue(Schema::hasColumn('$table','$field'));");
             }
         }
