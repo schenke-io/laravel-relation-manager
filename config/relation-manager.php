@@ -41,4 +41,18 @@ return [
      */
     'testCommand' => 'php artisan test',
 
+    /*
+     * Relationship Diagram Generation:
+     *
+     * This setting controls how relationship diagrams are included in markdown documentation:
+     * - true:  Diagrams are rendered as inline Mermaid code. Users viewing the markdown
+     *          will need the Mermaid plugin installed to see the diagrams.
+     * - false: Diagrams are generated as separate SVG files using Graphviz. This requires
+     *          Graphviz to be installed on the system generating the documentation.
+     */
+    'useMermaidDiagram' => true,
+    /*
+     * When true the existence of tables and key fields in the database is tested
+     */
+    'testDatabase' => true,
 ];
