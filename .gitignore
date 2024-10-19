@@ -1,13 +1,13 @@
-.idea
-.phpunit.cache
-build
+/.idea
+/.phpunit.cache
+/build
 composer.lock
-coverage
-docs
+/coverage
+/docs
 phpunit.xml.dist
 phpstan.neon
 testbench.yaml
-vendor
+/vendor
 node_modules
 
 .badita.yaml
@@ -15,4 +15,6 @@ node_modules
 
 .phpunit.result.cache
 
+# improve file overwriting issues
+/workbench/docs/diagram.*
 
