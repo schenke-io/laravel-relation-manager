@@ -119,7 +119,11 @@ enum Relations
         };
     }
 
-    public function setTableLinks(string $modelName1, string $modelName2, array &$tables): void
+    public function setTableLinks(
+        string $modelName1,
+        string $modelName2,
+        array &$tables,
+        bool $withExtraPivotTables): void
     {
         $modelName1 = ClassData::take($modelName1)->getShortName();
         $modelName2 = ClassData::take($modelName2)->getShortName();
@@ -143,8 +147,13 @@ enum Relations
                 break;
             case self::belongsToMany:
             case self::isManyToMany:
-                $tables[$tableName3][$tableName1] = $this;
-                $tables[$tableName3][$tableName2] = $this;
+                if ($withExtraPivotTables) {
+                    $tables[$tableName3][$tableName1] = $this;
+                    $tables[$tableName3][$tableName2] = $this;
+                } else {
+                    $tables[$tableName2][$tableName1] = $this;
+                    $tables[$tableName1][$tableName2] = $this;
+                }
                 break;
             case self::belongsTo:
                 $tables[$tableName1][$tableName2] = $this;

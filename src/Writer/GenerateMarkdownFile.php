@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Writer;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 
 class GenerateMarkdownFile
 {
@@ -12,12 +13,12 @@ class GenerateMarkdownFile
 
     public function writeFile(Command $command): ?string
     {
-        $markdownFile = config(ProjectContainer::CONFIG_KEY_MARKDOWN_FILE, '');
+        $markdownFile = ConfigKey::MARKDOWN_FILE->get('');
         if ($markdownFile == '') {
             return "markdown file not found: $markdownFile";
         }
-
-        $diagrammCode = ProjectContainer::getDiagrammCode();
+        $withExtraPivotTables = (bool) ConfigKey::SHOW_PIVOT_TABLES_IN_DIAGRAMM->get(true);
+        $diagrammCode = ProjectContainer::getDiagrammCode($withExtraPivotTables);
         $tableRelations = ProjectContainer::getMarkdownRelationTable();
         $tableDatabase = ProjectContainer::getMarkdownDatabaseTable();
         $commandClass = get_class($command);

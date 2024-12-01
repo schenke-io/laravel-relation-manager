@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Writer\GetDiagramm;
@@ -11,20 +12,6 @@ use SchenkeIo\LaravelRelationManager\Writer\GetTable;
 
 class ProjectContainer
 {
-    public const CONFIG_KEY_MODEL_NAME_SPACE = 'relation-manager.modelNameSpace';
-
-    public const CONFIG_KEY_PROJECT_TEST_CLASS = 'relation-manager.projectTestClass';
-
-    public const CONFIG_KEY_EXTENDED_TEST_CLASS = 'relation-manager.extendedTestClass';
-
-    public const CONFIG_KEY_MARKDOWN_FILE = 'relation-manager.markdownFile';
-
-    public const CONFIG_KEY_TEST_COMMAND = 'relation-manager.testCommand';
-
-    public const CONFIG_KEY_USE_MERMAID_DIAGRAMM = 'relation-manager.useMermaidDiagram';
-
-    public const CONFIG_KEY_TEST_DATABASE = 'relation-manager.testDatabase';
-
     public static DiagramDirection $diagrammDirection = DiagramDirection::LR;
 
     /**
@@ -100,7 +87,7 @@ class ProjectContainer
 
     public static function getModelClass(string $modelClass): string
     {
-        $class = ClassData::newFromName(config(self::CONFIG_KEY_MODEL_NAME_SPACE), $modelClass);
+        $class = ClassData::newFromName(ConfigKey::MODEL_NAME_SPACE->get(), $modelClass);
         if (! $class->isClass) {
             return '';
         }
@@ -121,7 +108,7 @@ class ProjectContainer
         return self::$errors;
     }
 
-    public static function getTableFields(): array
+    public static function getTableFields(bool $withExtraPivotTables): array
     {
         $tables = [];
         /*
@@ -132,7 +119,7 @@ class ProjectContainer
             $tableName = Str::snake(Str::plural(class_basename($primModel)));
             $tables[$tableName] = [];
         }
-        foreach (self::getDatabaseData() as $table1 => $table1Data) {
+        foreach (self::getDatabaseData($withExtraPivotTables) as $table1 => $table1Data) {
             ksort($table1Data);
             /**
              * @var Relations $relation
@@ -162,7 +149,7 @@ class ProjectContainer
     public static function getDatabaseTable(): array
     {
         $return = [];
-        foreach (self::getTableFields() as $table => $fields) {
+        foreach (self::getTableFields(true) as $table => $fields) {
             $return[] = [$table, implode(', ', $fields)];
         }
 
@@ -212,24 +199,24 @@ class ProjectContainer
         return GetTable::getHtml(self::getRelationTable());
     }
 
-    public static function getDiagrammCode(): string
+    public static function getDiagrammCode(bool $withExtraPivotTables): string
     {
-        if (config(self::CONFIG_KEY_USE_MERMAID_DIAGRAMM)) {
+        if (ConfigKey::USE_MERMAID_DIAGRAMM->get()) {
             return GetDiagramm::getMermaidCode(
-                self::getDatabaseData(),
+                self::getDatabaseData($withExtraPivotTables),
                 self::$diagrammDirection
             );
         } else {
-            GetDiagramm::writeGraphvizFile(self::getDatabaseData(),
+            GetDiagramm::writeGraphvizFile(self::getDatabaseData($withExtraPivotTables),
                 self::$diagrammDirection,
-                config(self::CONFIG_KEY_MARKDOWN_FILE));
+                ConfigKey::MARKDOWN_FILE->get());
 
             return GetDiagramm::getGraphvizCode();
         }
 
     }
 
-    public static function getDatabaseData(): array
+    public static function getDatabaseData(bool $withExtraPivotTables): array
     {
         $table = [];
         foreach (self::$relations as $primModel => $modelSet) {
@@ -238,7 +225,12 @@ class ProjectContainer
              * @var Relations $relation
              */
             foreach ($modelSet as $secModel => $relation) {
-                $relation->setTableLinks($primModel, $secModel, $table);
+                $relation->setTableLinks(
+                    $primModel,
+                    $secModel,
+                    $table,
+                    $withExtraPivotTables
+                );
             }
         }
 

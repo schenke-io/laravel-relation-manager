@@ -20,7 +20,7 @@ class AllConstraintTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testClassAgeConstraint()
+    public function test_class_age_constraint()
     {
         $classAgeConstraint = new ClassAgeConstraint;
         $this->assertThat(
@@ -39,7 +39,7 @@ class AllConstraintTest extends TestCase
         $this->assertIsString($classAgeConstraint->toString());
     }
 
-    public function testModelConstraint()
+    public function test_model_constraint()
     {
         $modelConstraint = new ModelConstraint;
         $this->assertThat(Country::class, $modelConstraint);
@@ -47,14 +47,14 @@ class AllConstraintTest extends TestCase
         $this->assertIsString($modelConstraint->toString());
     }
 
-    public function testNoRelationshipConstraint()
+    public function test_no_relationship_constraint()
     {
         $noRelationshipConstraint = new NoRelationshipConstraint;
         $this->assertThat(Single::class, $noRelationshipConstraint);
         $this->assertIsString($noRelationshipConstraint->toString());
     }
 
-    public function testRelationshipExistsConstraint()
+    public function test_relationship_exists_constraint()
     {
         $relationshipExistsConstraint = new RelationshipExistsConstraint;
         $this->assertThat(
@@ -64,7 +64,7 @@ class AllConstraintTest extends TestCase
         $this->assertIsString($relationshipExistsConstraint->toString());
     }
 
-    public function testRelationshipCountConstraint()
+    public function test_relationship_count_constraint()
     {
         $relationshipCountConstraint = new RelationshipCountConstraint;
         $this->assertThat(

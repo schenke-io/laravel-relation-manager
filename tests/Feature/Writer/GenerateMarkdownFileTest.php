@@ -5,9 +5,9 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Writer;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Config;
 use Mockery;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
@@ -19,7 +19,7 @@ use Workbench\App\Models\Single;
 
 class GenerateMarkdownFileTest extends TestCase
 {
-    public function testWriteFileOk()
+    public function test_write_file_ok()
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
@@ -35,7 +35,7 @@ class GenerateMarkdownFileTest extends TestCase
         $this->assertNull($return);
     }
 
-    public function testWriteFileException()
+    public function test_write_file_exception()
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
@@ -49,10 +49,10 @@ class GenerateMarkdownFileTest extends TestCase
         $this->assertIsString($return);
     }
 
-    public function testMarkdownFileNotDefined()
+    public function test_markdown_file_not_defined()
     {
         ProjectContainer::clear();
-        Config::set(ProjectContainer::CONFIG_KEY_MARKDOWN_FILE, '');
+        ConfigKey::MARKDOWN_FILE->set('');
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
@@ -64,10 +64,10 @@ class GenerateMarkdownFileTest extends TestCase
 
     }
 
-    public function testDiagramGraphviz()
+    public function test_diagram_graphviz()
     {
         ProjectContainer::clear();
-        Config::set(ProjectContainer::CONFIG_KEY_USE_MERMAID_DIAGRAMM, true);
+        ConfigKey::USE_MERMAID_DIAGRAMM->set(true);
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);

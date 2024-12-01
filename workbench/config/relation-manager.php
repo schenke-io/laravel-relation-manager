@@ -52,7 +52,7 @@ return [
      */
     'useMermaidDiagram' => true,
     /*
-     * When true the existence of tables and key fields in the database is tested
+     * When true the existence of tables and full fields in the database is tested
      */
     'testDatabase' => true,
 ];

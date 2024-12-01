@@ -13,7 +13,7 @@ class LaravelRelationManagerServiceProviderTest extends TestCase
     /**
      * @throws InvalidPackage
      */
-    public function testConfigurePackage()
+    public function test_configure_package()
     {
         $mockPackage = Mockery::mock(Package::class);
         $mockPackage->shouldReceive('name')->once();

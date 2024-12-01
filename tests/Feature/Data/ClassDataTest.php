@@ -21,32 +21,32 @@ class ClassDataTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function testIsModel()
+    public function test_is_model()
     {
         $this->assertTrue(ClassData::take(Country::class)->isModel);
         $this->assertFalse(ClassData::take('')->isModel);
         $this->assertFalse(ClassData::take(ClassData::class)->isModel);
     }
 
-    public function testIsClass()
+    public function test_is_class()
     {
         $this->assertTrue(ClassData::take(Country::class)->isClass);
         $this->assertFalse(ClassData::take('')->isClass);
         $this->assertTrue(ClassData::take(ClassData::class)->isClass);
     }
 
-    public function testNewFromFilename()
+    public function test_new_from_filename()
     {
         $this->assertTrue(ClassData::newFromFileName(__FILE__)->isClass);
     }
 
-    public function testGetFileAge()
+    public function test_get_file_age()
     {
         $this->assertGreaterThan(0, ClassData::take(Country::class)->getFileAge());
         $this->assertEquals(-1, ClassData::take('')->getFileAge());
     }
 
-    public function testIsFresherOrEqualThan(): void
+    public function test_is_fresher_or_equal_than(): void
     {
         $this->assertFalse(ClassData::take('')->isFresherOrEqualThan(''));
         $this->assertFalse(ClassData::take(Single::class)->isFresherOrEqualThan(''));
@@ -66,7 +66,7 @@ class ClassDataTest extends TestCase
         $this->assertTrue($classData->isFresherOrEqualThan(Capital::class));
     }
 
-    public function testGetModelRelations()
+    public function test_get_model_relations()
     {
         $this->assertEquals(
             [Capital::class, Region::class, City::class],
@@ -90,12 +90,12 @@ class ClassDataTest extends TestCase
     /**
      * @return void
      */
-    public function testGetShortNameWithClass(string $classname, string $return)
+    public function test_get_short_name_with_class(string $classname, string $return)
     {
         $this->assertEquals($return, (new ClassData($classname))->getShortName());
     }
 
-    public function testGetFileBase()
+    public function test_get_file_base()
     {
         $this->assertEquals(
             basename(__FILE__),
@@ -106,7 +106,7 @@ class ClassDataTest extends TestCase
     /**
      * @throws LaravelNotLoadedException|\ReflectionException
      */
-    public function testGetRelationCountOfModel()
+    public function test_get_relation_count_of_model()
     {
         $this->assertEquals(-1, ClassData::getRelationCountOfModel(''));
         $this->assertEquals(3, ClassData::getRelationCountOfModel(Country::class));
@@ -127,7 +127,7 @@ class ClassDataTest extends TestCase
     /**
      * @throws LaravelNotLoadedException|\ReflectionException
      */
-    public function testGetRelationExpectations(string $class, string $returnType, string $usesClass, string $regex): void
+    public function test_get_relation_expectations(string $class, string $returnType, string $usesClass, string $regex): void
     {
         $this->assertMatchesRegularExpression($regex, ClassData::getRelationExpectation($class, $returnType, $usesClass));
     }

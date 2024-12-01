@@ -11,6 +11,7 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestDox;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 
@@ -28,8 +29,8 @@ class GenerateProjectTestFile
     public function writeFile(Command $callingCommand, bool $testStrict): ?string
     {
         $relations = ProjectContainer::getRelations();
-        $testProjectClass = config(ProjectContainer::CONFIG_KEY_PROJECT_TEST_CLASS);
-        $extendedTestClass = config(ProjectContainer::CONFIG_KEY_EXTENDED_TEST_CLASS);
+        $testProjectClass = ConfigKey::PROJECT_TEST_CLASS->get();
+        $extendedTestClass = ConfigKey::EXTENDED_TEST_CLASS->get();
         $signature = $callingCommand->getName();
         $writerCallingClass = get_class($callingCommand);
         $rebuildCommand = (str_contains($signature, ':') ? 'php artisan ' : '').$signature;
@@ -116,10 +117,9 @@ class GenerateProjectTestFile
          * loop over tables and keys
          */
 
-        $testDatabase = config(ProjectContainer::CONFIG_KEY_TEST_DATABASE);
         $tableFields = [];
-        if (config(ProjectContainer::CONFIG_KEY_TEST_DATABASE)) {
-            $tableFields = ProjectContainer::getTableFields();
+        if (ConfigKey::TEST_DATABASE->get()) {
+            $tableFields = ProjectContainer::getTableFields(true);
         }
 
         foreach ($tableFields as $table => $fields) {

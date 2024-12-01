@@ -2,9 +2,9 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Define;
 
-use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\Capital;
@@ -13,7 +13,7 @@ use Workbench\App\Models\Location;
 
 class ProjectContainerTest extends TestCase
 {
-    public function testClear()
+    public function test_clear()
     {
         ProjectContainer::addError('123');
         ProjectContainer::addModel(Country::class);
@@ -22,13 +22,13 @@ class ProjectContainerTest extends TestCase
         $this->assertCount(0, ProjectContainer::getRelations());
     }
 
-    public function testSetModelNameSpace()
+    public function test_set_model_name_space()
     {
         ProjectContainer::clear();
         $this->assertEquals('Workbench\App\Models\Country', ProjectContainer::getModelClass('Country'));
     }
 
-    public function testAddModel()
+    public function test_add_model()
     {
         ProjectContainer::clear();
         $this->assertCount(0, ProjectContainer::getRelations());
@@ -36,7 +36,7 @@ class ProjectContainerTest extends TestCase
         $this->assertCount(1, ProjectContainer::getRelations());
     }
 
-    public function testAddRelation()
+    public function test_add_relation()
     {
         ProjectContainer::clear();
         $this->assertCount(0, ProjectContainer::getRelations());
@@ -54,7 +54,7 @@ class ProjectContainerTest extends TestCase
         $this->assertCount(1, ProjectContainer::getErrors());
     }
 
-    public function testAddError()
+    public function test_add_error()
     {
         ProjectContainer::clear();
         $this->assertCount(0, ProjectContainer::getErrors());
@@ -72,7 +72,7 @@ class ProjectContainerTest extends TestCase
     }
 
     #[DataProvider('dataProviderModels')]
-    public function testGetModelClass(string $modelClass, string $result, int $errorCount, int $unknownModelsCount)
+    public function test_get_model_class(string $modelClass, string $result, int $errorCount, int $unknownModelsCount)
     {
         ProjectContainer::clear();
         $this->assertEquals($result, ProjectContainer::getModelClass($modelClass));
@@ -81,16 +81,16 @@ class ProjectContainerTest extends TestCase
         $this->assertCount($unknownModelsCount, ProjectContainer::getUnknownModels());
     }
 
-    public function testGetRelationTable()
+    public function test_get_relation_table()
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
         $this->assertCount(2, ProjectContainer::getRelationTable());
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getMarkdownRelationTable()));
-        $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getDiagrammCode()));
+        $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getDiagrammCode(true)));
     }
 
-    public function testGetDatabaseTable()
+    public function test_get_database_table()
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
@@ -100,14 +100,16 @@ class ProjectContainerTest extends TestCase
         // $this->assertCount(2, ProjectContainer::getDatabaseTable());
     }
 
-    public function testGetDiagrammCode()
+    public function test_get_diagramm_code()
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
         ProjectContainer::addRelation(Capital::class, Location::class, Relations::morphOne);
-        Config::set(ProjectContainer::CONFIG_KEY_USE_MERMAID_DIAGRAMM, true);
-        $this->assertIsString(ProjectContainer::getDiagrammCode());
-        Config::set(ProjectContainer::CONFIG_KEY_USE_MERMAID_DIAGRAMM, false);
-        $this->assertIsString(ProjectContainer::getDiagrammCode());
+        ConfigKey::USE_MERMAID_DIAGRAMM->set(true);
+        $this->assertIsString(ProjectContainer::getDiagrammCode(true));
+        $this->assertIsString(ProjectContainer::getDiagrammCode(false));
+        ConfigKey::USE_MERMAID_DIAGRAMM->set(false);
+        $this->assertIsString(ProjectContainer::getDiagrammCode(true));
+        $this->assertIsString(ProjectContainer::getDiagrammCode(false));
     }
 }

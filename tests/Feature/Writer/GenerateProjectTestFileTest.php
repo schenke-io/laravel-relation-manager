@@ -5,9 +5,9 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Writer;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Config;
 use Mockery;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\Relations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
@@ -17,16 +17,16 @@ use Workbench\App\Models\Country;
 
 class GenerateProjectTestFileTest extends TestCase
 {
-    public function testGetTestGroup()
+    public function test_get_test_group()
     {
         $this->assertEquals('GenerateProjectTestFile', GenerateProjectTestFile::testGroup());
     }
 
-    public function testWriteFileOk()
+    public function test_write_file_ok()
     {
         ProjectContainer::clear();
         (new RunTestProjectManagerCommand)->buildRelations();
-        Config::set(ProjectContainer::CONFIG_KEY_TEST_DATABASE, true);
+        ConfigKey::TEST_DATABASE->set(true);
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once();
 
@@ -35,7 +35,7 @@ class GenerateProjectTestFileTest extends TestCase
         $this->assertNull($return);
     }
 
-    public function testWriteFileException()
+    public function test_write_file_exception()
     {
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);

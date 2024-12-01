@@ -10,14 +10,14 @@ use Workbench\App\Models\Country;
 
 class DefineRelationTest extends TestCase
 {
-    public function testConstruct()
+    public function test_construct()
     {
         ProjectContainer::clear();
         $defineRelation = new DefineRelation(Country::class);
         $this->assertCount(1, ProjectContainer::getRelations());
     }
 
-    public function testBuildRelation()
+    public function test_build_relation()
     {
         ProjectContainer::clear();
 

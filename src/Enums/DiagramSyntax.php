@@ -17,7 +17,7 @@ enum DiagramSyntax
         };
     }
 
-    public function morph(int|string $table1, int|string $table2)
+    public function morph(int|string $table1, int|string $table2): string
     {
         return match ($this) {
             DiagramSyntax::Mermaid => "$table1 --> $table2\n",
@@ -25,7 +25,7 @@ enum DiagramSyntax
         };
     }
 
-    public function normal(int|string $table1, int|string $table2)
+    public function normal(int|string $table1, int|string $table2): string
     {
         return match ($this) {
             DiagramSyntax::Mermaid => "$table1 ==> $table2\n",

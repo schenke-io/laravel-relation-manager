@@ -7,7 +7,7 @@ use SchenkeIo\LaravelRelationManager\Enums\Relations;
 
 class RelationsTest extends TestCase
 {
-    public function testAllRelationshipFunctions()
+    public function test_all_relationship_functions()
     {
         foreach (Relations::cases() as $case) {
             $this->assertIsString($case->getAssertName());
@@ -18,7 +18,7 @@ class RelationsTest extends TestCase
         }
     }
 
-    public function testGetClass()
+    public function test_get_class()
     {
         $this->assertIsString(Relations::hasOne->getClass());
         $this->expectException('Exception');

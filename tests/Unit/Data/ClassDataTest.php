@@ -12,7 +12,7 @@ class ClassDataTest extends TestCase
     /**
      * @throws LaravelNotLoadedException
      */
-    public function testGetModelRelations()
+    public function test_get_model_relations()
     {
         // we use the missing database in unit tests for this test
         $this->expectException(LaravelNotLoadedException::class);

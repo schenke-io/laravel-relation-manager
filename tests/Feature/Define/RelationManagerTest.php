@@ -16,7 +16,7 @@ use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
 class RelationManagerTest extends TestCase
 {
-    public function testWriteTestErrors()
+    public function test_write_test_errors()
     {
         /** @var Filesystem $mockFilesystem */
         $mockFilesystem = $this->mock(Filesystem::class, function (MockInterface $mock) {
@@ -39,7 +39,7 @@ class RelationManagerTest extends TestCase
         $handler->writeTest('', '', true);
     }
 
-    public function testWriteTestSuccess()
+    public function test_write_test_success()
     {
         ProjectContainer::clear();
         $mockGenerateProjectTestFile = Mockery::mock(GenerateProjectTestFile::class);
@@ -55,7 +55,7 @@ class RelationManagerTest extends TestCase
         $handler->writeTest(false);
     }
 
-    public function testWriteTestReturnError()
+    public function test_write_test_return_error()
     {
         ProjectContainer::clear();
         $mockGenerateProjectTestFile = Mockery::mock(GenerateProjectTestFile::class);
@@ -72,7 +72,7 @@ class RelationManagerTest extends TestCase
         $handler->writeTest('', '', false);
     }
 
-    public function testRunTestSuccess()
+    public function test_run_test_success()
     {
         ProjectContainer::clear();
 
@@ -85,7 +85,7 @@ class RelationManagerTest extends TestCase
         $handler->runTest();
     }
 
-    public function testRunTestFailure()
+    public function test_run_test_failure()
     {
         ProjectContainer::clear();
 
@@ -98,13 +98,13 @@ class RelationManagerTest extends TestCase
         $handler->runTest();
     }
 
-    public function testModel()
+    public function test_model()
     {
         $handler = new RelationManager;
         $this->assertInstanceOf(DefineRelation::class, $handler->model(''));
     }
 
-    public function testShowModelTable()
+    public function test_show_model_table()
     {
         $mockCommand = Mockery::mock(Command::class);
         $mockCommand->shouldReceive('table')->twice();
@@ -112,7 +112,7 @@ class RelationManagerTest extends TestCase
         $handler->showTables();
     }
 
-    public function testWriteMarkdownSuccess()
+    public function test_write_markdown_success()
     {
         $mockGenerateMarkdownFile = Mockery::mock(GenerateMarkdownFile::class);
         $mockGenerateMarkdownFile->expects('writeFile')->once()->andReturn(null);
@@ -127,7 +127,7 @@ class RelationManagerTest extends TestCase
         $handler->writeMarkdown('');
     }
 
-    public function testWriteMarkdownFailure()
+    public function test_write_markdown_failure()
     {
         $mockGenerateMarkdownFile = Mockery::mock(GenerateMarkdownFile::class);
         $mockGenerateMarkdownFile->expects('writeFile')->once()->andReturn('error');

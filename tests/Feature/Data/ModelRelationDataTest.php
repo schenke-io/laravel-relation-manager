@@ -9,7 +9,7 @@ use Workbench\App\Models\Country;
 
 class ModelRelationDataTest extends TestCase
 {
-    public function testCanCreateModelRelation()
+    public function test_can_create_model_relation()
     {
         $modelRelation = new ModelRelationData(
             Country::class,

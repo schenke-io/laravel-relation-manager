@@ -7,7 +7,7 @@ use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 
 class ModelCountDataTest extends TestCase
 {
-    public function testConstructor()
+    public function test_constructor()
     {
         $data = new ModelCountData('model-name', 4);
         $this->assertEquals(4, $data->count);

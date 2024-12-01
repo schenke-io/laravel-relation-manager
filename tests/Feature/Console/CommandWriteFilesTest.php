@@ -9,7 +9,7 @@ use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class CommandWriteFilesTest extends TestCase
 {
-    public function testRun()
+    public function test_run()
     {
         /** @var Filesystem $mockFilesystem */
         $mockFilesystem = $this->mock(Filesystem::class, function (MockInterface $mock) {

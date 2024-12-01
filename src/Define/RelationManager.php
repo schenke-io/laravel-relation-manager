@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Define;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
+use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
@@ -52,7 +53,7 @@ class RelationManager
 
     public function runTest(): self
     {
-        $testCommand = config(ProjectContainer::CONFIG_KEY_TEST_COMMAND);
+        $testCommand = ConfigKey::TEST_COMMAND->get();
         $command = "$testCommand --group=".GenerateProjectTestFile::testGroup();
         $this->command->info("running command:  $command");
         echo Process::run($command)->output();

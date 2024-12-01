@@ -8,7 +8,7 @@ use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class RelationManagerCommandTest extends TestCase
 {
-    public function testExtendsBaseClass()
+    public function test_extends_base_class()
     {
         $command = new class extends RelationManagerCommand
         {

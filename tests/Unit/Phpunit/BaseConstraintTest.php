@@ -7,7 +7,7 @@ use SchenkeIo\LaravelRelationManager\Phpunit\BaseConstraint;
 
 class BaseConstraintTest extends TestCase
 {
-    public function testBaseConstraint()
+    public function test_base_constraint()
     {
         $baseConstraint = new class extends BaseConstraint
         {

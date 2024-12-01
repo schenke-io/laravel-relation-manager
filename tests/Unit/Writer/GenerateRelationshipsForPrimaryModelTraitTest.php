@@ -7,7 +7,7 @@ use SchenkeIo\LaravelRelationManager\Writer\GenerateRelationTypesTrait;
 
 class GenerateRelationshipsForPrimaryModelTraitTest extends TestCase
 {
-    public function testGetContent()
+    public function test_get_content()
     {
         $this->assertIsString(GenerateRelationTypesTrait::getContent());
     }

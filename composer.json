@@ -15,10 +15,10 @@
     ],
     "require": {
         "php": "^8.2",
-        "illuminate/contracts": "^v11.28.1",
-        "nette/php-generator": "^v4.1.6",
+        "illuminate/contracts": "^10.0|^11.28.1",
+        "nette/php-generator": "^4.1.6",
         "spatie/laravel-data": "^3.11.2",
-        "spatie/laravel-package-tools": "^1.16.0"
+        "spatie/laravel-package-tools": "^1.0"
     },
     "require-dev": {
         "larastan/larastan": "^2.0.1",
@@ -27,7 +27,8 @@
         "nunomaduro/collision": "^8.5",
         "orchestra/testbench": "^9.5",
         "pestphp/pest": "^3.4",
-        "spatie/laravel-ray": "^1.26"
+        "spatie/laravel-ray": "^1.26",
+        "schenke-io/packaging-tools": "^v0.0"
     },
     "autoload": {
         "psr-4": {
@@ -55,7 +56,8 @@
             "@prepare",
             "@php ./vendor/bin/testbench package:discover --ansi"
         ],
-        "analyse": "vendor/bin/phpstan analyse",
+        "setup": "SchenkeIo\\PackagingTools\\Setup::handle",
+        "analyse": "./vendor/bin/phpstan analyse",
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "pint": "vendor/bin/pint",
@@ -64,10 +66,10 @@
             "vendor/bin/testbench run:test-project"
         ],
         "release": [
-            "composer pint",
-            "composer analyse",
-            "composer write-class",
-            "composer test-coverage"
+            "@pint",
+            "@analyse",
+            "@coverage",
+            "@markdown"
         ],
         "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
         "prepare": "@php vendor/bin/testbench package:discover --ansi",
@@ -80,6 +82,18 @@
         "lint": [
             "@php vendor/bin/pint",
             "@php vendor/bin/phpstan analyse"
+        ],
+        "low": "composer update --prefer-lowest --prefer-dist",
+        "stable": "composer update --prefer-stable --prefer-dist",
+        "coverage": "vendor/bin/pest --coverage",
+        "markdown": "vendor/bin/testbench write:markdown",
+        "check": [
+            "@pint",
+            "@test",
+            "@markdown"
+        ],
+        "add": [
+            "composer require --dev phpstan/phpstan-phpunit"
         ]
     },
     "config": {

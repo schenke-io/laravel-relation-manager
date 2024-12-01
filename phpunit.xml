@@ -16,6 +16,13 @@
             <directory>./src</directory>
         </include>
     </source>
+    <coverage>
+        <report>
+            <clover outputFile="build/coverage/clover.xml"/>
+            <php outputFile="build/coverage/coverage.php"/>
+            <text outputFile="build/coverage/coverage.txt" showUncoveredFiles="false" showOnlySummary="true"/>
+        </report>
+    </coverage>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="BCRYPT_ROUNDS" value="4"/>

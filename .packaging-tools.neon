@@ -1,0 +1,16 @@
+analyse: true
+coverage: true
+markdown:  vendor/bin/testbench write:markdown
+pint: true
+test: pest
+check:
+	- pint
+	- test
+	- markdown
+
+release:
+	- pint
+	- analyse
+	- coverage
+	- markdown
+

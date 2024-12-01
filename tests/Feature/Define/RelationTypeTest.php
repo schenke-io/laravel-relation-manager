@@ -9,21 +9,28 @@ use Workbench\App\Models\Country;
 
 class RelationTypeTest extends testCase
 {
-    public function testGetAssertName()
+    public function test_get_assert_name()
     {
         $this->assertEquals('assertModelHasOne', Relations::hasOne->getAssertName());
     }
 
-    public function testSetTableLinks()
+    public function test_set_table_links()
     {
         $tables = [];
         foreach (Relations::cases() as $case) {
-            $case->setTableLinks(Country::class, City::class, $tables);
+            $case->setTableLinks(Country::class, City::class, $tables, true);
         }
         $this->assertCount(3, $tables);
+
+        $tables = [];
+        foreach (Relations::cases() as $case) {
+            $case->setTableLinks(Country::class, City::class, $tables, false);
+        }
+        $this->assertCount(2, $tables);
+
     }
 
-    public function testInverseMethods()
+    public function test_inverse_methods()
     {
         $askForInverseCountNormal = 0;
         $askForInverseCountPrevent = 0;
@@ -54,7 +61,7 @@ class RelationTypeTest extends testCase
     /**
      * @throws \Exception
      */
-    public function testGetClass()
+    public function test_get_class()
     {
         foreach (Relations::cases() as $case) {
             if ($case == Relations::noRelation) {

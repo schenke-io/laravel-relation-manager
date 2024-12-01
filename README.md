@@ -1,15 +1,36 @@
+<!--
+
+This file was written by 'WriteMarkdownCommand.php' line 23 using
+SchenkeIo\PackagingTools\Markdown\MarkdownAssembler
+
+Do not edit manually as it will be overwritten.
+
+-->
 # Laravel Relation Manager
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/schenke-io/laravel-relation-manager/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/schenke-io/laravel-relation-manager/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager.svg?style=flat-square)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
-[![Coverage](https://img.shields.io/endpoint?url=https://otterwise.app/badge/github/schenke-io/laravel-relation-manager/fca0812c-2c3e-42b9-9d81-713f2c20769b)](https://otterwise.app/github/schenke-io/laravel-relation-manager)
+[![Coverage](.github/coverage.svg)]()
+[![PHPStan](.github/phpstan.svg)]()
 
-Developing complex Laravel applications with many models can be difficult. 
-**Laravel Relation Manager** helps by bringing all your model relationships 
-together. It creates tests to make sure they work and documents them for 
-easy reference. This saves you time, improves code quality, 
+Developing complex Laravel applications with many models can be difficult.
+**Laravel Relation Manager** helps by bringing all your model relationships
+together. It creates tests to make sure they work and documents them for
+easy reference. This saves you time, improves code quality,
 and keeps your project organized.
+
+
+
+* [Laravel Relation Manager](#laravel-relation-manager)
+  * [Installation](#installation)
+  * [Configuration](#configuration)
+  * [Usage](#usage)
+  * [Testing](#testing)
+  * [Changelog](#changelog)
+  * [License](#license)
+
+
 
 ## Installation
 
@@ -24,6 +45,31 @@ Install the config file of the package:
 php artisan relation-manager:install
 ```
 
+
+
+
+
+## Configuration
+
+The configuration file `config/relation-manager.php` has the following keys available.
+
+
+
+
+| key                      | definition                                       | type    |
+|--------------------------|--------------------------------------------------|---------|
+| modelNameSpace           | namespace of the models (commonly App\Models)    | String  |
+| projectTestClass         | empty test class which will be (over)written     | String  |
+| extendedTestClass        | class the written class should extend from       | String  |
+| markdownFile             | full path for the markdown file which is written | String  |
+| testCommand              | console command to run the tests                 | String  |
+| useMermaidDiagram        | true = mermaid, false = Graphviz                 | Boolean |
+| showPivotTablesInDiagram | should pivot tables be shown in the diagram      | Boolean |
+| testDatabase             | extend the tests to asserts of the database      | Boolean |
+
+
+
+
 ## Usage
 
 This package's core functionality is provided by two components:
@@ -35,13 +81,13 @@ In the command file:
 - decide if you want to add reverse relations
 - add BackedEnum classes used in $casts array of models as a special relation
 - after the model-relation definition:
-  - write the test file 
-  - run the test file (only)
-  - write text and graphical documentation
-  - echo tables 
+    - write the test file
+    - run the test file (only)
+    - write text and graphical documentation
+    - echo tables
 
 ```php
-# app/Console/Commands/RelationWriteCommand
+// app/Console/Commands/RelationWriteCommand
 
 use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
 
@@ -87,19 +133,8 @@ The following methods can be used inside `handle()`:
 | showTables         | -                                                  | Show the information as a table in the console               |
 |                    |                                                    |                                                              |
 
-## Configuration
 
-The configuration file `config/relation-manager.php` has the following keys available.
 
-| Key               | Definition                                            |
-|-------------------|-------------------------------------------------------|
-| modelNameSpace    | namespace of the models                               |
-| projectTestClass  | name of the class which will be written               |
-| extendedTestClass | from which class the test file should be extended     |
-| markdownFile      | location where the markdown file should be written to |
-| testCommand       | command to call the tests                             |
-| useMermaidDiagram | define the diagram writing technology                 |
-| testDatabase      | test the database as well                             |
 
 ## Testing
 
@@ -115,3 +150,6 @@ Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed re
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+
+
