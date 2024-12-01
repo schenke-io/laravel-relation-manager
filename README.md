@@ -79,7 +79,6 @@ This package's core functionality is provided by two components:
 In the command file:
 - define models and their relations
 - decide if you want to add reverse relations
-- add BackedEnum classes used in $casts array of models as a special relation
 - after the model-relation definition:
     - write the test file
     - run the test file (only)

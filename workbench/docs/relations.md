@@ -24,12 +24,11 @@ do not manually edit this file as it will be overwritten
 
 ```mermaid
 flowchart TD
-city_highway ==> cities
-city_highway ==> highways
 locations --> cities
 locations --> highways
 locations --> capitals
 cities ==> regions
+highways <==> cities
 capitals ==> countries
 regions ==> countries
 

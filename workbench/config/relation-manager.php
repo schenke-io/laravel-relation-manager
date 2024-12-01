@@ -55,4 +55,6 @@ return [
      * When true the existence of tables and full fields in the database is tested
      */
     'testDatabase' => true,
+
+    'showPivotTablesInDiagram' => false,
 ];

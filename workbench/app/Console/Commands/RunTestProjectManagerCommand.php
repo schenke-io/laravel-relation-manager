@@ -3,6 +3,7 @@
 namespace Workbench\App\Console\Commands;
 
 use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
+use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Highway;
 use Workbench\App\Models\Location;
@@ -33,8 +34,8 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
     public function buildRelations(): void
     {
 
-        $this->relationManager->model('City')
-            ->isManyToMany('Highway', true)
+        $this->relationManager->model(City::class)
+            ->isManyToMany(Highway::class, true)
             ->morphOne('Location', true)
             ->hasOneThrough('Country');
 

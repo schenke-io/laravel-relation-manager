@@ -151,8 +151,13 @@ enum Relations
                     $tables[$tableName3][$tableName1] = $this;
                     $tables[$tableName3][$tableName2] = $this;
                 } else {
-                    $tables[$tableName2][$tableName1] = $this;
-                    $tables[$tableName1][$tableName2] = $this;
+                    /*
+                     * it is called from both ends of the relationship so
+                     * we decide to use it only once here
+                     */
+                    if ($tableName1 > $tableName2) {
+                        $tables[$tableName1][$tableName2] = $this;
+                    }
                 }
                 break;
             case self::belongsTo:
@@ -170,6 +175,14 @@ enum Relations
     {
         return match ($this) {
             self::morphOne, self::morphMany => true,
+            default => false
+        };
+    }
+
+    public function isDouble(): bool
+    {
+        return match ($this) {
+            self::isManyToMany, self::belongsToMany => true,
             default => false
         };
     }

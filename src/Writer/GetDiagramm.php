@@ -49,6 +49,8 @@ class GetDiagramm
                 if ($table2) {
                     if ($relation->isMorph()) {
                         $return .= $style->morph($table1, $table2);
+                    } elseif ($relation->isDouble()) {
+                        $return .= $style->double($table1, $table2);
                     } else {
                         $return .= $style->normal($table1, $table2);
                     }
