@@ -37,7 +37,7 @@ enum DiagramSyntax
     {
         return match ($this) {
             DiagramSyntax::Mermaid => "$table1 <==> $table2\n",
-            DiagramSyntax::Dot => "  $table1 -> $table2 [style=bold, dir=both];\n",
+            DiagramSyntax::Dot => "  $table1 -> $table2 [dir=none, color=silver, penwidth=8];\n",
         };
     }
 
