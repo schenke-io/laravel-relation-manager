@@ -103,7 +103,7 @@ enum Relations
     /**
      * @throws \Exception
      */
-    public function getClass(): ?string
+    public function getClass(): string
     {
         return match ($this) {
             self::hasOne => EloquentRelations\HasOne::class,
