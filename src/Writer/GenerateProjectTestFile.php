@@ -57,7 +57,9 @@ class GenerateProjectTestFile
 
         $class = $nameSpace->addClass(class_basename($testProjectClass));
         $class->setExtends($extendedTestClass);
-        $class->addTrait($refreshTraitClass);
+        if ($refreshDatabase) {
+            $class->addTrait($refreshTraitClass);
+        }
         $class->addTrait($assertClass);
         /*
          * file age test
