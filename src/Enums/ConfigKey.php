@@ -20,6 +20,8 @@ enum ConfigKey: string
 
     case SHOW_PIVOT_TABLES_IN_DIAGRAMM = 'showPivotTablesInDiagram';
 
+    case REFRESH_DATABASE_AFTER_EACH_TEST = 'refreshDatabaseAfterEachTest';
+
     case TEST_DATABASE = 'testDatabase';
 
     public function full(): string
@@ -48,6 +50,7 @@ enum ConfigKey: string
 
             self::USE_MERMAID_DIAGRAMM,
             self::TEST_DATABASE,
+            self::REFRESH_DATABASE_AFTER_EACH_TEST,
             self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => Types::Boolean
         };
     }
@@ -62,7 +65,8 @@ enum ConfigKey: string
             self::TEST_COMMAND => 'console command to run the tests',
             self::USE_MERMAID_DIAGRAMM => 'true = mermaid, false = Graphviz',
             self::TEST_DATABASE => 'extend the tests to asserts of the database',
-            self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => 'should pivot tables be shown in the diagram'
+            self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => 'should pivot tables be shown in the diagram',
+            self::REFRESH_DATABASE_AFTER_EACH_TEST => 'should the database be refreshed after each test' ,
         };
     }
 }

@@ -56,16 +56,17 @@ The configuration file `config/relation-manager.php` has the following keys avai
 
 
 
-| key                      | definition                                       | type    |
-|--------------------------|--------------------------------------------------|---------|
-| modelNameSpace           | namespace of the models (commonly App\Models)    | String  |
-| projectTestClass         | empty test class which will be (over)written     | String  |
-| extendedTestClass        | class the written class should extend from       | String  |
-| markdownFile             | full path for the markdown file which is written | String  |
-| testCommand              | console command to run the tests                 | String  |
-| useMermaidDiagram        | true = mermaid, false = Graphviz                 | Boolean |
-| showPivotTablesInDiagram | should pivot tables be shown in the diagram      | Boolean |
-| testDatabase             | extend the tests to asserts of the database      | Boolean |
+| key                          | definition                                       | type    |
+|------------------------------|--------------------------------------------------|---------|
+| modelNameSpace               | namespace of the models (commonly App\Models)    | String  |
+| projectTestClass             | empty test class which will be (over)written     | String  |
+| extendedTestClass            | class the written class should extend from       | String  |
+| markdownFile                 | full path for the markdown file which is written | String  |
+| testCommand                  | console command to run the tests                 | String  |
+| useMermaidDiagram            | true = mermaid, false = Graphviz                 | Boolean |
+| showPivotTablesInDiagram     | should pivot tables be shown in the diagram      | Boolean |
+| refreshDatabaseAfterEachTest | should the database be refreshed after each test | Boolean |
+| testDatabase                 | extend the tests to asserts of the database      | Boolean |
 
 
 
