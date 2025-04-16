@@ -68,12 +68,13 @@ class TestProjectTest extends TestCase
      * Model Workbench\App\Models\Country
      */
     #[Group('GenerateProjectTestFile')]
-    public function testModelCountryHas_3StrictRelationshipsAndWorks(): void
+    public function testModelCountryHas_4StrictRelationshipsAndWorks(): void
     {
         $this->assertModelHasOne('Workbench\App\Models\Country', 'Workbench\App\Models\Capital');
         $this->assertModelHasMany('Workbench\App\Models\Country', 'Workbench\App\Models\Region');
+        $this->assertModelHasOneIndirect('Workbench\App\Models\Country', 'Workbench\App\Models\City');
         $this->assertModelHasManyThrough('Workbench\App\Models\Country', 'Workbench\App\Models\City');
-        $this->assertModelRelationCount('Workbench\App\Models\Country', 3);
+        $this->assertModelRelationCount('Workbench\App\Models\Country', 4);
     }
 
     /**

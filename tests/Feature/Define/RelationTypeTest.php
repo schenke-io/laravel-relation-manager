@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Define;
 
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
@@ -11,19 +11,19 @@ class RelationTypeTest extends testCase
 {
     public function test_get_assert_name()
     {
-        $this->assertEquals('assertModelHasOne', Relations::hasOne->getAssertName());
+        $this->assertEquals('assertModelHasOne', Relation::hasOne->getAssertName());
     }
 
     public function test_set_table_links()
     {
         $tables = [];
-        foreach (Relations::cases() as $case) {
+        foreach (Relation::cases() as $case) {
             $case->setTableLinks(Country::class, City::class, $tables, true);
         }
         $this->assertCount(3, $tables);
 
         $tables = [];
-        foreach (Relations::cases() as $case) {
+        foreach (Relation::cases() as $case) {
             $case->setTableLinks(Country::class, City::class, $tables, false);
         }
         $this->assertCount(2, $tables);
@@ -40,7 +40,7 @@ class RelationTypeTest extends testCase
         $isRelation = 0;
         $askForRelatedModel = 0;
 
-        foreach (Relations::cases() as $case) {
+        foreach (Relation::cases() as $case) {
             $askForInverseCountNormal += ($case->inverse(false)->askForInverse() ? 1 : 0);
             $askForInverseCountPrevent += ($case->inverse(true)->askForInverse() ? 1 : 0);
             $hasInverseNormal += ($case->hasInverse(false) ? 1 : 0);
@@ -53,9 +53,9 @@ class RelationTypeTest extends testCase
         $this->assertEquals(0, $askForInverseCountPrevent);
         $this->assertEquals(5, $hasInverseNormal);
         $this->assertEquals(0, $hasInversePrevent);
-        $this->assertEquals(7, $hasPublicFunction);
-        $this->assertEquals(10, $isRelation);
-        $this->assertEquals(7, $askForRelatedModel);
+        $this->assertEquals(8, $hasPublicFunction);
+        $this->assertEquals(11, $isRelation);
+        $this->assertEquals(8, $askForRelatedModel);
     }
 
     /**
@@ -63,11 +63,11 @@ class RelationTypeTest extends testCase
      */
     public function test_get_class()
     {
-        foreach (Relations::cases() as $case) {
-            if ($case == Relations::noRelation) {
+        foreach (Relation::cases() as $case) {
+            if ($case == Relation::noRelation) {
                 continue;
             }
-            if ($case == Relations::isSingle) {
+            if ($case == Relation::isSingle) {
                 continue;
             }
             $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $case->getClass());

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations as EloquentRelations;
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 
-enum Relations
+enum Relation
 {
     case noRelation;
     case hasOne;  // inverse:  belongsTo
@@ -26,6 +26,11 @@ enum Relations
      */
     case isManyToMany;
 
+    /*
+     * when a relation is made with extra filter, like hasOneThrough, it has not table keys
+     */
+    case hasOneIndirect;
+
     public function getAssertName(): string
     {
         return 'assertModel'.ucfirst($this->name);
@@ -39,7 +44,7 @@ enum Relations
     public function askForRelatedModel(): bool
     {
         return match ($this) {
-            self::hasOne, self::hasMany,
+            self::hasOne, self::hasMany,self::hasOneIndirect,
             self::isManyToMany,
             self::hasOneThrough, self::hasManyThrough,
             self::morphOne, self::morphMany => true,
@@ -106,7 +111,7 @@ enum Relations
     public function getClass(): string
     {
         return match ($this) {
-            self::hasOne => EloquentRelations\HasOne::class,
+            self::hasOne, self::hasOneIndirect => EloquentRelations\HasOne::class,
             self::hasMany => EloquentRelations\HasMany::class,
             self::belongsToMany, self::isManyToMany => EloquentRelations\BelongsToMany::class,
             self::hasOneThrough => EloquentRelations\HasOneThrough::class,
@@ -143,6 +148,7 @@ enum Relations
                 break;
             case self::hasOneThrough:
             case self::hasManyThrough:
+            case self::hasOneIndirect:
                 // no link
                 break;
             case self::belongsToMany:

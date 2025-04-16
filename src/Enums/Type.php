@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Enums;
 
-enum Types
+enum Type
 {
     case Boolean;
     case String;

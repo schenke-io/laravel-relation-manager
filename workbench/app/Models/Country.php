@@ -16,6 +16,11 @@ class Country extends Model
         return $this->hasOne(Capital::class);
     }
 
+    public function oldest(): HasOne
+    {
+        return $this->hasOne(City::class)->oldestOfMany();
+    }
+
     public function regions(): HasMany
     {
         return $this->hasMany(Region::class);

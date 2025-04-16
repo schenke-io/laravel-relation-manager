@@ -14,6 +14,7 @@ class RelationshipCountConstraint extends BaseConstraint
      * @param  ModelCountData  $other
      *
      * @throws LaravelNotLoadedException
+     * @throws \ReflectionException
      */
     protected function matches(mixed $other): bool
     {

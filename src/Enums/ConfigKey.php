@@ -39,19 +39,19 @@ enum ConfigKey: string
         Config::set($this->full(), $this->type()->format($value));
     }
 
-    public function type(): Types
+    public function type(): Type
     {
         return match ($this) {
             self::MODEL_NAME_SPACE,
             self::PROJECT_TEST_CLASS,
             self::EXTENDED_TEST_CLASS,
             self::MARKDOWN_FILE,
-            self::TEST_COMMAND => Types::String,
+            self::TEST_COMMAND => Type::String,
 
             self::USE_MERMAID_DIAGRAMM,
             self::TEST_DATABASE,
             self::REFRESH_DATABASE_AFTER_EACH_TEST,
-            self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => Types::Boolean
+            self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => Type::Boolean
         };
     }
 

@@ -2,7 +2,7 @@
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\RelationTypes;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 
 it('will not use debugging functions')
@@ -19,6 +19,6 @@ it('can verify if AssertModelRelations is outdated', function () {
 it('can verify if RelationTypes is outdated', function () {
     expect(
         ClassData::take(RelationTypes::class)
-            ->isFresherOrEqualThan(Relations::class)
+            ->isFresherOrEqualThan(Relation::class)
     )->toBeTrue();
 });

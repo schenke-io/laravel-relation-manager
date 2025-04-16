@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Nette\PhpGenerator\PhpFile;
+use phpDocumentor\Reflection\Types\ClassString;
 use ReflectionClass;
+use ReflectionException;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use Spatie\LaravelData\Data;
 
@@ -36,7 +37,7 @@ class ClassData extends Data
     {
         try {
             $this->reflection = new ReflectionClass($class);
-        } catch (\ReflectionException $e) {
+        } catch (ReflectionException $e) {
             $this->reflection = null;
             $this->classError = $e->getMessage();
             $this->isClass = false;
@@ -83,32 +84,31 @@ class ClassData extends Data
         return ClassData::take($classNameNew);
     }
 
-    public static function newFromFileName(string $fileName): ClassData
-    {
-        $file = PhpFile::fromCode(file_get_contents($fileName));
-        $class = array_key_first($file->getClasses());
-
-        return new ClassData($class);
-    }
-
     /**
      * @throws LaravelNotLoadedException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getRelationCountOfModel(string $model): int
     {
         $classData = new ClassData($model);
         if ($classData->isModel) {
-            return count($classData->getModelRelations());
+            $counter = 0;
+            foreach ($classData->getModelRelations() as $otherModel => $relations) {
+                $counter += count($relations);
+            }
+
+            return $counter;
         } else {
             return -1;
         }
     }
 
     /**
-     * @return array<string, mixed>
+     * array of the related model classes with array of relation types to them
      *
-     * @throws LaravelNotLoadedException|\ReflectionException
+     * @return array<ClassString, array<int,string>>
+     *
+     * @throws LaravelNotLoadedException|ReflectionException
      */
     public function getModelRelations(): array
     {
@@ -120,7 +120,7 @@ class ClassData extends Data
         try {
             DB::connection();
         } catch (Exception $e) {
-            throw new LaravelNotLoadedException('Laravel is not loaded');
+            throw new LaravelNotLoadedException;
         }
 
         /*
@@ -132,7 +132,7 @@ class ClassData extends Data
                 'Illuminate\Database\Eloquent\Relations')) {
                 // https://laracasts.com/discuss/channels/eloquent/is-there-a-way-to-list-all-relationships-of-a-model
                 /**
-                 * get the Model class in the method
+                 * method is a relation, get the Model class in the method
                  *
                  * @var Model $model
                  */
@@ -140,7 +140,9 @@ class ClassData extends Data
                 $modelMethod = $model->{$method->name}();
                 $related = $modelMethod->getRelated();
                 $theOtherModel = ($related)::class;
-                $return[$theOtherModel] = class_basename($method->getReturnType()->getName());
+
+                // to any model there can be more than one relationship
+                $return[$theOtherModel][] = class_basename($method->getReturnType()->getName());
             }
         }
 
@@ -151,7 +153,7 @@ class ClassData extends Data
      * returns text 'failed asserting that ....'
      *
      * @throws LaravelNotLoadedException
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public static function getRelationExpectation(
         string $class,
@@ -160,14 +162,21 @@ class ClassData extends Data
     {
         $relations = ClassData::take($class)->getModelRelations();
         if (isset($relations[$usesClass])) {
-            if ($relations[$usesClass] == $returnType) {
+            $expectationMet = false;
+            foreach ($relations[$usesClass] as $relationType) {
+                if ($relationType == $returnType) {
+                    $expectationMet = true;
+                    break;
+                }
+            }
+            if ($expectationMet) {
                 // expectation met, return OK
                 return '';
             } else {
-                return "$class has relation $returnType to $usesClass but found ".$relations[$usesClass];
+                return "$class has no relation $returnType";
             }
         } else {
-            return "$class has a relation to $usesClass";
+            return "$class has not any relations to $usesClass";
         }
     }
 

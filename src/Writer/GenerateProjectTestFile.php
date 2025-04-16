@@ -12,7 +12,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 
 class GenerateProjectTestFile
@@ -80,9 +80,13 @@ class GenerateProjectTestFile
         /*
          * loop over models
          */
-        foreach ($relations as $baseModel => $relatedModels) {
-            $baseClass = ClassData::take($baseModel);
-            $relCount = count($relatedModels);
+        foreach ($relations as $baseModel => $baseModelRelations) {
+            $relCount = 0;
+            foreach ($baseModelRelations as $relatedModel => $relations) {
+                // we count the relations independent of the models itself
+                $relCount += count($relations);
+            }
+
             $method = $class->addMethod(
                 'testModel'.
                 class_basename($baseModel).
@@ -95,28 +99,22 @@ class GenerateProjectTestFile
             $method->addComment('Model '.$baseModel);
             $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
             $method->setReturnType('void');
-            if (is_array($relatedModels)) {
+            foreach ($baseModelRelations as $model2 => $relations) {
                 /*
                  * walk all relations
+                 * @var Relation $relation
                  */
-                $modelCount = 0;
-                /**
-                 * @var string $model2
-                 * @var Relations $relation
-                 */
-                foreach ($relatedModels as $model2 => $relation) {
+                foreach ($relations as $relation) {
                     $assertName = $relation->getAssertName();
                     $method->addBody("\$this->$assertName('$baseModel'".
                         ($model2 ? ", '$model2'" : '').
                         ');'
                     );
-                    $modelCount++;
-                }
-                if ($testStrict) {
-                    $method->addBody("\$this->assertModelRelationCount('$baseModel', $modelCount);");
                 }
             }
-
+            if ($testStrict) {
+                $method->addBody("\$this->assertModelRelationCount('$baseModel', $relCount);");
+            }
         }
         /*
          * loop over tables and keys

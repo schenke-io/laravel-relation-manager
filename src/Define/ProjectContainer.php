@@ -6,7 +6,7 @@ use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Writer\GetDiagramm;
 use SchenkeIo\LaravelRelationManager\Writer\GetTable;
 
@@ -15,7 +15,7 @@ class ProjectContainer
     public static DiagramDirection $diagrammDirection = DiagramDirection::LR;
 
     /**
-     * @var array <string,array <string,Relations>>
+     * @var array <string,array <string,array<int,Relation>>>
      */
     private static array $relations = [];
 
@@ -43,34 +43,27 @@ class ProjectContainer
         }
     }
 
-    public static function addRelation(string $modelFrom, string $modelTo, Relations $relation): void
+    public static function addRelation(string $modelFrom, string $modelTo, Relation $relation): void
     {
         $classFrom = self::getModelClass($modelFrom);
+        if (! $classFrom) {
+            return;
+        }
+
         $classTo = self::getModelClass($modelTo);
-        if ($relation == Relations::morphTo) {
+        if ($relation == Relation::morphTo) {
             /*
              * morphTo is one method covering all morphs
              * we collect these separately and have this method be related to no model
              */
             self::$morphToRelations[$classFrom][] = class_basename($classTo);
             $classTo = '';
-        }
-        if ($classFrom != '') {
-            if (isset(self::$relations[$classFrom][$classTo])) {
-                if (self::$relations[$classFrom][$classTo] != $relation) {
-                    self::addError(sprintf(
-                        "unable to overwrite relation '%s' from '%s' to '%s' with '%s'",
-                        self::$relations[$classFrom][$classTo]->name,
-                        $modelFrom,
-                        $modelTo,
-                        $relation->name
-                    )
-                    );
-                }
-            } else {
-                self::$relations[$classFrom][$classTo] = $relation;
+            if (in_array($relation, self::$relations[$classFrom][$classTo] ?? [])) {
+                // only add it once
+                return;
             }
         }
+        self::$relations[$classFrom][$classTo][] = $relation;
     }
 
     public static function getRelations(): array
@@ -122,7 +115,7 @@ class ProjectContainer
         foreach (self::getDatabaseData($withExtraPivotTables) as $table1 => $table1Data) {
             ksort($table1Data);
             /**
-             * @var Relations $relation
+             * @var Relation $relation
              */
             foreach ($table1Data as $table2 => $relation) {
                 if (strlen($table2) > 1) {
@@ -165,14 +158,16 @@ class ProjectContainer
             $directRelation = self::$morphToRelations[$primModel] ?? [];
             sort($directRelation);
             $indirectRelation = [];
-            /**
-             * @var Relations $relation
-             */
-            foreach ($modelSet as $secModel => $relation) {
-                if ($relation->isDirectRelation()) {
-                    $directRelation[] = class_basename($secModel);
-                } else {
-                    $indirectRelation[] = class_basename($secModel);
+            foreach ($modelSet as $secModel => $relations) {
+                /**
+                 * @var Relation $relation
+                 */
+                foreach ($relations as $relation) {
+                    if ($relation->isDirectRelation()) {
+                        $directRelation[] = class_basename($secModel);
+                    } else {
+                        $indirectRelation[] = class_basename($secModel);
+                    }
                 }
             }
 
@@ -219,18 +214,19 @@ class ProjectContainer
     public static function getDatabaseData(bool $withExtraPivotTables): array
     {
         $table = [];
-        foreach (self::$relations as $primModel => $modelSet) {
-            /**
-             * @var string $secModel
-             * @var Relations $relation
-             */
-            foreach ($modelSet as $secModel => $relation) {
-                $relation->setTableLinks(
-                    $primModel,
-                    $secModel,
-                    $table,
-                    $withExtraPivotTables
-                );
+        foreach (self::$relations as $primModel => $baseModelRelations) {
+            foreach ($baseModelRelations as $secModel => $relations) {
+                /**
+                 * @var Relation $relation
+                 */
+                foreach ($relations as $relation) {
+                    $relation->setTableLinks(
+                        $primModel,
+                        $secModel,
+                        $table,
+                        $withExtraPivotTables
+                    );
+                }
             }
         }
 

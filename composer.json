@@ -94,7 +94,8 @@
         ],
         "add": [
             "composer require --dev phpstan/phpstan-phpunit"
-        ]
+        ],
+        "dev": "SchenkeIo\\PackagingTools\\DeveloperMenu::handle"
     },
     "config": {
         "sort-packages": true,

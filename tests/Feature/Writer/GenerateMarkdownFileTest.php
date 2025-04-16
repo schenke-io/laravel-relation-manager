@@ -8,7 +8,7 @@ use Illuminate\Filesystem\Filesystem;
 use Mockery;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use Workbench\App\Models\Capital;
@@ -22,10 +22,10 @@ class GenerateMarkdownFileTest extends TestCase
     public function test_write_file_ok()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
-        ProjectContainer::addRelation(Country::class, Region::class, Relations::noRelation);
-        ProjectContainer::addRelation(Country::class, Location::class, Relations::morphMany);
-        ProjectContainer::addRelation(Single::class, '', Relations::isSingle);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
+        ProjectContainer::addRelation(Country::class, Region::class, Relation::noRelation);
+        ProjectContainer::addRelation(Country::class, Location::class, Relation::morphMany);
+        ProjectContainer::addRelation(Single::class, '', Relation::isSingle);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once();
@@ -38,7 +38,7 @@ class GenerateMarkdownFileTest extends TestCase
     public function test_write_file_exception()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once()->andThrow(Exception::class, 'test error');
@@ -53,7 +53,7 @@ class GenerateMarkdownFileTest extends TestCase
     {
         ProjectContainer::clear();
         ConfigKey::MARKDOWN_FILE->set('');
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
 
@@ -68,7 +68,7 @@ class GenerateMarkdownFileTest extends TestCase
     {
         ProjectContainer::clear();
         ConfigKey::USE_MERMAID_DIAGRAMM->set(true);
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);
         $mockFilesystem->shouldReceive('put')->once();

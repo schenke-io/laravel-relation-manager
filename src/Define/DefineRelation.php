@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Define;
 
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 
 class DefineRelation
 {
@@ -19,8 +19,8 @@ class DefineRelation
     private function buildRelation(
         string $modelName,
         bool $addReverseRelation,
-        Relations $forward,
-        Relations $reverse
+        Relation $forward,
+        Relation $reverse
     ): self {
         ProjectContainer::addModel($modelName);
         ProjectContainer::addRelation($this->primaryModel, $modelName, $forward);

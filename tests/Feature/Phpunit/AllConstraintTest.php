@@ -5,7 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Phpunit;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Phpunit\ClassAgeConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\ModelConstraint;
 use SchenkeIo\LaravelRelationManager\Phpunit\NoRelationshipConstraint;
@@ -58,7 +58,7 @@ class AllConstraintTest extends TestCase
     {
         $relationshipExistsConstraint = new RelationshipExistsConstraint;
         $this->assertThat(
-            new ModelRelationData(Country::class, Capital::class, Relations::hasOne),
+            new ModelRelationData(Country::class, Capital::class, Relation::hasOne),
             $relationshipExistsConstraint
         );
         $this->assertIsString($relationshipExistsConstraint->toString());
@@ -68,7 +68,7 @@ class AllConstraintTest extends TestCase
     {
         $relationshipCountConstraint = new RelationshipCountConstraint;
         $this->assertThat(
-            new ModelCountData(Country::class, 3),
+            new ModelCountData(Country::class, 4),
             $relationshipCountConstraint
         );
         $this->assertIsString($relationshipCountConstraint->toString());

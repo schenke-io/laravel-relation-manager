@@ -6,6 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Mockery;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Metadata\ReflectionException;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
@@ -35,11 +36,6 @@ class ClassDataTest extends TestCase
         $this->assertTrue(ClassData::take(ClassData::class)->isClass);
     }
 
-    public function test_new_from_filename()
-    {
-        $this->assertTrue(ClassData::newFromFileName(__FILE__)->isClass);
-    }
-
     public function test_get_file_age()
     {
         $this->assertGreaterThan(0, ClassData::take(Country::class)->getFileAge());
@@ -66,10 +62,14 @@ class ClassDataTest extends TestCase
         $this->assertTrue($classData->isFresherOrEqualThan(Capital::class));
     }
 
+    /**
+     * @throws ReflectionException
+     * @throws LaravelNotLoadedException
+     */
     public function test_get_model_relations()
     {
         $this->assertEquals(
-            [Capital::class, Region::class, City::class],
+            [Capital::class, City::class, Region::class],
             array_keys(
                 ClassData::take(Country::class)->getModelRelations()
             )
@@ -109,7 +109,7 @@ class ClassDataTest extends TestCase
     public function test_get_relation_count_of_model()
     {
         $this->assertEquals(-1, ClassData::getRelationCountOfModel(''));
-        $this->assertEquals(3, ClassData::getRelationCountOfModel(Country::class));
+        $this->assertEquals(4, ClassData::getRelationCountOfModel(Country::class));
     }
 
     public static function dataProviderRelationExpectations(): array

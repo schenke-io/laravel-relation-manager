@@ -5,7 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Define;
 use PHPUnit\Framework\Attributes\DataProvider;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\Country;
@@ -41,17 +41,17 @@ class ProjectContainerTest extends TestCase
         ProjectContainer::clear();
         $this->assertCount(0, ProjectContainer::getRelations());
         // add good relation
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
         $this->assertCount(1, ProjectContainer::getRelations());
         $this->assertCount(0, ProjectContainer::getErrors());
-        // add another different relation
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasMany);
+        // add another different relation, which should work
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasMany);
         $this->assertCount(1, ProjectContainer::getRelations());
-        $this->assertCount(1, ProjectContainer::getErrors());
-        // add morphTo
-        ProjectContainer::addRelation(Capital::class, Location::class, Relations::morphTo);
+        $this->assertCount(0, ProjectContainer::getErrors());
+        // add morphTo, which should work
+        ProjectContainer::addRelation(Capital::class, Location::class, Relation::morphTo);
         $this->assertCount(2, ProjectContainer::getRelations());
-        $this->assertCount(1, ProjectContainer::getErrors());
+        $this->assertCount(0, ProjectContainer::getErrors());
     }
 
     public function test_add_error()
@@ -60,6 +60,15 @@ class ProjectContainerTest extends TestCase
         $this->assertCount(0, ProjectContainer::getErrors());
         ProjectContainer::addError('123');
         $this->assertCount(1, ProjectContainer::getErrors());
+    }
+
+    public function test_adding_invalid_model_is_ignored()
+    {
+        ProjectContainer::clear();
+        $this->assertCount(0, ProjectContainer::getRelations());
+        // add good relation
+        ProjectContainer::addRelation('wrong model ', Capital::class, Relation::hasOne);
+        $this->assertCount(0, ProjectContainer::getRelations());
     }
 
     public static function dataProviderModels(): array
@@ -84,7 +93,7 @@ class ProjectContainerTest extends TestCase
     public function test_get_relation_table()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
         $this->assertCount(2, ProjectContainer::getRelationTable());
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getMarkdownRelationTable()));
         $this->assertGreaterThanOrEqual(5, strlen(ProjectContainer::getDiagrammCode(true)));
@@ -93,8 +102,8 @@ class ProjectContainerTest extends TestCase
     public function test_get_database_table()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
-        ProjectContainer::addRelation(Capital::class, Location::class, Relations::morphOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
+        ProjectContainer::addRelation(Capital::class, Location::class, Relation::morphOne);
         $this->assertTrue(true);
         // todo repair next Line !
         // $this->assertCount(2, ProjectContainer::getDatabaseTable());
@@ -103,8 +112,8 @@ class ProjectContainerTest extends TestCase
     public function test_get_diagramm_code()
     {
         ProjectContainer::clear();
-        ProjectContainer::addRelation(Country::class, Capital::class, Relations::hasOne);
-        ProjectContainer::addRelation(Capital::class, Location::class, Relations::morphOne);
+        ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
+        ProjectContainer::addRelation(Capital::class, Location::class, Relation::morphOne);
         ConfigKey::USE_MERMAID_DIAGRAMM->set(true);
         $this->assertIsString(ProjectContainer::getDiagrammCode(true));
         $this->assertIsString(ProjectContainer::getDiagrammCode(false));

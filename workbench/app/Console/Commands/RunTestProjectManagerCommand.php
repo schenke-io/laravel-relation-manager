@@ -42,6 +42,7 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
         $this->relationManager->model(Country::class)
             ->hasOne('Capital', true)
             ->hasMany(Region::class, true)
+            ->hasOneIndirect('City')
             ->hasManyThrough('City');
 
         $this->relationManager->model('Highway');

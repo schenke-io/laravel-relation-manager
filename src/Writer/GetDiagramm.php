@@ -6,7 +6,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramSyntax;
-use SchenkeIo\LaravelRelationManager\Enums\Relations;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 
 class GetDiagramm
 {
@@ -44,7 +44,7 @@ class GetDiagramm
         $return = $style->start($diagrammDirection);
 
         foreach ($databaseData as $table1 => $data) {
-            /** @var Relations $relation */
+            /** @var Relation $relation */
             foreach ($data as $table2 => $relation) {
                 if ($table2) {
                     if ($relation->isMorph()) {

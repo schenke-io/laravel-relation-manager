@@ -8,6 +8,7 @@ This package's core functionality is provided by two components:
 In the command file:
 - define models and their relations
 - decide if you want to add reverse relations
+- it is possible to have more than one relationship between two models 
 - after the model-relation definition:
     - write the test file
     - run the test file (only)

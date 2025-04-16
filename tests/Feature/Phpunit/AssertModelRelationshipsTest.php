@@ -22,7 +22,7 @@ class AssertModelRelationshipsTest extends TestCase
 
     public function test_model_relation_count()
     {
-        $this->assertModelRelationCount(Country::class, 3);
+        $this->assertModelRelationCount(Country::class, 4);
     }
 
     public function test_model_has_one()
