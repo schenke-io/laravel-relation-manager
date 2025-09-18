@@ -29,10 +29,10 @@ class GenerateProjectTestFile
     public function writeFile(Command $callingCommand, bool $testStrict): ?string
     {
         $relations = ProjectContainer::getRelations();
-        $testProjectClass = ConfigKey::PROJECT_TEST_CLASS->get();
-        $extendedTestClass = ConfigKey::EXTENDED_TEST_CLASS->get();
+        $testProjectClass = (string) ConfigKey::PROJECT_TEST_CLASS->get();
+        $extendedTestClass = (string) ConfigKey::EXTENDED_TEST_CLASS->get();
         $refreshDatabase = (bool) ConfigKey::REFRESH_DATABASE_AFTER_EACH_TEST->get(true);
-        $signature = $callingCommand->getName();
+        $signature = (string) $callingCommand->getName();
         $writerCallingClass = get_class($callingCommand);
         $rebuildCommand = (str_contains($signature, ':') ? 'php artisan ' : '').$signature;
 

@@ -12,6 +12,10 @@ class ClassAgeConstraint extends BaseConstraint
      */
     protected function matches(mixed $other): bool
     {
+        if ($other->model2 === null) {
+            return false;  // let it fail when not complete
+        }
+
         $this->expectation = sprintf(
             'class %s is older than %s',
             $other->model1,  // old

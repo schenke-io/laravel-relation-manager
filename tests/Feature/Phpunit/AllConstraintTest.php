@@ -36,6 +36,10 @@ class AllConstraintTest extends TestCase
             new ModelRelationData('', ''),
             $this->logicalNot($classAgeConstraint)
         );
+        $this->assertThat(
+            new ModelRelationData('', null),
+            $this->logicalNot($classAgeConstraint)
+        );
         $this->assertIsString($classAgeConstraint->toString());
     }
 
@@ -60,6 +64,10 @@ class AllConstraintTest extends TestCase
         $this->assertThat(
             new ModelRelationData(Country::class, Capital::class, Relation::hasOne),
             $relationshipExistsConstraint
+        );
+        $this->assertThat(
+            new ModelRelationData(Country::class, null, Relation::hasOne),
+            $this->logicalNot($relationshipExistsConstraint)
         );
         $this->assertIsString($relationshipExistsConstraint->toString());
     }

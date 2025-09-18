@@ -26,9 +26,9 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
         $this->relationManager
             ->writeMarkdown()
             ->showTables()
+            ->scanRelations()
             ->writeTest(strict: true)
             ->runTest();
-
     }
 
     public function buildRelations(): void

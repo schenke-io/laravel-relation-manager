@@ -13,8 +13,8 @@ class GenerateMarkdownFile
 
     public function writeFile(Command $command): ?string
     {
-        $markdownFile = ConfigKey::MARKDOWN_FILE->get('');
-        if ($markdownFile == '') {
+        $markdownFile = (string) ConfigKey::MARKDOWN_FILE->get('');
+        if ($markdownFile === '') {
             return "markdown file not found: $markdownFile";
         }
         $withExtraPivotTables = (bool) ConfigKey::SHOW_PIVOT_TABLES_IN_DIAGRAMM->get(true);
@@ -22,7 +22,7 @@ class GenerateMarkdownFile
         $tableRelations = ProjectContainer::getMarkdownRelationTable();
         $tableDatabase = ProjectContainer::getMarkdownDatabaseTable();
         $commandClass = get_class($command);
-        $signature = $command->getName();
+        $signature = (string) $command->getName();
 
         $markdown = <<<markdown
 <!--

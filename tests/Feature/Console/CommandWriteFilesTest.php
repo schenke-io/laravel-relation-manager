@@ -4,8 +4,8 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Console;
 
 use Illuminate\Filesystem\Filesystem;
 use Mockery\MockInterface;
-use SchenkeIo\LaravelRelationManager\Console\WriteTraitFiles;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Writer\WriteTraitFiles;
 
 class CommandWriteFilesTest extends TestCase
 {

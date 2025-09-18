@@ -39,6 +39,7 @@ class RelationWriteCommand extends RelationManagerCommand
         // finally 
         $this->relationManager
             ->writeMarkdown()
+            ->scanRelations()
             ->showTables()
             ->writeTest(strict: true)
             ->runTest();
@@ -53,11 +54,11 @@ This command is called by default with `php artisan relation-manager:run`.
 
 The following methods can be used inside `handle()`:
 
-| method             | parameter                                          | details                                                      |
-|--------------------|----------------------------------------------------|--------------------------------------------------------------|
-| model($model)      | name of the model                                  | the model name is relative to the model namespace configured |
-| writeTest($strict) | false: define the minimum, true: define everything | write the test file as defined                               |
-| runTest            | -                                                  | run the test file                                            |
-| writeMarkdown      | -                                                  | write a markdown file with the documentation                 |
-| showTables         | -                                                  | Show the information as a table in the console               |
-|                    |                                                    |                                                              |
+| method             | parameter                                          | details                                                       |
+|--------------------|----------------------------------------------------|---------------------------------------------------------------|
+| model($model)      | name of the model                                  | the model name is relative to the model namespace configured  |
+| writeTest($strict) | false: define the minimum, true: define everything | write the test file as defined                                |
+| runTest            | -                                                  | run the test file                                             |
+| writeMarkdown      | -                                                  | write a markdown file with the documentation                  |
+| showTables         | -                                                  | Show the information as a table in the console                |
+| scanRelations      | -                                                  | scan and display the current relations in the PHP code needed |

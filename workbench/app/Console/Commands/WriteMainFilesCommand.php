@@ -4,7 +4,7 @@ namespace Workbench\App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use SchenkeIo\LaravelRelationManager\Console\WriteTraitFiles;
+use SchenkeIo\LaravelRelationManager\Writer\WriteTraitFiles;
 
 class WriteMainFilesCommand extends Command
 {

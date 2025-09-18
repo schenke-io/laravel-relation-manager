@@ -17,6 +17,11 @@ return [
     'modelNameSpace' => 'Workbench\App\Models',
 
     /*
+     * Specifies the path for the model files (commonly 'app/Models').
+     */
+    'modelDirectory' => realpath(__DIR__.'/../app/Models'),
+
+    /*
      * Name of the test class (as a string or in 'Classname::class' format).
      * Ensure this class exists, as it will be overwritten.
      * For initial setup, an empty class can be used.

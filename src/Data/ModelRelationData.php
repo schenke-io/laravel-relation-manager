@@ -8,6 +8,9 @@ use Spatie\LaravelData\Data;
 
 /**
  * used in Phpunit/Constraints
+ *
+ * @property-read string $model1
+ * @property-read string|null $model2
  */
 class ModelRelationData extends Data
 {

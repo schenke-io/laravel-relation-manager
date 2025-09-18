@@ -18,6 +18,9 @@ class RelationshipExistsConstraint extends BaseConstraint
      */
     protected function matches(mixed $other): bool
     {
+        if ($other->model2 === null) {
+            return false;  // let it fail when not complete
+        }
         $this->expectation = ClassData::getRelationExpectation(
             $other->model1,
             class_basename($other->relation->getClass()),

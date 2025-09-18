@@ -17,6 +17,11 @@ return [
     'modelNameSpace' => 'App\Models',
 
     /*
+     *  Specifies the absolute path for your project's model files (commonly app_path('Models'))
+     */
+    'modelDirectory' => app_path('Models'),
+
+    /*
      * Name of the test class (as a string or in 'Classname::class' format).
      * Ensure this class exists, as it will be overwritten.
      * For initial setup, an empty class can be used.
@@ -51,8 +56,19 @@ return [
      *          Graphviz to be installed on the system generating the documentation.
      */
     'useMermaidDiagram' => true,
+
     /*
      * When true the existence of tables and full fields in the database is tested
      */
     'testDatabase' => true,
+
+    /*
+     * should pivot tables be shown in the diagram
+     */
+    'showPivotTablesInDiagram' => true,
+
+    /*
+     * should the database be refreshed after each test
+     */
+    'refreshDatabaseAfterEachTest' => false,
 ];

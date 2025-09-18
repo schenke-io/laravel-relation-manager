@@ -15,14 +15,17 @@ class ProjectContainer
     public static DiagramDirection $diagrammDirection = DiagramDirection::LR;
 
     /**
-     * @var array <string,array <string,array<int,Relation>>>
+     * @var array<string, array<string, list<Relation>>>
      */
     private static array $relations = [];
 
+    /** @var list<string> */
     private static array $errors = [];
 
+    /** @var list<string> */
     private static array $unknownModels = [];
 
+    /** @var array<string, list<string>> */
     private static array $morphToRelations = [];
 
     public static function clear(): void
@@ -66,6 +69,9 @@ class ProjectContainer
         self::$relations[$classFrom][$classTo][] = $relation;
     }
 
+    /**
+     * @return array<string, array<string, list<Relation>>>
+     */
     public static function getRelations(): array
     {
         ksort(self::$relations);
@@ -73,6 +79,9 @@ class ProjectContainer
         return self::$relations;
     }
 
+    /**
+     * @return list<string>
+     */
     public static function getUnknownModels(): array
     {
         return self::$unknownModels;
@@ -80,7 +89,7 @@ class ProjectContainer
 
     public static function getModelClass(string $modelClass): string
     {
-        $class = ClassData::newFromName(ConfigKey::MODEL_NAME_SPACE->get(), $modelClass);
+        $class = ClassData::newFromName((string) ConfigKey::MODEL_NAME_SPACE->get(), $modelClass);
         if (! $class->isClass) {
             return '';
         }
@@ -96,11 +105,17 @@ class ProjectContainer
         self::$errors[] = $msg;
     }
 
+    /**
+     * @return list<string>
+     */
     public static function getErrors(): array
     {
         return self::$errors;
     }
 
+    /**
+     * @return array<string, list<string>>
+     */
     public static function getTableFields(bool $withExtraPivotTables): array
     {
         $tables = [];
@@ -139,6 +154,9 @@ class ProjectContainer
         return $return;
     }
 
+    /**
+     * @return array{0: list<string>, 1: list<list<string>>}
+     */
     public static function getDatabaseTable(): array
     {
         $return = [];
@@ -149,6 +167,9 @@ class ProjectContainer
         return [['table', 'required fields'], $return];
     }
 
+    /**
+     * @return array{0: list<string>, 1: list<list<string>>}
+     */
     public static function getRelationTable(): array
     {
         $return = [];
@@ -204,13 +225,16 @@ class ProjectContainer
         } else {
             GetDiagramm::writeGraphvizFile(self::getDatabaseData($withExtraPivotTables),
                 self::$diagrammDirection,
-                ConfigKey::MARKDOWN_FILE->get());
+                (string) ConfigKey::MARKDOWN_FILE->get());
 
             return GetDiagramm::getGraphvizCode();
         }
 
     }
 
+    /**
+     * @return array<string, array<string, Relation>>
+     */
     public static function getDatabaseData(bool $withExtraPivotTables): array
     {
         $table = [];

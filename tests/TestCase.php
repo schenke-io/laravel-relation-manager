@@ -33,6 +33,7 @@ class TestCase extends Orchestra
                 'prefix' => '',
             ]);
             $config->set('relation-manager.modelNameSpace', 'Workbench\App\Models');
+            $config->set('relation-manager.modelDirectory', workbench_path('app/Models'));
             $config->set('relation-manager.projectTestClass', TestProjectTest::class);
             $config->set('relation-manager.extendedTestClass', TestCase::class);
             $config->set('relation-manager.markdownFile', workbench_path('docs/relations.md'));

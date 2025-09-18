@@ -12,6 +12,9 @@ class GetDiagramm
 {
     public const GRAPHVIZ_BASENAME = 'diagram';
 
+    /**
+     * @param  array<string, array<string|null, Relation>>  $databaseData
+     */
     public static function getMermaidCode(array $databaseData, DiagramDirection $diagrammDirection): string
     {
         return self::getDiagrammCode(DiagramSyntax::Mermaid, $databaseData, $diagrammDirection);
@@ -22,6 +25,9 @@ class GetDiagramm
         return "<img src='".self::GRAPHVIZ_BASENAME.".png' alt='".self::GRAPHVIZ_BASENAME."' />";
     }
 
+    /**
+     * @param  array<string, array<string|null, Relation>>  $databaseData
+     */
     public static function writeGraphvizFile(
         array $databaseData,
         DiagramDirection $diagrammDirection,
@@ -39,6 +45,9 @@ class GetDiagramm
         Process::run("dot -Tpng {$dotFile} -o {$pngFile}");
     }
 
+    /**
+     * @param  array<string, array<string|null, Relation>>  $databaseData
+     */
     public static function getDiagrammCode(DiagramSyntax $style, array $databaseData, DiagramDirection $diagrammDirection): string
     {
         $return = $style->start($diagrammDirection);

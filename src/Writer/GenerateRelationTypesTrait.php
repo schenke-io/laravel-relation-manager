@@ -34,7 +34,6 @@ class GenerateRelationTypesTrait
                     $method->addParameter('addReverseRelation')->setType('bool');
                 }
                 $hasInverse = $case->hasInverse() ? 'true' : 'false';
-                $preventInverse = $case->askForInverse() ? '$preventInverse' : $hasInverse;
                 $method->addBody('return $this->buildRelation(');
                 $method->addBody('    '.($case->askForRelatedModel() ? '$modelName' : '""').',');
                 $method->addBody('    '.($case->askForInverse() ? '$addReverseRelation' : 'false').',');

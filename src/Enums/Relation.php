@@ -2,12 +2,15 @@
 
 namespace SchenkeIo\LaravelRelationManager\Enums;
 
+use ArchTech\Enums\From;
 use Illuminate\Database\Eloquent\Relations as EloquentRelations;
 use Illuminate\Support\Str;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 
 enum Relation
 {
+    use From;
+
     case noRelation;
     case hasOne;  // inverse:  belongsTo
     case hasMany;  // inverse: belongsTo
@@ -31,6 +34,11 @@ enum Relation
      */
     case hasOneIndirect;
 
+    public static function tryFromRelationName(string $relationName): ?self
+    {
+        return self::tryFromName(lcfirst($relationName));
+    }
+
     public function getAssertName(): string
     {
         return 'assertModel'.ucfirst($this->name);
@@ -44,7 +52,7 @@ enum Relation
     public function askForRelatedModel(): bool
     {
         return match ($this) {
-            self::hasOne, self::hasMany,self::hasOneIndirect,
+            self::hasOne, self::hasMany, self::hasOneIndirect,
             self::isManyToMany,
             self::hasOneThrough, self::hasManyThrough,
             self::morphOne, self::morphMany => true,
@@ -124,6 +132,9 @@ enum Relation
         };
     }
 
+    /**
+     * @param  array<string, array<string|null, Relation>>  $tables
+     */
     public function setTableLinks(
         string $modelName1,
         string $modelName2,

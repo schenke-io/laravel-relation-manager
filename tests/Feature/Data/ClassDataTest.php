@@ -80,7 +80,7 @@ class ClassDataTest extends TestCase
     public static function dataProviderGetShortNameWithClass(): array
     {
         return [
-            'data 1' => ['', ''],
+            'data 1' => ['', 'ClassData'],
             'data 2' => [Country::class, 'Country'],
             'data 3' => [Country::class, 'Country'],
         ];

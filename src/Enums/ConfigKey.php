@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Config;
 enum ConfigKey: string
 {
     case MODEL_NAME_SPACE = 'modelNameSpace';
+    case MODEL_DIRECTORY = 'modelDirectory';
 
     case PROJECT_TEST_CLASS = 'projectTestClass';
 
@@ -29,7 +30,7 @@ enum ConfigKey: string
         return 'relation-manager.'.$this->value;
     }
 
-    public function get(mixed $default = null): mixed
+    public function get(mixed $default = null): string|bool
     {
         return $this->type()->format(config($this->full(), $default));
     }
@@ -42,16 +43,11 @@ enum ConfigKey: string
     public function type(): Type
     {
         return match ($this) {
-            self::MODEL_NAME_SPACE,
-            self::PROJECT_TEST_CLASS,
-            self::EXTENDED_TEST_CLASS,
-            self::MARKDOWN_FILE,
-            self::TEST_COMMAND => Type::String,
-
             self::USE_MERMAID_DIAGRAMM,
             self::TEST_DATABASE,
             self::REFRESH_DATABASE_AFTER_EACH_TEST,
-            self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => Type::Boolean
+            self::SHOW_PIVOT_TABLES_IN_DIAGRAMM => Type::Boolean,
+            default => Type::String
         };
     }
 
@@ -59,6 +55,7 @@ enum ConfigKey: string
     {
         return match ($this) {
             self::MODEL_NAME_SPACE => 'namespace of the models (commonly App\Models)',
+            self::MODEL_DIRECTORY => 'full directory path to model files',
             self::PROJECT_TEST_CLASS => 'empty test class which will be (over)written',
             self::EXTENDED_TEST_CLASS => 'class the written class should extend from',
             self::MARKDOWN_FILE => 'full path for the markdown file which is written',

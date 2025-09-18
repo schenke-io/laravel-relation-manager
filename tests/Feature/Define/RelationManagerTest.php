@@ -16,6 +16,21 @@ use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
 class RelationManagerTest extends TestCase
 {
+    public function test_write_relation_success()
+    {
+        ProjectContainer::clear();
+        $mockGenerateProjectTestFile = Mockery::mock(GenerateProjectTestFile::class);
+
+        $mockCommand = Mockery::mock(Command::class);
+        $mockCommand->shouldReceive('info')->times(3);
+
+        $handler = new RelationManager(
+            generateProjectTestFile: $mockGenerateProjectTestFile,
+            command: $mockCommand
+        );
+        $handler->scanRelations();
+    }
+
     public function test_write_test_errors()
     {
         /** @var Filesystem $mockFilesystem */

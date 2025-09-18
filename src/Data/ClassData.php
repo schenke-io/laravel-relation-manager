@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use phpDocumentor\Reflection\Types\ClassString;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use Spatie\LaravelData\Data;
 
@@ -19,7 +19,8 @@ class ClassData extends Data
 
     public string $modelError = '';
 
-    public readonly mixed $reflection;
+    /** @var ReflectionClass<object> */
+    public readonly ReflectionClass $reflection;
 
     public readonly bool $isClass;
 
@@ -36,10 +37,11 @@ class ClassData extends Data
     public function __construct(protected string $class, protected Filesystem $fileSystem = new Filesystem)
     {
         try {
+            // @phpstan-ignore-next-line
             $this->reflection = new ReflectionClass($class);
         } catch (ReflectionException $e) {
-            $this->reflection = null;
-            $this->classError = $e->getMessage();
+            $this->reflection = new ReflectionClass($this);
+            $this->classError = "Class $class does not exist";
             $this->isClass = false;
             $this->isModel = false;
             $this->className = '';
@@ -52,7 +54,8 @@ class ClassData extends Data
 
         $this->isClass = true;
         $this->className = $this->reflection->getName();
-        $this->fileName = $this->reflection->getFileName();
+        $file = $this->reflection->getFileName();
+        $this->fileName = $file !== false ? $file : '';
         $this->nameSpace = $this->reflection->getNamespaceName();
         $this->fileAge = $this->fileSystem->exists($this->fileName) ?
             $this->fileSystem->lastModified($this->fileName) : -1;
@@ -86,7 +89,6 @@ class ClassData extends Data
 
     /**
      * @throws LaravelNotLoadedException
-     * @throws ReflectionException
      */
     public static function getRelationCountOfModel(string $model): int
     {
@@ -106,9 +108,9 @@ class ClassData extends Data
     /**
      * array of the related model classes with array of relation types to them
      *
-     * @return array<ClassString, array<int,string>>
+     * @return array<class-string, list<string>>
      *
-     * @throws LaravelNotLoadedException|ReflectionException
+     * @throws LaravelNotLoadedException
      */
     public function getModelRelations(): array
     {
@@ -127,22 +129,19 @@ class ClassData extends Data
          * find all from Eloquent
          */
         foreach ($this->reflection->getMethods() as $method) {
-            if (str_starts_with(
-                $method->getReturnType() ?? 'null return',
-                'Illuminate\Database\Eloquent\Relations')) {
+            $returnType = $method->getReturnType();
+            if ($returnType instanceof ReflectionNamedType && str_starts_with(
+                $returnType->getName(),
+                'Illuminate\\Database\\Eloquent\\Relations')) {
                 // https://laracasts.com/discuss/channels/eloquent/is-there-a-way-to-list-all-relationships-of-a-model
-                /**
-                 * method is a relation, get the Model class in the method
-                 *
-                 * @var Model $model
-                 */
+                /** @var Model $model */
                 $model = new ($this->class);
                 $modelMethod = $model->{$method->name}();
                 $related = $modelMethod->getRelated();
                 $theOtherModel = ($related)::class;
 
-                // to any model there can be more than one relationship
-                $return[$theOtherModel][] = class_basename($method->getReturnType()->getName());
+                // to any model, there can be more than one relationship
+                $return[$theOtherModel][] = class_basename($returnType->getName());
             }
         }
 
@@ -153,7 +152,6 @@ class ClassData extends Data
      * returns text 'failed asserting that ....'
      *
      * @throws LaravelNotLoadedException
-     * @throws ReflectionException
      */
     public static function getRelationExpectation(
         string $class,
@@ -185,8 +183,8 @@ class ClassData extends Data
      */
     public function getFileAge(): int
     {
-        if ($this->isClass) {
-            return filemtime($this->reflection->getFileName());
+        if ($this->fileSystem->exists($this->fileName)) {
+            return $this->fileSystem->lastModified($this->fileName);
         } else {
             return -1;
         }
@@ -199,8 +197,8 @@ class ClassData extends Data
      */
     public function isFresherOrEqualThan(string $otherClass): bool
     {
-
         $other = new ClassData($otherClass);
+
         if (
             $this->isClass &&
             $other->isClass &&
@@ -214,7 +212,7 @@ class ClassData extends Data
 
     public function getShortName(): string
     {
-        return $this->isClass ? $this->reflection->getShortName() : '';
+        return $this->reflection->getShortName();
     }
 
     public function getFileBase(): string

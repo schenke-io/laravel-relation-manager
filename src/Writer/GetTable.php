@@ -4,6 +4,9 @@ namespace SchenkeIo\LaravelRelationManager\Writer;
 
 final class GetTable
 {
+    /**
+     * @param  array{0: list<string>, 1: list<list<string>>}  $table
+     */
     public static function getHtml(array $table): string
     {
         [$headers, $tableRows] = $table;

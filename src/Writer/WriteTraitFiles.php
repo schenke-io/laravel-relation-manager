@@ -1,13 +1,11 @@
 <?php
 
-namespace SchenkeIo\LaravelRelationManager\Console;
+namespace SchenkeIo\LaravelRelationManager\Writer;
 
 use Illuminate\Filesystem\Filesystem;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\RelationTypes;
 use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
-use SchenkeIo\LaravelRelationManager\Writer\GenerateAssertModelRelationsTrait;
-use SchenkeIo\LaravelRelationManager\Writer\GenerateRelationTypesTrait;
 
 class WriteTraitFiles
 {
