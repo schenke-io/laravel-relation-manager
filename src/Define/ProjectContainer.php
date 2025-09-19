@@ -66,6 +66,9 @@ class ProjectContainer
                 return;
             }
         }
+        if ($relation == Relation::morphToMany) {
+
+        }
         self::$relations[$classFrom][$classTo][] = $relation;
     }
 
@@ -123,20 +126,18 @@ class ProjectContainer
          * load all tables of each model
          */
         foreach (self::$relations as $primModel => $data) {
-            $primClass = ClassData::take($primModel);
             $tableName = Str::snake(Str::plural(class_basename($primModel)));
             $tables[$tableName] = [];
         }
         foreach (self::getDatabaseData($withExtraPivotTables) as $table1 => $table1Data) {
             ksort($table1Data);
-            /**
-             * @var Relation $relation
-             */
             foreach ($table1Data as $table2 => $relation) {
                 if (strlen($table2) > 1) {
                     if ($relation->isMorph()) {
-                        $tables[$table1][] = Str::singular($table1).'able_id';
-                        $tables[$table1][] = Str::singular($table1).'able_type';
+                        $base = Str::singular($table1);
+                        $base = str_ends_with($base, 'able') ? $base : $base.'able';
+                        $tables[$table1][] = $base.'_id';
+                        $tables[$table1][] = $base.'_type';
                     } else {
                         $tables[$table1][] = Str::singular($table2).'_id';
                     }
@@ -180,9 +181,6 @@ class ProjectContainer
             sort($directRelation);
             $indirectRelation = [];
             foreach ($modelSet as $secModel => $relations) {
-                /**
-                 * @var Relation $relation
-                 */
                 foreach ($relations as $relation) {
                     if ($relation->isDirectRelation()) {
                         $directRelation[] = class_basename($secModel);
@@ -240,9 +238,6 @@ class ProjectContainer
         $table = [];
         foreach (self::$relations as $primModel => $baseModelRelations) {
             foreach ($baseModelRelations as $secModel => $relations) {
-                /**
-                 * @var Relation $relation
-                 */
                 foreach ($relations as $relation) {
                     $relation->setTableLinks(
                         $primModel,

@@ -10,8 +10,9 @@
  * using the data from: SchenkeIo\LaravelRelationManager\Enums\Relation
  */
 
-namespace SchenkeIo\LaravelRelationManager\Define;
+namespace SchenkeIo\LaravelRelationManager\Traits;
 
+use SchenkeIo\LaravelRelationManager\Define\DefineRelation;
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
 
 trait RelationTypes
@@ -56,6 +57,16 @@ trait RelationTypes
         );
     }
 
+    public function belongsToMany(string $modelName, bool $addReverseRelation): DefineRelation
+    {
+        return $this->buildRelation(
+            $modelName,
+            $addReverseRelation,
+            Relation::belongsToMany,
+            Relation::belongsToMany
+        );
+    }
+
     public function morphOne(string $modelName, bool $addReverseRelation): DefineRelation
     {
         return $this->buildRelation(
@@ -76,13 +87,23 @@ trait RelationTypes
         );
     }
 
-    public function isManyToMany(string $modelName, bool $addReverseRelation): DefineRelation
+    public function morphToMany(string $modelName, bool $addReverseRelation): DefineRelation
     {
         return $this->buildRelation(
             $modelName,
             $addReverseRelation,
-            Relation::isManyToMany,
-            Relation::belongsToMany
+            Relation::morphToMany,
+            Relation::morphedByMany
+        );
+    }
+
+    public function morphedByMany(string $modelName): DefineRelation
+    {
+        return $this->buildRelation(
+            $modelName,
+            false,
+            Relation::morphedByMany,
+            Relation::noRelation
         );
     }
 

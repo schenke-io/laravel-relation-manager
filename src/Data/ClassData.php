@@ -19,8 +19,8 @@ class ClassData extends Data
 
     public string $modelError = '';
 
-    /** @var ReflectionClass<object> */
-    public readonly ReflectionClass $reflection;
+    /** @var ReflectionClass<object>|null */
+    public readonly ?ReflectionClass $reflection;
 
     public readonly bool $isClass;
 
@@ -40,7 +40,7 @@ class ClassData extends Data
             // @phpstan-ignore-next-line
             $this->reflection = new ReflectionClass($class);
         } catch (ReflectionException $e) {
-            $this->reflection = new ReflectionClass($this);
+            $this->reflection = null;
             $this->classError = "Class $class does not exist";
             $this->isClass = false;
             $this->isModel = false;
@@ -115,6 +115,9 @@ class ClassData extends Data
     public function getModelRelations(): array
     {
         $return = [];
+        if (is_null($this->reflection)) {
+            return $return;
+        }
         if (! $this->isModel) {
             return $return;
         }
@@ -126,7 +129,7 @@ class ClassData extends Data
         }
 
         /*
-         * find all from Eloquent
+         * find all relations which have a return type hint of type Illuminate\Database\Eloquent\Relations\*
          */
         foreach ($this->reflection->getMethods() as $method) {
             $returnType = $method->getReturnType();
@@ -139,9 +142,18 @@ class ClassData extends Data
                 $modelMethod = $model->{$method->name}();
                 $related = $modelMethod->getRelated();
                 $theOtherModel = ($related)::class;
+                $relationName = class_basename($returnType->getName());
+                if (method_exists($modelMethod, 'getMorphType')) {
+                    // @phpstan-ignore-next-line
+                    $type = $modelMethod->getMorphType();
+                    if (str_starts_with($type, strtolower(class_basename($this->class)))) {
+                        // it's a Tag class with taggable_type - we mark it
+                        // todo catch special cases with morphToMany
+                    }
+                }
 
                 // to any model, there can be more than one relationship
-                $return[$theOtherModel][] = class_basename($returnType->getName());
+                $return[$theOtherModel][] = $relationName;
             }
         }
 
@@ -212,7 +224,7 @@ class ClassData extends Data
 
     public function getShortName(): string
     {
-        return $this->reflection->getShortName();
+        return $this->reflection ? $this->reflection->getShortName() : '';
     }
 
     public function getFileBase(): string

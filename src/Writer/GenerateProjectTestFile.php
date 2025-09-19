@@ -12,8 +12,7 @@ use PHPUnit\Framework\Attributes\TestDox;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
 use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
-use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
+use SchenkeIo\LaravelRelationManager\Traits\AssertModelRelations;
 
 class GenerateProjectTestFile
 {
@@ -77,6 +76,8 @@ class GenerateProjectTestFile
         $method->addBody("    $shortCommandClassName,");
         $method->addBody('    __CLASS__');
         $method->addBody(');');
+
+        //        print_r($relations);
         /*
          * loop over models
          */

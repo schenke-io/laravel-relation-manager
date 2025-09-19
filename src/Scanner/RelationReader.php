@@ -3,6 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Scanner;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Filesystem\Filesystem;
 use ReflectionClass;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
@@ -13,22 +14,36 @@ use Throwable;
 
 class RelationReader
 {
+    public const RELATION_CLASSES = [
+        Relations\BelongsTo::class,
+        Relations\BelongsToMany::class,
+        Relations\HasMany::class,
+        Relations\HasManyThrough::class,
+        Relations\HasOne::class,
+        Relations\HasOneThrough::class,
+        Relations\MorphMany::class,
+        Relations\MorphOne::class,
+        Relations\MorphTo::class,
+        Relations\MorphToMany::class,
+    ];
+
     public function __construct(protected Filesystem $files = new Filesystem) {}
 
     /**
      * looping through all models and showing the code this structure would be defined
+     *
+     * @throws LaravelNotLoadedException
      */
     public function displayRelations(): string
     {
         $return = '';
         $relationData = $this->relationData();
-        // print_r($relationData);
         foreach ($relationData as $model => $relations) {
             $modelRelations = [];
             foreach ($relations as $otherModel => $relationNames) {
                 foreach ($relationNames as $relationName) {
-                    $relation = Relation::tryFromRelationName($relationName);
-                    if ($relation === null) {
+                    $relation = Relation::fromRelationName($relationName);
+                    if ($relation === Relation::noRelation) {
                         continue;
                     }
                     if ($relation->hasPublicFunction()) {
@@ -40,10 +55,17 @@ class RelationReader
                                 $hasInverse = true;
                             }
                         }
-                        $modelRelations[] = sprintf('    ->%s(%s, %s)',
-                            lcfirst($relationName),
-                            $otherModel, $hasInverse ? 'true' : 'false'
-                        );
+                        if ($relation->hasInverse()) {
+                            $modelRelations[] = sprintf('    ->%s(%s, %s)',
+                                lcfirst($relationName),
+                                $otherModel, $hasInverse ? 'true' : 'false'
+                            );
+                        } else {
+                            $modelRelations[] = sprintf('    ->%s(%s)',
+                                lcfirst($relationName),
+                                $otherModel
+                            );
+                        }
                     }
                 }
             }
@@ -112,7 +134,7 @@ class RelationReader
     protected function getClassFromPath(string $path): ?string
     {
         // Replace the app path with the base namespace 'App'
-        $class = (string) ConfigKey::MODEL_NAME_SPACE->get().'\\'.basename($path, '.php');
+        $class = ConfigKey::MODEL_NAME_SPACE->get().'\\'.basename($path, '.php');
 
         return class_exists($class) ? $class : null;
     }

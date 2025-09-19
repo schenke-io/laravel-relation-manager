@@ -6,6 +6,10 @@ use Nette;
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Phpunit\ClassAgeConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\NoRelationshipConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipCountConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipExistsConstraint;
 
 class GenerateAssertModelRelationsTrait
 {
@@ -22,10 +26,15 @@ class GenerateAssertModelRelationsTrait
         $file->addComment(__CLASS__);
         $file->addComment('using the data from: @see '.Relation::class);
 
-        $nameSpace = $file->addNamespace($location.'\Phpunit');
+        $nameSpace = $file->addNamespace($location.'\Traits');
         $nameSpace->addUse(ModelCountData::class);
         $nameSpace->addUse(ModelRelationData::class);
         $nameSpace->addUse(Relation::class);
+        $nameSpace->addUse(ClassAgeConstraint::class);
+        $nameSpace->addUse(NoRelationshipConstraint::class);
+        $nameSpace->addUse(RelationshipCountConstraint::class);
+        $nameSpace->addUse(RelationshipExistsConstraint::class);
+
         $classWritten = [];
         $trait = $nameSpace->addTrait($traitName);
 

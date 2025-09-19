@@ -21,7 +21,5 @@ class RelationsTest extends TestCase
     public function test_get_class()
     {
         $this->assertIsString(Relation::hasOne->getClass());
-        $this->expectException('Exception');
-        Relation::noRelation->getClass();
     }
 }

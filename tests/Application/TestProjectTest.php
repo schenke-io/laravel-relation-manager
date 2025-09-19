@@ -15,8 +15,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestDox;
-use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Traits\AssertModelRelations;
 use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
 
 class TestProjectTest extends TestCase
@@ -46,8 +46,8 @@ class TestProjectTest extends TestCase
     #[Group('GenerateProjectTestFile')]
     public function testModelCapitalHas_2StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelBelongsTo('Workbench\App\Models\Capital', 'Workbench\App\Models\Country');
         $this->assertModelMorphOne('Workbench\App\Models\Capital', 'Workbench\App\Models\Location');
+        $this->assertModelBelongsTo('Workbench\App\Models\Capital', 'Workbench\App\Models\Country');
         $this->assertModelRelationCount('Workbench\App\Models\Capital', 2);
     }
 
@@ -55,13 +55,14 @@ class TestProjectTest extends TestCase
      * Model Workbench\App\Models\City
      */
     #[Group('GenerateProjectTestFile')]
-    public function testModelCityHas_4StrictRelationshipsAndWorks(): void
+    public function testModelCityHas_5StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelIsManyToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
-        $this->assertModelMorphOne('Workbench\App\Models\City', 'Workbench\App\Models\Location');
+        $this->assertModelBelongsToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
         $this->assertModelHasOneThrough('Workbench\App\Models\City', 'Workbench\App\Models\Country');
+        $this->assertModelMorphToMany('Workbench\App\Models\City', 'Workbench\App\Models\Tag');
+        $this->assertModelMorphOne('Workbench\App\Models\City', 'Workbench\App\Models\Location');
         $this->assertModelBelongsTo('Workbench\App\Models\City', 'Workbench\App\Models\Region');
-        $this->assertModelRelationCount('Workbench\App\Models\City', 4);
+        $this->assertModelRelationCount('Workbench\App\Models\City', 5);
     }
 
     /**
@@ -71,9 +72,9 @@ class TestProjectTest extends TestCase
     public function testModelCountryHas_4StrictRelationshipsAndWorks(): void
     {
         $this->assertModelHasOne('Workbench\App\Models\Country', 'Workbench\App\Models\Capital');
-        $this->assertModelHasMany('Workbench\App\Models\Country', 'Workbench\App\Models\Region');
         $this->assertModelHasOneIndirect('Workbench\App\Models\Country', 'Workbench\App\Models\City');
         $this->assertModelHasManyThrough('Workbench\App\Models\Country', 'Workbench\App\Models\City');
+        $this->assertModelHasMany('Workbench\App\Models\Country', 'Workbench\App\Models\Region');
         $this->assertModelRelationCount('Workbench\App\Models\Country', 4);
     }
 
@@ -102,12 +103,13 @@ class TestProjectTest extends TestCase
      * Model Workbench\App\Models\Region
      */
     #[Group('GenerateProjectTestFile')]
-    public function testModelRegionHas_3StrictRelationshipsAndWorks(): void
+    public function testModelRegionHas_4StrictRelationshipsAndWorks(): void
     {
         $this->assertModelBelongsTo('Workbench\App\Models\Region', 'Workbench\App\Models\Country');
+        $this->assertModelMorphToMany('Workbench\App\Models\Region', 'Workbench\App\Models\Tag');
         $this->assertModelHasMany('Workbench\App\Models\Region', 'Workbench\App\Models\City');
         $this->assertModelHasOneThrough('Workbench\App\Models\Region', 'Workbench\App\Models\Capital');
-        $this->assertModelRelationCount('Workbench\App\Models\Region', 3);
+        $this->assertModelRelationCount('Workbench\App\Models\Region', 4);
     }
 
     /**
@@ -117,6 +119,17 @@ class TestProjectTest extends TestCase
     public function testModelSingleHas_0StrictRelationshipsAndWorks(): void
     {
         $this->assertModelRelationCount('Workbench\App\Models\Single', 0);
+    }
+
+    /**
+     * Model Workbench\App\Models\Tag
+     */
+    #[Group('GenerateProjectTestFile')]
+    public function testModelTagHas_2StrictRelationshipsAndWorks(): void
+    {
+        $this->assertModelMorphedByMany('Workbench\App\Models\Tag', 'Workbench\App\Models\City');
+        $this->assertModelMorphedByMany('Workbench\App\Models\Tag', 'Workbench\App\Models\Region');
+        $this->assertModelRelationCount('Workbench\App\Models\Tag', 2);
     }
 
     #[Group('GenerateProjectTestFile')]
@@ -172,5 +185,11 @@ class TestProjectTest extends TestCase
     public function testDatabaseTable_singles()
     {
         $this->assertTrue(Schema::hasTable('singles'));
+    }
+
+    #[Group('GenerateProjectTestFile')]
+    public function testDatabaseTable_tags()
+    {
+        $this->assertTrue(Schema::hasTable('tags'));
     }
 }

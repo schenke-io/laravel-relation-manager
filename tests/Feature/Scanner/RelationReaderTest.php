@@ -1,9 +1,14 @@
 <?php
 
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Scanner;
 
 use function Orchestra\Testbench\workbench_path;
+
+it('can find the relation form the class name', function (string $className) {
+    expect(Relation::fromRelationName(class_basename($className)))->toBeInstanceOf(Relation::class);
+})->with(Scanner\RelationReader::RELATION_CLASSES);
 
 it('can scan the demo project and displays the code', function () {
     $scanner = new Scanner\RelationReader;

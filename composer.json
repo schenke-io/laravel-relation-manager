@@ -67,8 +67,8 @@
             "vendor/bin/testbench run:test-project"
         ],
         "release": [
-            "vendor/bin/testbench write:main-files",
             "@pint",
+            "@write-class",
             "@analyse",
             "@coverage",
             "@markdown"

@@ -49,13 +49,13 @@ class RelationTypeTest extends testCase
             $isRelation += ($case->isRelation() ? 1 : 0);
             $askForRelatedModel += ($case->askForRelatedModel() ? 1 : 0);
         }
-        $this->assertEquals(0, $askForInverseCountNormal);
+        $this->assertEquals(1, $askForInverseCountNormal);
         $this->assertEquals(0, $askForInverseCountPrevent);
-        $this->assertEquals(5, $hasInverseNormal);
+        $this->assertEquals(6, $hasInverseNormal);
         $this->assertEquals(0, $hasInversePrevent);
-        $this->assertEquals(8, $hasPublicFunction);
-        $this->assertEquals(11, $isRelation);
-        $this->assertEquals(8, $askForRelatedModel);
+        $this->assertEquals(10, $hasPublicFunction);
+        $this->assertEquals(12, $isRelation);
+        $this->assertEquals(10, $askForRelatedModel);
     }
 
     /**
@@ -70,7 +70,11 @@ class RelationTypeTest extends testCase
             if ($case == Relation::isSingle) {
                 continue;
             }
-            $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $case->getClass());
+            $class = $case->getClass();
+            if (is_null($class)) {
+                continue;
+            }
+            $this->assertStringContainsString('Illuminate\Database\Eloquent\Relations', $class);
         }
     }
 }

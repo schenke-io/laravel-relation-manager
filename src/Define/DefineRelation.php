@@ -3,6 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Define;
 
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Traits\RelationTypes;
 
 class DefineRelation
 {

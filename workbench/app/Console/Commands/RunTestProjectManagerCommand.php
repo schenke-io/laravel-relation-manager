@@ -6,7 +6,6 @@ use SchenkeIo\LaravelRelationManager\Console\RelationManagerCommand;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;
 use Workbench\App\Models\Highway;
-use Workbench\App\Models\Location;
 use Workbench\App\Models\Region;
 
 /**
@@ -33,30 +32,30 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
 
     public function buildRelations(): void
     {
+        $this->relationManager->model('Capital')
+            ->morphOne('Location', true);
 
         $this->relationManager->model(City::class)
-            ->isManyToMany(Highway::class, true)
-            ->morphOne('Location', true)
-            ->hasOneThrough('Country');
+            ->belongsToMany(Highway::class, true)
+            ->hasOneThrough('Country')
+            ->morphToMany('Tag', true)
+            ->morphOne('Location', true);
 
         $this->relationManager->model(Country::class)
             ->hasOne('Capital', true)
-            ->hasMany(Region::class, true)
             ->hasOneIndirect('City')
-            ->hasManyThrough('City');
+            ->hasManyThrough('City')
+            ->hasMany(Region::class, true);
 
-        $this->relationManager->model('Highway');
+        $this->relationManager->model('Highway')
+            ->morphMany('Location', true);
 
         $this->relationManager->model(Region::class)
+            ->morphToMany('Tag', true)
             ->hasMany('City', true)
             ->hasOneThrough('Capital');
 
-        $this->relationManager->model(Highway::class)
-            ->morphMany(Location::class, true);
-
         $this->relationManager->model('Single');
 
-        $this->relationManager->model('Capital')
-            ->morphOne('Location', true);
     }
 }

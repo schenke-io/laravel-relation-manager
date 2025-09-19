@@ -10,7 +10,7 @@ class GenerateRelationTypesTrait
 {
     public static function getContent(): string
     {
-        $location = 'SchenkeIo\LaravelRelationManager\Define';
+        $location = 'SchenkeIo\LaravelRelationManager\Traits';
         $file = new Nette\PhpGenerator\PhpFile;
         $file->addComment('## Description of all the possible relationships');
         $file->addComment("\n------\n");
@@ -19,6 +19,7 @@ class GenerateRelationTypesTrait
         $file->addComment('using the data from: '.Relation::class);
 
         $nameSpace = $file->addNamespace($location);
+
         $nameSpace->addUse(Relation::class);
         $nameSpace->addUse(DefineRelation::class);
 
@@ -33,7 +34,6 @@ class GenerateRelationTypesTrait
                 if ($case->askForInverse()) {
                     $method->addParameter('addReverseRelation')->setType('bool');
                 }
-                $hasInverse = $case->hasInverse() ? 'true' : 'false';
                 $method->addBody('return $this->buildRelation(');
                 $method->addBody('    '.($case->askForRelatedModel() ? '$modelName' : '""').',');
                 $method->addBody('    '.($case->askForInverse() ? '$addReverseRelation' : 'false').',');

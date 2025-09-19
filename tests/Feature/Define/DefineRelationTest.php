@@ -17,7 +17,7 @@ class DefineRelationTest extends TestCase
         ProjectContainer::clear();
         $defineRelation = new DefineRelation(City::class);
         $this->assertCount(1, ProjectContainer::getRelations());
-        $defineRelation->isManyToMany(Highway::class, true);
+        $defineRelation->belongsToMany(Highway::class, true);
         $this->assertCount(2, ProjectContainer::getRelations());
 
         $this->assertIsString(GetDiagramm::getMermaidCode(
@@ -38,7 +38,15 @@ class DefineRelationTest extends TestCase
 
         $testCommand = new class extends RunTestProjectManagerCommand {};
         $testCommand->buildRelations();
-        $this->assertCount(7, ProjectContainer::getRelations());
+        $this->assertCount(8, ProjectContainer::getRelations());
 
+    }
+
+    public function test_morphed_by_many()
+    {
+        ProjectContainer::clear();
+        $defineRelation = new DefineRelation(City::class);
+        $defineRelation->morphedByMany(Highway::class);
+        $this->assertCount(2, ProjectContainer::getRelations());
     }
 }

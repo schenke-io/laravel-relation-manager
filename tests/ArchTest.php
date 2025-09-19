@@ -1,9 +1,9 @@
 <?php
 
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
-use SchenkeIo\LaravelRelationManager\Define\RelationTypes;
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
-use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
+use SchenkeIo\LaravelRelationManager\Traits\AssertModelRelations;
+use SchenkeIo\LaravelRelationManager\Traits\RelationTypes;
 
 it('will not use debugging functions')
     ->expect(['dd', 'dump', 'ray'])

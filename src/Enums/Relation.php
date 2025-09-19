@@ -23,20 +23,29 @@ enum Relation
     case morphTo;
     case morphOne;
     case morphMany;
+    case morphToMany;
 
+    case morphedByMany; // returns as MorphToMany, so not visble, is used in tha Moprh class
     /*
-     * standard  speak
-     */
-    case isManyToMany;
-
-    /*
-     * when a relation is made with extra filter, like hasOneThrough, it has not table keys
+     * when a relation is made with extra filter, like hasOneThrough, it has not any table keys
      */
     case hasOneIndirect;
 
-    public static function tryFromRelationName(string $relationName): ?self
+    public static function fromRelationName(string $relationName): self
     {
-        return self::tryFromName(lcfirst($relationName));
+        return match ($relationName) {
+            'BelongsTo' => self::belongsTo,
+            'BelongsToMany' => self::belongsToMany,
+            'HasMany' => self::hasMany,
+            'HasManyThrough' => self::hasManyThrough,
+            'HasOne' => self::hasOne,
+            'HasOneThrough' => self::hasOneThrough,
+            'MorphMany' => self::morphMany,
+            'MorphOne' => self::morphOne,
+            'MorphTo' => self::morphTo,
+            'MorphToMany' => self::morphToMany,
+            default => self::noRelation
+        };
     }
 
     public function getAssertName(): string
@@ -53,9 +62,9 @@ enum Relation
     {
         return match ($this) {
             self::hasOne, self::hasMany, self::hasOneIndirect,
-            self::isManyToMany,
             self::hasOneThrough, self::hasManyThrough,
-            self::morphOne, self::morphMany => true,
+            self::belongsToMany,
+            self::morphOne, self::morphMany, self::morphToMany, self::morphedByMany => true,
             default => false
         };
     }
@@ -67,8 +76,9 @@ enum Relation
         } else {
             return match ($this) {
                 self::hasOne, self::hasMany => self::belongsTo,
-                self::isManyToMany => self::belongsToMany,
+                self::belongsToMany => self::belongsToMany,
                 self::morphOne, self::morphMany => self::morphTo,
+                self::morphToMany => self::morphedByMany,
                 default => self::noRelation
             };
         }
@@ -87,7 +97,6 @@ enum Relation
         return match ($this) {
             self::isSingle,
             self::belongsTo,
-            self::belongsToMany,
             self::morphTo,
             self::noRelation => false,
             default => true
@@ -108,27 +117,26 @@ enum Relation
         return match ($this) {
             self::hasOne, self::hasMany,
             self::belongsTo,
-            self::morphOne, self::morphMany => true,
+            //            self::morphOne,
+            self::morphToMany => true,
             default => false
         };
     }
 
-    /**
-     * @throws \Exception
-     */
-    public function getClass(): string
+    public function getClass(): ?string
     {
         return match ($this) {
             self::hasOne, self::hasOneIndirect => EloquentRelations\HasOne::class,
             self::hasMany => EloquentRelations\HasMany::class,
-            self::belongsToMany, self::isManyToMany => EloquentRelations\BelongsToMany::class,
+            self::belongsToMany => EloquentRelations\BelongsToMany::class,
             self::hasOneThrough => EloquentRelations\HasOneThrough::class,
             self::hasManyThrough => EloquentRelations\HasManyThrough::class,
             self::belongsTo => EloquentRelations\BelongsTo::class,
             self::morphTo => EloquentRelations\MorphTo::class,
             self::morphOne => EloquentRelations\MorphOne::class,
+            self::morphToMany => EloquentRelations\MorphToMany::class,
             self::morphMany => EloquentRelations\MorphMany::class,
-            default => throw new \Exception('class unknown for '.$this->name)
+            default => null,
         };
     }
 
@@ -149,7 +157,8 @@ enum Relation
 
         $names = [Str::snake($modelName1), Str::snake($modelName2)];
         sort($names);
-        $tableName3 = implode('_', $names);
+        $pivotTable = implode('_', $names);
+        $morphPivotTable = Str::snake($modelName2).'able';
         switch ($this) {
             case self::hasOne:
             case self::hasMany:
@@ -163,10 +172,10 @@ enum Relation
                 // no link
                 break;
             case self::belongsToMany:
-            case self::isManyToMany:
+
                 if ($withExtraPivotTables) {
-                    $tables[$tableName3][$tableName1] = $this;
-                    $tables[$tableName3][$tableName2] = $this;
+                    $tables[$pivotTable][$tableName1] = $this;
+                    $tables[$pivotTable][$tableName2] = $this;
                 } else {
                     /*
                      * it is called from both ends of the relationship so
@@ -177,6 +186,10 @@ enum Relation
                     }
                 }
                 break;
+            case self::morphToMany:
+                // todo: morphToMany
+                break;
+
             case self::belongsTo:
                 $tables[$tableName1][$tableName2] = $this;
                 break;
@@ -191,15 +204,15 @@ enum Relation
     public function isMorph(): bool
     {
         return match ($this) {
-            self::morphOne, self::morphMany => true,
+            self::morphTo, self::morphOne, self::morphMany, self::morphToMany => true,
             default => false
         };
     }
 
-    public function isDouble(): bool
+    public function isDoubleLine(): bool
     {
         return match ($this) {
-            self::isManyToMany, self::belongsToMany => true,
+            self::morphToMany, self::belongsToMany => true,
             default => false
         };
     }

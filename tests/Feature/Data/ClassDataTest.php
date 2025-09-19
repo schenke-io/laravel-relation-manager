@@ -22,6 +22,15 @@ class ClassDataTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_wrong_class_returns_empty_model_relations()
+    {
+        // take a non-existent class and check if getModelRelations is []
+        $this->assertEquals([], ClassData::take('Vendor\\Package\\FooBarBazNonExisting')->getModelRelations());
+
+        // take an existing non-model class and check if getModelRelations is []
+        $this->assertEquals([], ClassData::take(ClassData::class)->getModelRelations());
+    }
+
     public function test_is_model()
     {
         $this->assertTrue(ClassData::take(Country::class)->isModel);
@@ -80,7 +89,7 @@ class ClassDataTest extends TestCase
     public static function dataProviderGetShortNameWithClass(): array
     {
         return [
-            'data 1' => ['', 'ClassData'],
+            'data 1' => ['', ''],
             'data 2' => [Country::class, 'Country'],
             'data 3' => [Country::class, 'Country'],
         ];
@@ -104,7 +113,7 @@ class ClassDataTest extends TestCase
     }
 
     /**
-     * @throws LaravelNotLoadedException|\ReflectionException
+     * @throws LaravelNotLoadedException
      */
     public function test_get_relation_count_of_model()
     {
@@ -125,7 +134,7 @@ class ClassDataTest extends TestCase
 
     #[DataProvider('dataProviderRelationExpectations')]
     /**
-     * @throws LaravelNotLoadedException|\ReflectionException
+     * @throws LaravelNotLoadedException
      */
     public function test_get_relation_expectations(string $class, string $returnType, string $usesClass, string $regex): void
     {

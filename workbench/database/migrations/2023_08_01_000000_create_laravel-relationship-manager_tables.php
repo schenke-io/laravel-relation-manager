@@ -30,6 +30,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('region_id');
+            $table->integer('country_id');  // capital
         });
         Schema::create('singles', function (Blueprint $table) {
             $table->id();
@@ -44,8 +45,18 @@ return new class extends Migration
             $table->integer('highway_id');
         });
         Schema::create('locations', function (Blueprint $table) {
+            $table->id();
             $table->integer('locationable_id');
             $table->string('locationable_type');
+        });
+        Schema::create('tags', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+        });
+        Schema::create('tagable', function (Blueprint $table) {
+            $table->integer('tag_id');
+            $table->integer('tagable_id');
+            $table->string('tagable_type');
         });
     }
 
@@ -54,6 +65,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('tagable');
+        Schema::dropIfExists('tags');
+        Schema::dropIfExists('locations');
+        Schema::dropIfExists('city_highway');
+        Schema::dropIfExists('highways');
         Schema::dropIfExists('singles');
         Schema::dropIfExists('cities');
         Schema::dropIfExists('regions');

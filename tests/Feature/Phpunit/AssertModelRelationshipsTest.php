@@ -2,8 +2,8 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Phpunit;
 
-use SchenkeIo\LaravelRelationManager\Phpunit\AssertModelRelations;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use SchenkeIo\LaravelRelationManager\Traits\AssertModelRelations;
 use Workbench\App\Models\Capital;
 use Workbench\App\Models\City;
 use Workbench\App\Models\Country;

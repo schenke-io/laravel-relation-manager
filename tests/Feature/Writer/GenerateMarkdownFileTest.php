@@ -24,7 +24,7 @@ class GenerateMarkdownFileTest extends TestCase
         ProjectContainer::clear();
         ProjectContainer::addRelation(Country::class, Capital::class, Relation::hasOne);
         ProjectContainer::addRelation(Country::class, Region::class, Relation::noRelation);
-        ProjectContainer::addRelation(Country::class, Location::class, Relation::morphMany);
+        ProjectContainer::addRelation(Country::class, Location::class, Relation::morphToMany);
         ProjectContainer::addRelation(Single::class, '', Relation::isSingle);
 
         $mockFilesystem = Mockery::mock(Filesystem::class);

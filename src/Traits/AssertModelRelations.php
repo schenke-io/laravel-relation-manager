@@ -11,11 +11,15 @@
  * using the data from: @see SchenkeIo\LaravelRelationManager\Enums\Relation
  */
 
-namespace SchenkeIo\LaravelRelationManager\Phpunit;
+namespace SchenkeIo\LaravelRelationManager\Traits;
 
 use SchenkeIo\LaravelRelationManager\Data\ModelCountData;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Phpunit\ClassAgeConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\NoRelationshipConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipCountConstraint;
+use SchenkeIo\LaravelRelationManager\Phpunit\RelationshipExistsConstraint;
 
 trait AssertModelRelations
 {
@@ -23,7 +27,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($class1, $class2, Relation::noRelation),
-            new ClassAgeConstraint
+            new ClassAgeConstraint()
         );
     }
 
@@ -31,7 +35,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelCountData($model, $count),
-            new RelationshipCountConstraint
+            new RelationshipCountConstraint()
         );
     }
 
@@ -39,7 +43,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::hasOne),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -47,7 +51,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::hasMany),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -55,7 +59,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::hasOneThrough),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -63,7 +67,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::hasManyThrough),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -71,7 +75,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::belongsToMany),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -79,20 +83,20 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::belongsTo),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
     public function assertModelIsSingle(string $model): void
     {
-        \PHPUnit\Framework\assertThat($model, new NoRelationshipConstraint);
+        \PHPUnit\Framework\assertThat($model, new NoRelationshipConstraint());
     }
 
     public function assertModelMorphTo(string $modelFrom): void
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelFrom, Relation::morphTo),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -100,7 +104,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::morphOne),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -108,15 +112,23 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::morphMany),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 
-    public function assertModelIsManyToMany(string $modelFrom, string $modelTo): void
+    public function assertModelMorphToMany(string $modelFrom, string $modelTo): void
     {
         \PHPUnit\Framework\assertThat(
-            new ModelRelationData($modelFrom, $modelTo, Relation::isManyToMany),
-            new RelationshipExistsConstraint
+            new ModelRelationData($modelFrom, $modelTo, Relation::morphToMany),
+            new RelationshipExistsConstraint()
+        );
+    }
+
+    public function assertModelMorphedByMany(string $modelFrom, string $modelTo): void
+    {
+        \PHPUnit\Framework\assertThat(
+            new ModelRelationData($modelFrom, $modelTo, Relation::morphedByMany),
+            new RelationshipExistsConstraint()
         );
     }
 
@@ -124,7 +136,7 @@ trait AssertModelRelations
     {
         \PHPUnit\Framework\assertThat(
             new ModelRelationData($modelFrom, $modelTo, Relation::hasOneIndirect),
-            new RelationshipExistsConstraint
+            new RelationshipExistsConstraint()
         );
     }
 }
