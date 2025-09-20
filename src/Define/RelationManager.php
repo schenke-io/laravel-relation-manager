@@ -7,6 +7,7 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Process;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use SchenkeIo\LaravelRelationManager\Scanner\RelationReader;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
@@ -88,6 +89,9 @@ class RelationManager
         return $this;
     }
 
+    /**
+     * @throws LaravelNotLoadedException
+     */
     public function scanRelations(): self
     {
         $this->command->info('scanning existing relations');

@@ -77,10 +77,11 @@ class ClassData extends Data
 
     public static function newFromName(string $nameSpace, string $className): ClassData
     {
-        // check if name is ok already
-        $classData = ClassData::take($className);
-        if ($classData->isClass) {
-            return $classData;
+        if (str_contains($className, '\\')) {
+            $classData = ClassData::take($className);
+            if ($classData->isClass) {
+                return $classData;
+            }
         }
         // assemble class name and try
         $classNameNew = Str::finish($nameSpace, '\\').$className;

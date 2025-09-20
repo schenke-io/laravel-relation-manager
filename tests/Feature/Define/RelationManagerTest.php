@@ -16,6 +16,28 @@ use SchenkeIo\LaravelRelationManager\Writer\GenerateProjectTestFile;
 
 class RelationManagerTest extends TestCase
 {
+    public function test_unknown_models()
+    {
+        // it should display an error line if there are unknown models in getUnknownModels()
+        ProjectContainer::clear();
+        // Add some unknown models to the container
+        ProjectContainer::addModel('UnknownModelA');
+        ProjectContainer::addModel('UnknownModelB');
+
+        $mockCommand = Mockery::mock(Command::class);
+        // scanRelations prints 3 info lines in total
+        $mockCommand->shouldReceive('info')->times(3);
+        // it should print an error with the missing models list
+        $mockCommand->shouldReceive('error')->once()->withArgs(function ($msg) {
+            return str_contains($msg, 'Missing models:') &&
+                str_contains($msg, 'UnknownModelA') &&
+                str_contains($msg, 'UnknownModelB');
+        });
+
+        $handler = new RelationManager(command: $mockCommand);
+        $handler->scanRelations();
+    }
+
     public function test_write_relation_success()
     {
         ProjectContainer::clear();
