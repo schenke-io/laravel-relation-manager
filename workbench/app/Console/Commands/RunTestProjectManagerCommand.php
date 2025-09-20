@@ -36,10 +36,10 @@ class RunTestProjectManagerCommand extends RelationManagerCommand
             ->morphOne('Location', true);
 
         $this->relationManager->model(City::class)
-            ->belongsToMany(Highway::class, true)
             ->hasOneThrough('Country')
-            ->morphToMany('Tag', true)
-            ->morphOne('Location', true);
+            ->belongsToMany(Highway::class, true)
+            ->morphOne('Location', true)
+            ->morphToMany('Tag', true);
 
         $this->relationManager->model(Country::class)
             ->hasOne('Capital', true)

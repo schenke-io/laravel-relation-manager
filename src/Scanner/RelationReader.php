@@ -38,8 +38,24 @@ class RelationReader
     {
         $return = '';
         $relationData = $this->relationData();
+        /*
+         * find all relations morphTo which make a partner relation
+         * marked as reverse
+         */
+        $morphTo = [];
+        foreach ($relationData as $model => $relations) {
+            foreach ($relations as $otherModel => $relationNames) {
+                foreach ($relationNames as $relationName) {
+                    if (in_array($relationName, ['MorphTo', 'MorphedByMany'])) {
+                        $morphTo[] = $model;
+                    }
+                }
+            }
+        }
+
         foreach ($relationData as $model => $relations) {
             $modelRelations = [];
+            ksort($relations);
             foreach ($relations as $otherModel => $relationNames) {
                 foreach ($relationNames as $relationName) {
                     $relation = Relation::fromRelationName($relationName);
@@ -48,17 +64,12 @@ class RelationReader
                     }
                     if ($relation->hasPublicFunction()) {
                         // check for reverse
-                        $hasInverse = false;
-                        $otherRelations = $relationData[$otherModel][$model] ?? [];
-                        foreach ($otherRelations as $otherRelation) {
-                            if (lcfirst($otherRelation) == $relation->inverse()->name) {
-                                $hasInverse = true;
-                            }
-                        }
+                        $inverseRelationFound = $this->findInverseRelation($model, $otherModel, $relation, $relationData, $morphTo);
+
                         if ($relation->hasInverse()) {
                             $modelRelations[] = sprintf('    ->%s(%s, %s)',
                                 lcfirst($relationName),
-                                $otherModel, $hasInverse ? 'true' : 'false'
+                                $otherModel, $inverseRelationFound ? 'true' : 'false'
                             );
                         } else {
                             $modelRelations[] = sprintf('    ->%s(%s)',
@@ -153,5 +164,29 @@ class RelationReader
         } catch (Throwable $e) {
             return false;
         }
+    }
+
+    /**
+     * @param  array<string,mixed>  $relationData
+     * @param  array<int,string>  $morphTo
+     */
+    private function findInverseRelation(
+        string $model,
+        string $otherModel,
+        Relation $relation,
+        array $relationData,
+        array $morphTo): bool
+    {
+        if ($relation->isMorph()) {
+            return in_array($otherModel, $morphTo);
+        }
+        $otherRelations = $relationData[$otherModel][$model] ?? [];
+        foreach ($otherRelations as $otherRelation) {
+            if (lcfirst($otherRelation) == $relation->inverse()->name) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

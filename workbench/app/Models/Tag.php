@@ -22,6 +22,6 @@ class Tag extends Model
      */
     public function regions(): MorphToMany
     {
-        return $this->morphedByMany(Region::class, 'tagable');
+        return $this->morphedByMany(Region::class, 'taggable');
     }
 }

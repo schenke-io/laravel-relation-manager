@@ -11,8 +11,8 @@ do not manually edit this file as it will be overwritten
 <tr><th>model</th><th>direct</th><th>indirect</th></tr><tr><td>Capital</td><td>Country</td><td>Location</td></tr>
 <tr><td>Location</td><td>Capital, City, Highway</td><td></td></tr>
 <tr><td>City</td><td>Region, Tag</td><td>Country, Highway, Location</td></tr>
-<tr><td>Highway</td><td></td><td>City, Location</td></tr>
 <tr><td>Country</td><td>Capital, Region</td><td>City, City</td></tr>
+<tr><td>Highway</td><td></td><td>City, Location</td></tr>
 <tr><td>Tag</td><td></td><td>City, Region</td></tr>
 <tr><td>Region</td><td>City, Country, Tag</td><td>Capital</td></tr>
 <tr><td>Single</td><td></td><td></td></tr>
@@ -30,8 +30,8 @@ locations --> cities
 locations --> highways
 capitals ==> countries
 cities ==> regions
-highways <==> cities
 regions ==> countries
+highways <==> cities
 
 ```
 

@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -146,9 +147,14 @@ class ClassData extends Data
                 if (method_exists($modelMethod, 'getMorphType')) {
                     // @phpstan-ignore-next-line
                     $type = $modelMethod->getMorphType();
+                    $oldRelationName = $relationName;
                     if (str_starts_with($type, strtolower(class_basename($this->class)))) {
-                        // it's a Tag class with taggable_type - we mark it
-                        // todo catch special cases with morphToMany
+                        /*
+                         * the MorphToMany in the main morph class (with _type and _id)
+                         * is made by the function $this->morphedByMany() return type MorphToMany
+                         * we name this relation MorphedByMany for better differentiation
+                         */
+                        $relationName = $relationName === 'MorphToMany' ? 'MorphedByMany' : $relationName;
                     }
                 }
 

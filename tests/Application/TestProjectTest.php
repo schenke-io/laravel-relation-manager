@@ -57,10 +57,10 @@ class TestProjectTest extends TestCase
     #[Group('GenerateProjectTestFile')]
     public function testModelCityHas_5StrictRelationshipsAndWorks(): void
     {
-        $this->assertModelBelongsToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
         $this->assertModelHasOneThrough('Workbench\App\Models\City', 'Workbench\App\Models\Country');
-        $this->assertModelMorphToMany('Workbench\App\Models\City', 'Workbench\App\Models\Tag');
+        $this->assertModelBelongsToMany('Workbench\App\Models\City', 'Workbench\App\Models\Highway');
         $this->assertModelMorphOne('Workbench\App\Models\City', 'Workbench\App\Models\Location');
+        $this->assertModelMorphToMany('Workbench\App\Models\City', 'Workbench\App\Models\Tag');
         $this->assertModelBelongsTo('Workbench\App\Models\City', 'Workbench\App\Models\Region');
         $this->assertModelRelationCount('Workbench\App\Models\City', 5);
     }
