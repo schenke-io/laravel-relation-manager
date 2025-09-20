@@ -93,7 +93,10 @@ class RelationManager
         $this->command->info('scanning existing relations');
         $relationReader = new RelationReader;
         $this->command->info($relationReader->displayRelations());
-
+        $unknownModels = ProjectContainer::getUnknownModels();
+        if (count($unknownModels) > 0) {
+            $this->command->error('Missing models: '.implode(', ', $unknownModels));
+        }
         $this->command->info('');
 
         return $this;
