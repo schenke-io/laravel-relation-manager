@@ -15,6 +15,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Schema;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\TestDox;
+use SchenkeIo\LaravelRelationManager\Define\ProjectContainer;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Traits\AssertModelRelations;
 use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
@@ -38,6 +39,17 @@ class TestProjectTest extends TestCase
             RunTestProjectManagerCommand::class,
             __CLASS__
         );
+    }
+
+    /**
+     * @return void
+     *
+     * all given models have been found?
+     */
+    #[Group('GenerateProjectTestFile')]
+    public function testAllModelsKnown(): void
+    {
+        $this->assertCount(0,ProjectContainer::getUnknownModels());
     }
 
     /**

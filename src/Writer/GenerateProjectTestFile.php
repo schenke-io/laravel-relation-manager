@@ -53,6 +53,7 @@ class GenerateProjectTestFile
         $nameSpace->addUse(Group::class);
         $nameSpace->addUse(Schema::class);
         $nameSpace->addUse(TestDox::class);
+        $nameSpace->addUse(ProjectContainer::class);
 
         $class = $nameSpace->addClass(class_basename($testProjectClass));
         $class->setExtends($extendedTestClass);
@@ -77,7 +78,17 @@ class GenerateProjectTestFile
         $method->addBody('    __CLASS__');
         $method->addBody(');');
 
-        //        print_r($relations);
+        /*
+         * models found test
+         */
+        $method = $class->addMethod('testAllModelsKnown');
+        $method->addComment('@return void');
+        $method->addComment('');
+        $method->addComment('all given models have been found?');
+        $method->addAttribute(Group::class, [GenerateProjectTestFile::testGroup()]);
+        $method->setReturnType('void');
+        $method->addBody('$this->assertCount(0,ProjectContainer::getUnknownModels());');
+
         /*
          * loop over models
          */
