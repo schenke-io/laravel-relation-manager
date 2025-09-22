@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
+use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
 use Spatie\LaravelData\Data;
 
@@ -110,7 +111,7 @@ class ClassData extends Data
     /**
      * array of the related model classes with array of relation types to them
      *
-     * @return array<class-string, list<string>>
+     * @return array<string,ModelRelationData[]>
      *
      * @throws LaravelNotLoadedException
      */
@@ -159,8 +160,14 @@ class ClassData extends Data
                     }
                 }
 
+                $comment = basename($method->getFileName() ?: '?').':'.($method->getStartLine() ?: '?');
                 // to any model, there can be more than one relationship
-                $return[$theOtherModel][] = $relationName;
+                $return[$theOtherModel][] = new ModelRelationData(
+                    model1: $model,
+                    model2: $theOtherModel,
+                    relation: Relation::fromRelationName($relationName),
+                    comment: $comment
+                );
             }
         }
 
@@ -181,7 +188,7 @@ class ClassData extends Data
         if (isset($relations[$usesClass])) {
             $expectationMet = false;
             foreach ($relations[$usesClass] as $relationType) {
-                if ($relationType == $returnType) {
+                if ($relationType->relation == Relation::fromRelationName($returnType)) {
                     $expectationMet = true;
                     break;
                 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations;
 use Illuminate\Filesystem\Filesystem;
 use ReflectionClass;
 use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
@@ -44,9 +45,9 @@ class RelationReader
          */
         $morphTo = [];
         foreach ($relationData as $model => $relations) {
-            foreach ($relations as $otherModel => $relationNames) {
-                foreach ($relationNames as $relationName) {
-                    if (in_array($relationName, ['MorphTo', 'MorphedByMany'])) {
+            foreach ($relations as $otherModel => $modelRelationSet) {
+                foreach ($modelRelationSet as $modelRelationData) {
+                    if (in_array($modelRelationData->relation, [Relation::morphTo, Relation::morphedByMany])) {
                         $morphTo[] = $model;
                     }
                 }
@@ -56,25 +57,29 @@ class RelationReader
         foreach ($relationData as $model => $relations) {
             $modelRelations = [];
             ksort($relations);
-            foreach ($relations as $otherModel => $relationNames) {
-                foreach ($relationNames as $relationName) {
-                    $relation = Relation::fromRelationName($relationName);
+            foreach ($relations as $otherModel => $modelRelationSet) {
+                foreach ($modelRelationSet as $modelRelationData) {
+                    $relation = $modelRelationData->relation;
                     if ($relation === Relation::noRelation) {
                         continue;
                     }
                     if ($relation->hasPublicFunction()) {
                         // check for reverse
-                        $inverseRelationFound = $this->findInverseRelation($model, $otherModel, $relation, $relationData, $morphTo);
+                        $inverseRelationFound = $this->findInverseRelation(
+                            $model, $otherModel, $relation, $relationData, $morphTo
+                        );
 
                         if ($relation->hasInverse()) {
-                            $modelRelations[] = sprintf('    ->%s(%s, %s)',
-                                lcfirst($relationName),
-                                $otherModel, $inverseRelationFound ? 'true' : 'false'
+                            $modelRelations[] = sprintf('    ->%s(%s, %s) // %s',
+                                lcfirst($modelRelationData->relation->name),
+                                $otherModel, $inverseRelationFound ? 'true' : 'false',
+                                $modelRelationData->comment
                             );
                         } else {
-                            $modelRelations[] = sprintf('    ->%s(%s)',
-                                lcfirst($relationName),
-                                $otherModel
+                            $modelRelations[] = sprintf('    ->%s(%s) // %s',
+                                lcfirst($modelRelationData->relation->name),
+                                $otherModel,
+                                $modelRelationData->comment
                             );
                         }
                     }
@@ -93,7 +98,7 @@ class RelationReader
     }
 
     /**
-     * @return array<class-string, array<class-string, list<string>>>
+     * @return array<class-string,array<string,array<ModelRelationData>>>
      *
      * @throws LaravelNotLoadedException
      */
@@ -182,7 +187,7 @@ class RelationReader
         }
         $otherRelations = $relationData[$otherModel][$model] ?? [];
         foreach ($otherRelations as $otherRelation) {
-            if (lcfirst($otherRelation) == $relation->inverse()->name) {
+            if (lcfirst($otherRelation->relation->name) == $relation->inverse()->name) {
                 return true;
             }
         }

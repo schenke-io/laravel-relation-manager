@@ -1,5 +1,6 @@
 <?php
 
+use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
 use SchenkeIo\LaravelRelationManager\Enums\Relation;
 use SchenkeIo\LaravelRelationManager\Scanner;
@@ -51,7 +52,12 @@ it('ignores unknown relation names', function () {
         {
             return [
                 'App\\Models\\Foo' => [
-                    'App\\Models\\Bar' => ['someUnknownRelation'],
+                    'App\\Models\\Bar' => [
+                        new ModelRelationData(
+                            'App\\Models\\Foo',
+                            'Test',
+                        ),
+                    ],
                 ],
             ];
         }

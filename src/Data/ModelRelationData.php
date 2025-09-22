@@ -21,6 +21,7 @@ class ModelRelationData extends Data
         public readonly bool $preventInverse = false,
         public ?string $key1 = null,
         public ?string $key2 = null,
+        public ?string $comment = null
     ) {
         if ($relation->askForRelatedModel()) {
             $this->key1 = $key1 ?? 'id';
