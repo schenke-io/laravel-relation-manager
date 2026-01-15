@@ -1,7 +1,7 @@
 <?php
 
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 
 test('RelationData can be instantiated from array with string type', function () {
     $data = [
@@ -11,5 +11,5 @@ test('RelationData can be instantiated from array with string type', function ()
 
     $relationData = RelationData::from($data);
 
-    expect($relationData->type)->toBe(Relation::hasMany);
+    expect($relationData->type)->toBe(EloquentRelation::hasMany);
 });

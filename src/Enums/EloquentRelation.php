@@ -7,8 +7,14 @@ use Illuminate\Database\Eloquent\Relations as EloquentRelations;
 /**
  * Enum representing various Laravel relationship types and providing
  * utility methods for inverse relationships, syntax mapping, and more.
+ *
+ * This enum captures the different kinds of Eloquent relationships supported by
+ * Laravel, including one-to-one, one-to-many, many-to-many, and polymorphic
+ * variants. It provides logic to determine the logical inverse of a relation,
+ * identify if a relation is direct or indirect, and map relation types to
+ * their corresponding Laravel Eloquent relation classes.
  */
-enum Relation: string
+enum EloquentRelation: string
 {
     use EnumHelper;
 
@@ -27,13 +33,18 @@ enum Relation: string
     case morphToMany = 'morphToMany';
 
     case morphedByMany = 'morphedByMany'; // returns as MorphToMany, so not visble, is used in tha Moprh class
+
+    case bidirectional = 'bidirectional';
+
     /*
-     * when a relation is made with extra filter, like hasOneThrough, it has not any table keys
+     * when a relation is made with an extra filter, like hasOneThrough, it has not any table keys
      */
     case hasOneIndirect = 'hasOneIndirect';
 
     /**
      * Map a short relation class name (e.g., 'HasMany') to its corresponding Enum case.
+     *
+     * @param  string  $relationName  The short class name of the relation.
      */
     public static function fromRelationName(string $relationName): self
     {
@@ -52,16 +63,25 @@ enum Relation: string
         };
     }
 
+    /**
+     * Generates the PHPUnit assertion method name for this relation type.
+     */
     public function getAssertName(): string
     {
         return 'assertModel'.ucfirst($this->name);
     }
 
+    /**
+     * Checks if this relation type typically has a logical inverse.
+     */
     public function askForInverse(): bool
     {
         return self::inverse() != self::noRelation;
     }
 
+    /**
+     * Determines if this relation type requires a related model to be defined.
+     */
     public function askForRelatedModel(): bool
     {
         return match ($this) {
@@ -96,13 +116,16 @@ enum Relation: string
         }
     }
 
+    /**
+     * Convenience method to check if an inverse exists.
+     */
     public function hasInverse(bool $preventInverse = false): bool
     {
         return $this->inverse($preventInverse) !== self::noRelation;
     }
 
     /**
-     * can the relation be defined in a command
+     * Checks if this relation can be directly initiated via a public method in a model definition context.
      */
     public function hasPublicFunction(): bool
     {
@@ -115,6 +138,9 @@ enum Relation: string
         };
     }
 
+    /**
+     * Distinguishes actual relationships from internal state enums like noRelation.
+     */
     public function isRelation(): bool
     {
         return match ($this) {
@@ -124,6 +150,9 @@ enum Relation: string
 
     }
 
+    /**
+     * Identifies relationships that represent a direct database link (e.g., via a foreign key).
+     */
     public function isDirectRelation(): bool
     {
         return match ($this) {
@@ -135,6 +164,9 @@ enum Relation: string
         };
     }
 
+    /**
+     * Maps the enum case to the fully qualified class name of the Eloquent relation.
+     */
     public function getClass(): ?string
     {
         return match ($this) {
@@ -152,18 +184,24 @@ enum Relation: string
         };
     }
 
+    /**
+     * Identifies polymorphic relationship types.
+     */
     public function isMorph(): bool
     {
         return match ($this) {
-            self::morphTo, self::morphOne, self::morphMany, self::morphToMany => true,
+            self::morphTo, self::morphOne, self::morphMany, self::morphToMany, self::morphedByMany => true,
             default => false
         };
     }
 
+    /**
+     * Indicates if the relationship should be represented by a double line in diagrams.
+     */
     public function isDoubleLine(): bool
     {
         return match ($this) {
-            self::morphToMany, self::belongsToMany => true,
+            self::morphToMany, self::belongsToMany, self::bidirectional => true,
             default => false
         };
     }

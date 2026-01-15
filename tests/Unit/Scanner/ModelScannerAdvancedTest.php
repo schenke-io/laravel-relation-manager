@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Unit\Scanner;
 
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Scanner\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Tests\Models\Comment;
 use SchenkeIo\LaravelRelationManager\Tests\Models\Country;
@@ -23,14 +23,14 @@ class ModelScannerAdvancedTest extends TestCase
         $this->assertArrayHasKey(MorphModel::class, $results);
         $morph = $results[MorphModel::class];
 
-        $this->assertEquals(Relation::morphTo, $morph['imageable']['type']);
-        $this->assertEquals(Relation::morphOne, $morph['profile']['type']);
+        $this->assertEquals(EloquentRelation::morphTo, $morph['imageable']['type']);
+        $this->assertEquals(EloquentRelation::morphOne, $morph['profile']['type']);
         $this->assertEquals(Profile::class, $morph['profile']['related']);
 
-        $this->assertEquals(Relation::morphMany, $morph['comments']['type']);
+        $this->assertEquals(EloquentRelation::morphMany, $morph['comments']['type']);
         $this->assertEquals(Comment::class, $morph['comments']['related']);
 
-        $this->assertEquals(Relation::morphToMany, $morph['tags']['type']);
+        $this->assertEquals(EloquentRelation::morphToMany, $morph['tags']['type']);
         $this->assertEquals(Tag::class, $morph['tags']['related']);
     }
 
@@ -42,10 +42,10 @@ class ModelScannerAdvancedTest extends TestCase
         $this->assertArrayHasKey(ThroughModel::class, $results);
         $through = $results[ThroughModel::class];
 
-        $this->assertEquals(Relation::hasOneThrough, $through['userCountry']['type']);
+        $this->assertEquals(EloquentRelation::hasOneThrough, $through['userCountry']['type']);
         $this->assertEquals(Country::class, $through['userCountry']['related']);
 
-        $this->assertEquals(Relation::hasManyThrough, $through['userPosts']['type']);
+        $this->assertEquals(EloquentRelation::hasManyThrough, $through['userPosts']['type']);
         $this->assertEquals(Post::class, $through['userPosts']['related']);
     }
 }

@@ -3,7 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Tests\Unit\Data;
 
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use Workbench\App\Models\Country;
 
@@ -14,7 +14,7 @@ class ModelRelationDataTest extends TestCase
         $modelRelation = new ModelRelationData(
             Country::class,
             Country::class,
-            Relation::noRelation,
+            EloquentRelation::noRelation,
             true
         );
         $this->assertTrue($modelRelation->preventInverse);

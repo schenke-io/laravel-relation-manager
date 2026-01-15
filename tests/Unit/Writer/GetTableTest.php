@@ -16,6 +16,22 @@ test('it can generate html table', function () {
         ->and($html)->toContain('<td>Row 1 Col 1</td>');
 });
 
+test('it can generate html table with rowspan', function () {
+    $table = [
+        ['Header 1', 'Header 2'],
+        [
+            ['Group 1', 'Row 1'],
+            ['Group 1', 'Row 2'],
+            ['Group 2', 'Row 3'],
+        ],
+    ];
+    $html = GetTable::getHtml($table, [0]);
+    expect($html)->toContain('rowspan="2"')
+        ->and($html)->toContain('Group 1')
+        ->and($html)->toContain('Group 2')
+        ->and($html)->not->toContain('rowspan="1"');
+});
+
 test('it can generate markdown table', function () {
     $table = [
         ['Header 1', 'Header 2'],

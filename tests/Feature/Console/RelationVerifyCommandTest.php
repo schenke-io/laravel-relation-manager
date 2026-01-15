@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 
 it('passes when relationships are in sync', function () {
@@ -65,7 +65,7 @@ it('fails if scanner fails', function () {
 it('shows warnings when relationships are in sync but have logic issues', function () {
     ModelScanner::shouldReceive('scan')->once()->andReturn([
         'App\Models\User' => [
-            'groups' => ['type' => Relation::belongsToMany, 'related' => 'App\Models\Group'],
+            'groups' => ['type' => EloquentRelation::belongsToMany, 'related' => 'App\Models\Group'],
         ],
         'App\Models\Group' => [],
     ]);

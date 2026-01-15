@@ -1,6 +1,6 @@
 <?php
 
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Scanner\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Tests\Models\AttributeModel;
 use SchenkeIo\LaravelRelationManager\Tests\Models\Post;
@@ -18,29 +18,29 @@ test('it can scan models and find relations', function () {
         ->and($results)->toHaveKey(AttributeModel::class);
 
     expect($results[User::class]['posts'])->toMatchArray([
-        'type' => Relation::hasMany,
+        'type' => EloquentRelation::hasMany,
         'related' => Post::class,
     ]);
 
     expect($results[User::class]['roles'])->toMatchArray([
-        'type' => Relation::belongsToMany,
+        'type' => EloquentRelation::belongsToMany,
         'related' => Role::class,
         'pivotTable' => 'role_user',
     ]);
 
     expect($results[Role::class]['users'])->toMatchArray([
-        'type' => Relation::belongsToMany,
+        'type' => EloquentRelation::belongsToMany,
         'related' => User::class,
         'pivotTable' => 'role_user',
     ]);
 
     expect($results[Post::class]['author'])->toMatchArray([
-        'type' => Relation::belongsTo,
+        'type' => EloquentRelation::belongsTo,
         'related' => User::class,
     ]);
 
     expect($results[AttributeModel::class]['customRelation'])->toMatchArray([
-        'type' => Relation::hasOne,
+        'type' => EloquentRelation::hasOne,
         'related' => User::class,
     ]);
 });

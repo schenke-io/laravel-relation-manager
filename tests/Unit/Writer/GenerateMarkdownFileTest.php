@@ -9,7 +9,7 @@ use SchenkeIo\LaravelRelationManager\Data\ConfigData;
 use SchenkeIo\LaravelRelationManager\Data\ModelData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GetDiagram;
@@ -20,7 +20,7 @@ class GenerateMarkdownFileTest extends TestCase
     {
         $models = [
             'App\Models\Post' => new ModelData(methods: [
-                'user' => new RelationData(type: Relation::belongsTo, related: 'App\Models\User'),
+                'user' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\User'),
             ]),
         ];
         $relationshipData = new RelationshipData(config: new ConfigData, models: $models);
@@ -36,7 +36,7 @@ class GenerateMarkdownFileTest extends TestCase
 
         $diagram = $generator->getMermaidDiagram();
         $this->assertStringContainsString('mermaid', $diagram);
-        $this->assertStringContainsString('posts ==> users', $diagram);
+        $this->assertStringContainsString('posts -.-> users', $diagram);
     }
 
     public function test_generate_uses_mermaid_by_default()
@@ -97,7 +97,17 @@ class GenerateMarkdownFileTest extends TestCase
     {
         $models = [
             'App\Models\Post' => new ModelData(methods: [
-                'user' => new RelationData(type: Relation::belongsTo, related: 'App\Models\User'),
+                'user' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\User'),
+                'comments' => new RelationData(type: EloquentRelation::morphMany, related: 'App\Models\Comment'),
+            ]),
+            'App\Models\User' => new ModelData(methods: [
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
+            ]),
+            'App\Models\Comment' => new ModelData(methods: [
+                'commentable' => new RelationData(type: EloquentRelation::morphTo),
+            ]),
+            'App\Models\Lone' => new ModelData(methods: [
+                'lonelyMorph' => new RelationData(type: EloquentRelation::morphTo),
             ]),
         ];
         $relationshipData = new RelationshipData(config: new ConfigData, models: $models);
@@ -112,5 +122,12 @@ class GenerateMarkdownFileTest extends TestCase
         $this->assertStringContainsString('user', $markdown);
         $this->assertStringContainsString('belongsTo', $markdown);
         $this->assertStringContainsString('User', $markdown);
+        $this->assertStringContainsString('commentable', $markdown);
+        $this->assertStringContainsString('morphTo', $markdown);
+        // commentable morphs to Post
+        $this->assertStringContainsString('Post', $markdown);
+        // lonelyMorph has no targets
+        $this->assertStringContainsString('lonelyMorph', $markdown);
+        $this->assertStringContainsString('n/a', $markdown);
     }
 }

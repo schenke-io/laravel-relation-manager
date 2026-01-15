@@ -5,6 +5,13 @@ use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
 uses()->group('support');
 
+it('returns path from ENV if present', function () {
+    $envPath = '/custom/env/path.json';
+    $_ENV['LARAVEL_RELATIONSHIPS_JSON'] = $envPath;
+    expect(PathResolver::getRelationshipFilePath())->toBe($envPath);
+    unset($_ENV['LARAVEL_RELATIONSHIPS_JSON']);
+});
+
 it('returns path from composer.json if present', function () {
     File::shouldReceive('exists')->andReturnUsing(fn ($path) => $path === base_path('composer.json'));
     File::shouldReceive('get')

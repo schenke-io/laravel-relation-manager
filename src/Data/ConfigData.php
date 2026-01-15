@@ -27,13 +27,20 @@ class ConfigData extends Data
      */
     public readonly bool $useMermaid;
 
+    /**
+     * Whether to show intermediate (pivot) tables in the diagram.
+     */
+    public readonly bool $showIntermediateTables;
+
     public function __construct(
         ?string $markdownPath = null,
         ?string $modelPath = null,
         ?bool $useMermaid = null,
+        ?bool $showIntermediateTables = null,
     ) {
         $this->markdownPath = $markdownPath ?: base_path('RELATIONS.md');
         $this->modelPath = $modelPath ?: 'app/Models';
         $this->useMermaid = $useMermaid ?? true;
+        $this->showIntermediateTables = $showIntermediateTables ?? false;
     }
 }

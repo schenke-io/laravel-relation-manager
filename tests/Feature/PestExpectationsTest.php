@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature;
 
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Tests\Models\Post;
 use SchenkeIo\LaravelRelationManager\Tests\Models\User;
@@ -15,13 +15,13 @@ class PestExpectationsTest extends TestCase
         ModelScanner::shouldReceive('scan')->andReturn([
             User::class => [
                 'posts' => [
-                    'type' => Relation::hasMany,
+                    'type' => EloquentRelation::hasMany,
                     'related' => Post::class,
                 ],
             ],
         ]);
 
-        expect(User::class)->toHaveRelation(Post::class, Relation::hasMany);
+        expect(User::class)->toHaveRelation(Post::class, EloquentRelation::hasMany);
     }
 
     public function test_to_has_many()
@@ -29,7 +29,7 @@ class PestExpectationsTest extends TestCase
         ModelScanner::shouldReceive('scan')->andReturn([
             User::class => [
                 'posts' => [
-                    'type' => Relation::hasMany,
+                    'type' => EloquentRelation::hasMany,
                     'related' => Post::class,
                 ],
             ],
@@ -43,7 +43,7 @@ class PestExpectationsTest extends TestCase
         ModelScanner::shouldReceive('scan')->andReturn([
             User::class => [
                 'profile' => [
-                    'type' => Relation::hasOne,
+                    'type' => EloquentRelation::hasOne,
                     'related' => 'Profile',
                 ],
             ],
@@ -57,7 +57,7 @@ class PestExpectationsTest extends TestCase
         ModelScanner::shouldReceive('scan')->andReturn([
             Post::class => [
                 'user' => [
-                    'type' => Relation::belongsTo,
+                    'type' => EloquentRelation::belongsTo,
                     'related' => User::class,
                 ],
             ],
@@ -71,7 +71,7 @@ class PestExpectationsTest extends TestCase
         ModelScanner::shouldReceive('scan')->andReturn([
             User::class => [
                 'roles' => [
-                    'type' => Relation::belongsToMany,
+                    'type' => EloquentRelation::belongsToMany,
                     'related' => 'Role',
                 ],
             ],

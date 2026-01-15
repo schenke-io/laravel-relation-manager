@@ -1,6 +1,6 @@
 <!--
 
-This file was written by 'WriteMarkdownCommand.php' line 22 using
+This file was written by 'WriteMarkdownCommand.php' line 19 using
 SchenkeIo\PackagingTools\Markdown\MarkdownAssembler
 
 Do not edit manually as it will be overwritten.
@@ -31,16 +31,21 @@ and keeps your project organized.
 * [Laravel Relation Manager](#laravel-relation-manager)
   * [Installation](#installation)
   * [Workflow](#workflow)
+    * [The Draw Command](#the-draw-command)
+      * [Understanding the Diagram](#understanding-the-diagram)
+    * [Configuration](#configuration)
 * [Examples and Guides](#examples-and-guides)
   * [1. Automatic Discovery](#1.-automatic-discovery)
   * [2. Declarative Relations via Attributes](#2.-declarative-relations-via-attributes)
-    * [On the Class Level](#on-the-class-level)
     * [On the Method Level](#on-the-method-level)
+    * [Automatic Reverse Relations](#automatic-reverse-relations)
     * [Suppressing Relationships](#suppressing-relationships)
   * [3. Testing Your Relations](#3.-testing-your-relations)
     * [Using PHPUnit](#using-phpunit)
     * [Using Pest](#using-pest)
   * [4. Visualizing Relations](#4.-visualizing-relations)
+    * [Mermaid Diagram Example](#mermaid-diagram-example)
+    * [Relationship Table Example](#relationship-table-example)
   * [Testing Relationships](#testing-relationships)
     * [Strict vs. Loose Mode](#strict-vs.-loose-mode)
     * [PHPUnit Integration](#phpunit-integration)
@@ -71,14 +76,42 @@ Laravel Relation Manager helps you maintain consistency in your Eloquent relatio
 
 1. **Extract**: `php artisan relation:extract` - Scans your models and saves the relationship state to `.relationships.json`.
 2. **Verify**: `php artisan relation:verify` - Ensures your code implementation matches the defined relationship state.
-3. **Draw**: `php artisan relation:draw` - Generates visualization (diagrams and tables) of your model relationships.
+3. **Draw**: `php artisan relation:draw [filename]` - Generates visualization (diagrams and tables) of your model relationships.
 
+### The Draw Command
 
+The `relation:draw` command generates a comprehensive Markdown file (default: `RELATIONS.md`) that includes:
+- **Model relations table**: Listing direct and indirect relations for each model.
+- **Table relations diagram**: A visual representation of your database schema.
+- **Database overview**: Expected tables and their foreign key columns.
+- **Relationship details**: A complete list of all defined relationships.
 
+You can optionally provide a filename to override the default path.
 
+#### Understanding the Diagram
 
-[View Model Relationships](docs/relationships.md)
+In the Mermaid diagram, arrows represent relationships between tables.
+- **Colors**:
+    - **Green** (`#2ecc71`): Standard Eloquent relations (One-to-One, One-to-Many).
+    - **Blue** (`#3498db`): Polymorphic relations.
+    - **Orange** (`#e67e22`): Many-to-Many relations.
+- **Line Styles**:
+    - `==>` : Standard direct relations.
+    - `-->` : Polymorphic relations.
+    - `<==>` : Many-to-Many relations.
 
+**FAQ: Why is there an arrow from `tags` to `regions`?**
+This occurs when a model (like `Tag`) has a relationship method pointing to another model (like `Region`). Even if the database foreign key is on a pivot table or the other model, the diagram reflects the intent of the relationship method defined in the model.
+
+**Suggestion**: If you want to exclude certain methods from the diagram, use the `#[Relation(EloquentRelation::noRelation)]` attribute.
+
+### Configuration
+
+The `.relationships.json` file contains a `config` section to customize the behavior:
+
+- `markdown_path`: Path where the relations documentation will be generated (default: `RELATIONS.md`).
+- `model_path`: Directory where your Eloquent models are located (default: `app/Models`).
+- `use_mermaid`: Boolean to toggle between Mermaid (default) and Graphviz diagram generation.
 
 
 
@@ -110,26 +143,13 @@ When you run `php artisan relation:extract`, this relation will be automatically
 
 ## 2. Declarative Relations via Attributes
 
-Sometimes you might want to define relations that are not explicitly in your code yet, or you want to provide additional metadata.
-
-### On the Class Level
-
-```php
-use SchenkeIo\LaravelRelationManager\Attributes\Relation;
-use SchenkeIo\LaravelRelationManager\Enums\Relation as RelationEnum;
-
-#[Relation(RelationEnum::hasMany, Comment::class, addReverse: true)]
-class Post extends Model
-{
-    // ...
-}
-```
+Sometimes you might want to provide additional metadata to your relationships or explicitly mark methods to be ignored.
 
 ### On the Method Level
 
 ```php
 use SchenkeIo\LaravelRelationManager\Attributes\Relation;
-use SchenkeIo\LaravelRelationManager\Enums\Relation as RelationEnum;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation as RelationEnum;
 
 class User extends Model
 {
@@ -141,13 +161,25 @@ class User extends Model
 }
 ```
 
+### Automatic Reverse Relations
+
+You can tell the scanner to automatically inject the inverse relation into the related model:
+
+```php
+#[Relation(RelationEnum::hasMany, Comment::class, addReverse: true)]
+public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
+```
+
 ### Suppressing Relationships
 
 If you have a method that should not be treated as a relationship, you can explicitly mark it with `noRelation`:
 
 ```php
 use SchenkeIo\LaravelRelationManager\Attributes\Relation;
-use SchenkeIo\LaravelRelationManager\Enums\Relation as RelationEnum;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation as RelationEnum;
 
 class User extends Model
 {
@@ -192,14 +224,35 @@ it('has the correct relations', function () {
 
 ## 4. Visualizing Relations
 
-Generate a Mermaid diagram or a Markdown table of your relations:
+Generate a diagram or a Markdown table of your relations:
 
 ```bash
 php artisan relation:draw
 ```
 
-By default, this command uses the data from `.relationships.json` and can be configured to output different formats or to a specific file.
+By default, this command uses the data from `.relationships.json`. It supports:
+- **Mermaid.js**: Default tool for embedding diagrams in Markdown (GitHub/GitLab compatible).
+- **Graphviz**: An alternative that generates a PNG file (requires `dot` to be installed). This is automatically used if `use_mermaid` is set to `false` in the configuration.
 
+### Mermaid Diagram Example
+
+```mermaid
+flowchart LR
+    User ==> Post
+    Post ==> Comment
+    linkStyle 0 stroke:#2ecc71,stroke-width:3px
+    linkStyle 1 stroke:#2ecc71,stroke-width:3px
+```
+
+### Relationship Table Example
+
+<table>
+<tr><th>Model</th><th>Method(): Relation</th><th>Related Model</th><th>Reverse Relation</th></tr>
+<tr><td rowspan="2">User</td><td><code>posts(): hasMany</code></td><td>Post</td><td>Post::author</td></tr>
+<tr><td><code>profile(): hasOne</code></td><td>Profile</td><td>Profile::user</td></tr>
+</table>
+
+Here an example of a [generated markdown](workbench/resources/md/relations.md) file.
 
 
 
@@ -281,6 +334,6 @@ This will automatically register three tests in your Pest file:
 ---
 
 
-README generated at 2026-01-15 07:53:00 using [packaging-tools](https://github.com/schenke-io/packaging-tools)
+README generated at 2026-01-15 13:09:50 using [packaging-tools](https://github.com/schenke-io/packaging-tools)
 
 

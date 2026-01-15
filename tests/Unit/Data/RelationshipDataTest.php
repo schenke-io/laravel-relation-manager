@@ -4,13 +4,13 @@ use SchenkeIo\LaravelRelationManager\Data\ConfigData;
 use SchenkeIo\LaravelRelationManager\Data\ModelData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 
 test('it validates matching models and relations', function () {
     $currentModels = [
         'App\Models\User' => [
             'posts' => [
-                'type' => Relation::hasMany,
+                'type' => EloquentRelation::hasMany,
                 'related' => 'App\Models\Post',
             ],
         ],
@@ -20,7 +20,7 @@ test('it validates matching models and relations', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'App\Models\Post'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
             ]),
         ]
     );
@@ -45,7 +45,7 @@ test('it detects type mismatch', function () {
     $currentModels = [
         'App\Models\User' => [
             'posts' => [
-                'type' => Relation::hasOne,
+                'type' => EloquentRelation::hasOne,
             ],
         ],
     ];
@@ -54,13 +54,13 @@ test('it detects type mismatch', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany),
+                'posts' => new RelationData(type: EloquentRelation::hasMany),
             ]),
         ]
     );
     $errors = $relationshipData->validateImplementation($currentModels);
 
-    expect($errors)->toContain('Relation App\Models\User::posts type mismatch: expected hasMany, got hasOne');
+    expect($errors)->toContain('EloquentRelation App\Models\User::posts type mismatch: expected hasMany, got hasOne');
 });
 
 test('it validates strict mode', function () {
@@ -80,7 +80,7 @@ test('it validates strict mode', function () {
     $errors = $relationshipData->validateImplementation($currentModels, true);
 
     expect($errors)->toContain('Model App\Models\Extra found in implementation but missing in JSON')
-        ->toContain('Relation App\Models\User::extra found in implementation but missing in JSON');
+        ->toContain('EloquentRelation App\Models\User::extra found in implementation but missing in JSON');
 });
 
 test('it detects asymmetry', function () {
@@ -88,7 +88,7 @@ test('it detects asymmetry', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'groups' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Group'),
+                'groups' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Group'),
             ]),
             'App\Models\Group' => new ModelData,
         ]
@@ -103,7 +103,7 @@ test('it detects broken relations', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'NonExistentClass'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'NonExistentClass'),
             ]),
         ]
     );
@@ -120,66 +120,66 @@ test('it detects missing relation methods', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'App\Models\Post'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
             ]),
         ]
     );
     $errors = $relationshipData->validateImplementation($currentModels);
-    expect($errors)->toContain('Relation App\Models\User::posts missing in implementation');
+    expect($errors)->toContain('EloquentRelation App\Models\User::posts missing in implementation');
 });
 
 test('it detects mismatched related model', function () {
     $currentModels = [
         'App\Models\User' => [
-            'posts' => ['type' => Relation::hasMany, 'related' => 'App\Models\Other'],
+            'posts' => ['type' => EloquentRelation::hasMany, 'related' => 'App\Models\Other'],
         ],
     ];
     $relationshipData = new RelationshipData(
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'App\Models\Post'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
             ]),
         ]
     );
     $errors = $relationshipData->validateImplementation($currentModels);
-    expect($errors)->toContain('Relation App\Models\User::posts related model mismatch: expected App\Models\Post, got App\Models\Other');
+    expect($errors)->toContain('EloquentRelation App\Models\User::posts related model mismatch: expected App\Models\Post, got App\Models\Other');
 });
 
 test('it detects mismatched foreign key', function () {
     $currentModels = [
         'App\Models\User' => [
-            'posts' => ['type' => Relation::hasMany, 'related' => 'App\Models\Post', 'foreignKey' => 'other_id'],
+            'posts' => ['type' => EloquentRelation::hasMany, 'related' => 'App\Models\Post', 'foreignKey' => 'other_id'],
         ],
     ];
     $relationshipData = new RelationshipData(
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'App\Models\Post', foreignKey: 'user_id'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post', foreignKey: 'user_id'),
             ]),
         ]
     );
     $errors = $relationshipData->validateImplementation($currentModels);
-    expect($errors)->toContain('Relation App\Models\User::posts foreign key mismatch: expected user_id, got other_id');
+    expect($errors)->toContain('EloquentRelation App\Models\User::posts foreign key mismatch: expected user_id, got other_id');
 });
 
 test('it detects mismatched pivot table', function () {
     $currentModels = [
         'App\Models\User' => [
-            'groups' => ['type' => Relation::belongsToMany, 'related' => 'App\Models\Group', 'pivotTable' => 'other_pivot'],
+            'groups' => ['type' => EloquentRelation::belongsToMany, 'related' => 'App\Models\Group', 'pivotTable' => 'other_pivot'],
         ],
     ];
     $relationshipData = new RelationshipData(
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'groups' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Group', pivotTable: 'group_user'),
+                'groups' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Group', pivotTable: 'group_user'),
             ]),
         ]
     );
     $errors = $relationshipData->validateImplementation($currentModels);
-    expect($errors)->toContain('Relation App\Models\User::groups pivot table mismatch: expected group_user, got other_pivot');
+    expect($errors)->toContain('EloquentRelation App\Models\User::groups pivot table mismatch: expected group_user, got other_pivot');
 });
 
 test('it detects related model not being an Eloquent model', function () {
@@ -187,7 +187,7 @@ test('it detects related model not being an Eloquent model', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: \stdClass::class),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: \stdClass::class),
             ]),
         ]
     );
@@ -206,16 +206,18 @@ test('it can generate diagram data', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'App\Models\Post'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
             ]),
             'App\Models\Post' => new ModelData(methods: [
-                'user' => new RelationData(type: Relation::belongsTo, related: 'App\Models\User'),
+                'user' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\User'),
             ]),
         ]
     );
     $diagramData = $relationshipData->getDiagramData();
-    expect($diagramData)->toBeArray()
-        ->toHaveKey('posts');
+    expect($diagramData)->toBeArray();
+    $firstKey = array_key_first($diagramData);
+    $relation = current($diagramData[$firstKey]);
+    expect($relation)->toBe(EloquentRelation::bidirectional);
 });
 
 test('it handles symmetric belongsToMany without asymmetry warning', function () {
@@ -223,10 +225,10 @@ test('it handles symmetric belongsToMany without asymmetry warning', function ()
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'groups' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Group'),
+                'groups' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Group'),
             ]),
             'App\Models\Group' => new ModelData(methods: [
-                'users' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\User'),
+                'users' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\User'),
             ]),
         ]
     );
@@ -240,8 +242,8 @@ test('getDiagramData handles special relations', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'profile' => new RelationData(type: Relation::isSingle),
-                'nothing' => new RelationData(type: Relation::noRelation),
+                'profile' => new RelationData(type: EloquentRelation::isSingle),
+                'nothing' => new RelationData(type: EloquentRelation::noRelation),
             ]),
         ]
     );
@@ -254,7 +256,7 @@ test('getDiagramData handles pivot tables', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'groups' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Group'),
+                'groups' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Group'),
             ]),
         ]
     );
@@ -273,7 +275,7 @@ test('getWarnings handles belongsToMany without related model', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'groups' => new RelationData(type: Relation::belongsToMany, related: null),
+                'groups' => new RelationData(type: EloquentRelation::belongsToMany, related: null),
             ]),
         ]
     );
@@ -286,7 +288,7 @@ test('getWarnings handles broken relations without related model', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: null),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: null),
             ]),
         ]
     );
@@ -299,12 +301,12 @@ test('getDiagramData handles indirect and morph relations', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'indirect' => new RelationData(type: Relation::hasOneIndirect, related: 'App\Models\Other'),
-                'morph' => new RelationData(type: Relation::morphToMany, related: 'App\Models\Tag'),
-                'groups' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Alpha'), // Alpha < User (table name)
+                'indirect' => new RelationData(type: EloquentRelation::hasOneIndirect, related: 'App\Models\Other'),
+                'morph' => new RelationData(type: EloquentRelation::morphToMany, related: 'App\Models\Tag'),
+                'groups' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Alpha'), // Alpha < User (table name)
             ]),
         ]
     );
     $diagramData = $relationshipData->getDiagramData();
-    expect($diagramData)->toHaveKey('tags');
+    expect($diagramData)->toHaveKey('users');
 });

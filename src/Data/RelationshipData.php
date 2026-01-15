@@ -4,11 +4,21 @@ namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
 
+/**
+ * Data Transfer Object for all relationship data of the project.
+ *
+ * This class serves as the central repository for relationship metadata
+ * extracted from Eloquent models. It includes configuration settings and
+ * a collection of model-specific relationship data. It provides methods
+ * for loading from and saving to JSON files, validating the current
+ * implementation against the stored data, generating warnings for
+ * inconsistencies, and preparing data for visualization (diagrams).
+ */
 #[MapName(SnakeCaseMapper::class)]
 class RelationshipData extends Data
 {
@@ -18,6 +28,11 @@ class RelationshipData extends Data
         public readonly array $models = [],
     ) {}
 
+    /**
+     * Custom instantiation logic to handle older data formats or nested arrays.
+     *
+     * @param  mixed  ...$payloads  Payloads to create the instance from.
+     */
     public static function from(mixed ...$payloads): static
     {
         $data = $payloads[0] ?? [];
@@ -39,6 +54,12 @@ class RelationshipData extends Data
         return parent::from($data);
     }
 
+    /**
+     * Loads relationship data from a JSON file.
+     *
+     * @param  string  $path  The full path to the JSON file.
+     * @return self|null The loaded data or null if the file doesn't exist or is invalid.
+     */
     public static function loadFromFile(string $path): ?self
     {
         if (! File::exists($path)) {
@@ -55,6 +76,12 @@ class RelationshipData extends Data
         return self::from($data);
     }
 
+    /**
+     * Persists the current relationship data to a JSON file.
+     *
+     * @param  string  $path  The full path where the JSON should be saved.
+     * @return bool True on success, false otherwise.
+     */
     public function saveToFile(string $path): bool
     {
         $json = $this->toJson(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
@@ -63,8 +90,13 @@ class RelationshipData extends Data
     }
 
     /**
-     * @param  array<string, array<string, array<string, mixed>>>  $currentModels
-     * @return array<string> List of error messages
+     * Validates that the current model implementation matches the stored relationship data.
+     *
+     * It compares types, related models, foreign keys, and pivot tables.
+     *
+     * @param  array<string, array<string, array<string, mixed>>>  $currentModels  The implementation data discovered by scanning.
+     * @param  bool  $strict  If true, it also warns about items in implementation missing in JSON.
+     * @return array<string> List of error messages.
      */
     public function validateImplementation(array $currentModels, bool $strict = false): array
     {
@@ -79,7 +111,7 @@ class RelationshipData extends Data
                 }
                 foreach ($relations as $method => $data) {
                     if (! isset($this->models[$model]->methods[$method])) {
-                        $errors[] = "Relation $model::$method found in implementation but missing in JSON";
+                        $errors[] = "EloquentRelation $model::$method found in implementation but missing in JSON";
                     }
                 }
             }
@@ -94,7 +126,7 @@ class RelationshipData extends Data
 
             foreach ($modelData->methods as $method => $expectedData) {
                 if (! isset($currentModels[$model][$method])) {
-                    $errors[] = "Relation $model::$method missing in implementation";
+                    $errors[] = "EloquentRelation $model::$method missing in implementation";
 
                     continue;
                 }
@@ -103,10 +135,10 @@ class RelationshipData extends Data
 
                 // Compare type
                 $expectedType = $expectedData->type->name;
-                $currentType = ($currentData['type'] instanceof Relation) ? $currentData['type']->name : $currentData['type'];
+                $currentType = ($currentData['type'] instanceof EloquentRelation) ? $currentData['type']->name : $currentData['type'];
 
                 if ($currentType !== $expectedType) {
-                    $errors[] = "Relation $model::$method type mismatch: expected $expectedType, got $currentType";
+                    $errors[] = "EloquentRelation $model::$method type mismatch: expected $expectedType, got $currentType";
                 }
 
                 // Compare related model
@@ -114,21 +146,21 @@ class RelationshipData extends Data
                 $currentRelated = $currentData['related'] ?? null;
 
                 if ($expectedRelated && $currentRelated !== $expectedRelated) {
-                    $errors[] = "Relation $model::$method related model mismatch: expected $expectedRelated, got $currentRelated";
+                    $errors[] = "EloquentRelation $model::$method related model mismatch: expected $expectedRelated, got $currentRelated";
                 }
 
                 // Compare foreign key
                 $expectedForeignKey = $expectedData->foreignKey;
                 $currentForeignKey = $currentData['foreignKey'] ?? null;
                 if ($expectedForeignKey && $currentForeignKey !== $expectedForeignKey) {
-                    $errors[] = "Relation $model::$method foreign key mismatch: expected $expectedForeignKey, got $currentForeignKey";
+                    $errors[] = "EloquentRelation $model::$method foreign key mismatch: expected $expectedForeignKey, got $currentForeignKey";
                 }
 
                 // Compare pivot table
                 $expectedPivotTable = $expectedData->pivotTable;
                 $currentPivotTable = $currentData['pivotTable'] ?? null;
                 if ($expectedPivotTable && $currentPivotTable !== $expectedPivotTable) {
-                    $errors[] = "Relation $model::$method pivot table mismatch: expected $expectedPivotTable, got $currentPivotTable";
+                    $errors[] = "EloquentRelation $model::$method pivot table mismatch: expected $expectedPivotTable, got $currentPivotTable";
                 }
             }
         }
@@ -137,8 +169,15 @@ class RelationshipData extends Data
     }
 
     /**
-     * @param  array<string, string[]>  $potentialRelations
-     * @return string[]
+     * Checks for potential issues in the relationship data.
+     *
+     * It identifies:
+     * 1. Asymmetry (e.g., belongsToMany without an inverse).
+     * 2. Broken relations (missing related model or non-existent class).
+     * 3. Missing ID columns in database tables that look like foreign keys.
+     *
+     * @param  array<string, string[]>  $potentialRelations  Suspicious database columns discovered by scanner.
+     * @return string[] List of warning messages.
      */
     public function getWarnings(array $potentialRelations = []): array
     {
@@ -149,7 +188,7 @@ class RelationshipData extends Data
                 $typeEnum = $data->type;
 
                 // Asymmetry check
-                if ($typeEnum === Relation::belongsToMany) {
+                if ($typeEnum === EloquentRelation::belongsToMany) {
                     $relatedModel = $data->related;
                     if (! $relatedModel) {
                         continue;
@@ -159,7 +198,7 @@ class RelationshipData extends Data
                     if (isset($this->models[$relatedModel])) {
                         foreach ($this->models[$relatedModel]->methods as $inverseData) {
                             $inverseType = $inverseData->type;
-                            if ($inverseType === Relation::belongsToMany && $inverseData->related === $model) {
+                            if ($inverseType === EloquentRelation::belongsToMany && $inverseData->related === $model) {
                                 $foundInverse = true;
                                 break;
                             }
@@ -174,7 +213,7 @@ class RelationshipData extends Data
                 // Broken relations check
                 $related = $data->related;
                 if (! $related) {
-                    if ($typeEnum !== Relation::morphTo && $typeEnum !== Relation::noRelation) {
+                    if ($typeEnum !== EloquentRelation::morphTo && $typeEnum !== EloquentRelation::noRelation) {
                         $warnings[] = "Broken: $model::$method() has no related model defined.";
                     }
 
@@ -200,10 +239,17 @@ class RelationshipData extends Data
     }
 
     /**
-     * @return array<string, array<string|null, Relation>>
+     * Prepares relationship data for diagram generation.
+     *
+     * It maps model names to their plural snake_case table names and determines the
+     * relationship links between them.
+     *
+     * @param  bool|null  $withExtraPivotTables  If true, pivot tables are included as separate nodes.
+     * @return array<string, array<string|null, EloquentRelation>> A map of table connections.
      */
-    public function getDiagramData(bool $withExtraPivotTables = false): array
+    public function getDiagramData(?bool $withExtraPivotTables = null): array
     {
+        $withExtraPivotTables ??= $this->config->showIntermediateTables;
         $tables = [];
         foreach ($this->models as $modelName => $modelData) {
             foreach ($modelData->methods as $relationData) {
@@ -222,56 +268,64 @@ class RelationshipData extends Data
                 $pivotTable = implode('_', $names);
 
                 switch ($type) {
-                    case Relation::hasOne:
-                    case Relation::hasMany:
-                    case Relation::morphOne:
-                    case Relation::morphMany:
+                    case EloquentRelation::hasOne:
+                    case EloquentRelation::hasMany:
+                    case EloquentRelation::morphOne:
+                    case EloquentRelation::morphMany:
+                    case EloquentRelation::morphToMany:
+                    case EloquentRelation::morphedByMany:
                         if ($tableName2) {
-                            $tables[$tableName2][$tableName1] = $type;
+                            $tables[$tableName1][$tableName2] = $type;
                         }
                         break;
-                    case Relation::hasOneThrough:
-                    case Relation::hasManyThrough:
-                    case Relation::hasOneIndirect:
+                    case EloquentRelation::hasOneThrough:
+                    case EloquentRelation::hasManyThrough:
+                    case EloquentRelation::hasOneIndirect:
                         // no link
                         break;
-                    case Relation::belongsToMany:
+                    case EloquentRelation::belongsToMany:
                         if ($tableName2) {
                             if ($withExtraPivotTables) {
                                 $tables[$pivotTable][$tableName1] = $type;
                                 $tables[$pivotTable][$tableName2] = $type;
                             } else {
-                                if ($tableName1 > $tableName2) {
-                                    $tables[$tableName1][$tableName2] = $type;
-                                }
+                                $tables[$tableName1][$tableName2] = $type;
                             }
                         }
                         break;
-                    case Relation::morphToMany:
-                    case Relation::morphedByMany:
-                        if ($tableName2) {
-                            $tables[$tableName2][$tableName1] = $type;
-                        }
-                        break;
 
-                    case Relation::belongsTo:
+                    case EloquentRelation::belongsTo:
                         if ($tableName2) {
                             $tables[$tableName1][$tableName2] = $type;
                         }
                         break;
-                    case Relation::morphTo:
-                    case Relation::isSingle:
-                    case Relation::noRelation:
+                    case EloquentRelation::morphTo:
+                    case EloquentRelation::isSingle:
+                    case EloquentRelation::noRelation:
                         $tables[$tableName1][null] = $type;
                         break;
                 }
             }
         }
 
-        return $tables;
+        // bidirectional detection
+        foreach ($tables as $t1 => $targets) {
+            foreach ($targets as $t2 => $rel) {
+                if ($t2 && isset($tables[$t2][$t1])) {
+                    $tables[$t1][$t2] = EloquentRelation::bidirectional;
+                    unset($tables[$t2][$t1]);
+                }
+            }
+        }
+
+        return array_filter($tables);
     }
 
     /**
+     * Summarizes relationship information for each model.
+     *
+     * It distinguishes between direct (e.g., belongsTo) and indirect (e.g., hasManyThrough) relationships.
+     *
      * @return array<string, array{direct: string[], indirect: string[]}>
      */
     public function getModelRelationsData(): array
@@ -285,7 +339,7 @@ class RelationshipData extends Data
             ];
             foreach ($modelData->methods as $methodName => $relationData) {
                 $type = $relationData->type;
-                if ($type === Relation::noRelation || $type === Relation::isSingle) {
+                if ($type === EloquentRelation::noRelation || $type === EloquentRelation::isSingle) {
                     continue;
                 }
                 $related = $relationData->related ? class_basename($relationData->related) : 'n/a';
@@ -305,7 +359,11 @@ class RelationshipData extends Data
     }
 
     /**
-     * @return array<string, string[]>
+     * Infers database tables and their expected foreign key columns from the relationship data.
+     *
+     * This is useful for generating documentation or verifying database schema.
+     *
+     * @return array<string, string[]> A mapping of table names to their identified foreign key columns.
      */
     public function getDatabaseTableData(): array
     {
@@ -319,15 +377,15 @@ class RelationshipData extends Data
             foreach ($modelData->methods as $methodName => $relationData) {
                 $type = $relationData->type;
                 switch ($type) {
-                    case Relation::belongsTo:
+                    case EloquentRelation::belongsTo:
                         $fk = $relationData->foreignKey ?: Str::snake($relationData->related ? class_basename($relationData->related) : '').'_id';
                         $tables[$tableName][] = $fk;
                         break;
-                    case Relation::morphTo:
+                    case EloquentRelation::morphTo:
                         $tables[$tableName][] = $methodName.'_id';
                         $tables[$tableName][] = $methodName.'_type';
                         break;
-                    case Relation::belongsToMany:
+                    case EloquentRelation::belongsToMany:
                         $pivot = $relationData->pivotTable;
                         if (! $pivot && $relationData->related) {
                             $names = [Str::snake($modelShortName), Str::snake(class_basename($relationData->related))];
@@ -344,8 +402,8 @@ class RelationshipData extends Data
                             }
                         }
                         break;
-                    case Relation::morphToMany:
-                    case Relation::morphedByMany:
+                    case EloquentRelation::morphToMany:
+                    case EloquentRelation::morphedByMany:
                         $pivot = $relationData->pivotTable;
                         if ($pivot) {
                             if (! isset($tables[$pivot])) {
@@ -372,5 +430,57 @@ class RelationshipData extends Data
         ksort($tables);
 
         return $tables;
+    }
+
+    /**
+     * Find reverse relations for a given relation.
+     *
+     * @return array<int, array{0: string, 1: string}>
+     */
+    public function getReverseRelations(string $modelName, string $methodName): array
+    {
+        $relation = $this->models[$modelName]->methods[$methodName] ?? null;
+        if (! $relation || ! $relation->related) {
+            return [];
+        }
+
+        $results = [];
+        $targetModel = $relation->related;
+        $expectedInverseType = $relation->type->inverse();
+
+        if (isset($this->models[$targetModel])) {
+            foreach ($this->models[$targetModel]->methods as $targetMethodName => $targetRelation) {
+                if ($targetRelation->related === $modelName && $targetRelation->type === $expectedInverseType) {
+                    $results[] = [$targetModel, $targetMethodName];
+                }
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * For a morphTo relation, find all models that morph to it.
+     *
+     * @return string[] List of model names
+     */
+    public function getMorphToTargets(string $modelName, string $methodName): array
+    {
+        $relation = $this->models[$modelName]->methods[$methodName] ?? null;
+        if (! $relation || $relation->type !== EloquentRelation::morphTo) {
+            return [];
+        }
+
+        $targets = [];
+        foreach ($this->models as $otherModelName => $otherModelData) {
+            foreach ($otherModelData->methods as $otherMethodName => $otherRelation) {
+                if ($otherRelation->related === $modelName &&
+                    ($otherRelation->type === EloquentRelation::morphOne || $otherRelation->type === EloquentRelation::morphMany)) {
+                    $targets[] = $otherModelName;
+                }
+            }
+        }
+
+        return array_unique($targets);
     }
 }

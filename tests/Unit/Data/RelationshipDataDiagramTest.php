@@ -6,7 +6,7 @@ use SchenkeIo\LaravelRelationManager\Data\ConfigData;
 use SchenkeIo\LaravelRelationManager\Data\ModelData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class RelationshipDataDiagramTest extends TestCase
@@ -15,63 +15,52 @@ class RelationshipDataDiagramTest extends TestCase
     {
         $models = [
             'App\Models\A' => new ModelData(methods: [
-                'hasOne' => new RelationData(type: Relation::hasOne, related: 'App\Models\B'),
-                'hasMany' => new RelationData(type: Relation::hasMany, related: 'App\Models\C'),
-                'morphOne' => new RelationData(type: Relation::morphOne, related: 'App\Models\D'),
-                'morphMany' => new RelationData(type: Relation::morphMany, related: 'App\Models\E'),
-                'hasOneThrough' => new RelationData(type: Relation::hasOneThrough, related: 'App\Models\F'),
-                'hasManyThrough' => new RelationData(type: Relation::hasManyThrough, related: 'App\Models\G'),
-                'hasOneIndirect' => new RelationData(type: Relation::hasOneIndirect, related: 'App\Models\H'),
-                'belongsToMany' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\I'),
-                'morphToMany' => new RelationData(type: Relation::morphToMany, related: 'App\Models\J'),
-                'morphedByMany' => new RelationData(type: Relation::morphedByMany, related: 'App\Models\K'),
-                'belongsTo' => new RelationData(type: Relation::belongsTo, related: 'App\Models\L'),
-                'morphTo' => new RelationData(type: Relation::morphTo),
-                'isSingle' => new RelationData(type: Relation::isSingle),
-                'noRelation' => new RelationData(type: Relation::noRelation),
+                'hasOne' => new RelationData(type: EloquentRelation::hasOne, related: 'App\Models\B'),
+                'hasMany' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\C'),
+                'morphOne' => new RelationData(type: EloquentRelation::morphOne, related: 'App\Models\D'),
+                'morphMany' => new RelationData(type: EloquentRelation::morphMany, related: 'App\Models\E'),
+                'hasOneThrough' => new RelationData(type: EloquentRelation::hasOneThrough, related: 'App\Models\F'),
+                'hasManyThrough' => new RelationData(type: EloquentRelation::hasManyThrough, related: 'App\Models\G'),
+                'hasOneIndirect' => new RelationData(type: EloquentRelation::hasOneIndirect, related: 'App\Models\H'),
+                'belongsToMany' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\I'),
+                'morphToMany' => new RelationData(type: EloquentRelation::morphToMany, related: 'App\Models\J'),
+                'morphedByMany' => new RelationData(type: EloquentRelation::morphedByMany, related: 'App\Models\K'),
+                'belongsTo' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\L'),
+                'morphTo' => new RelationData(type: EloquentRelation::morphTo),
+                'isSingle' => new RelationData(type: EloquentRelation::isSingle),
+                'noRelation' => new RelationData(type: EloquentRelation::noRelation),
             ]),
         ];
 
         $relationshipData = new RelationshipData(config: new ConfigData, models: $models);
         $diagramData = $relationshipData->getDiagramData();
 
-        // hasOne: B -> A
-        $this->assertArrayHasKey('b_s', $diagramData);
-        $this->assertEquals(Relation::hasOne, $diagramData['b_s']['a_s']);
-
-        // hasMany: C -> A
-        $this->assertArrayHasKey('c_s', $diagramData);
-        $this->assertEquals(Relation::hasMany, $diagramData['c_s']['a_s']);
-
-        // morphOne: D -> A
-        $this->assertArrayHasKey('d_s', $diagramData);
-        $this->assertEquals(Relation::morphOne, $diagramData['d_s']['a_s']);
-
-        // morphMany: E -> A
-        $this->assertArrayHasKey('e_s', $diagramData);
-        $this->assertEquals(Relation::morphMany, $diagramData['e_s']['a_s']);
-
-        // belongsToMany: as -> is (because as > is alphabetically? 'as' > 'is' is false, 'a' < 'i')
-        // Wait: class_basename('App\Models\A') is 'A', table is 'as'.
-        // class_basename('App\Models\I') is 'I', table is 'is'.
-        // 'as' < 'is' alphabetically. So nothing in diagram unless we flip them or as > is.
-        // Let's check logic: if ($tableName1 > $tableName2) { $tables[$tableName1][$tableName2] = $type; }
-        // 'as' > 'is' is false. So $tables['is']['as'] should be set? No, it's not set.
-        // If I want to test belongsToMany, I should use names that trigger it.
-
-        // morphToMany: J -> A
-        $this->assertArrayHasKey('j_s', $diagramData);
-        $this->assertEquals(Relation::morphToMany, $diagramData['j_s']['a_s']);
-
-        // morphedByMany: K -> A
-        $this->assertArrayHasKey('k_s', $diagramData);
-        $this->assertEquals(Relation::morphedByMany, $diagramData['k_s']['a_s']);
-
-        // belongsTo: as -> ls
+        // hasOne: A -> B
         $this->assertArrayHasKey('a_s', $diagramData);
-        $this->assertEquals(Relation::belongsTo, $diagramData['a_s']['l_s']);
+        $this->assertEquals(EloquentRelation::hasOne, $diagramData['a_s']['b_s']);
 
-        // morphTo, isSingle, noRelation: as -> null
+        // hasMany: A -> C
+        $this->assertEquals(EloquentRelation::hasMany, $diagramData['a_s']['c_s']);
+
+        // morphOne: A -> D
+        $this->assertEquals(EloquentRelation::morphOne, $diagramData['a_s']['d_s']);
+
+        // morphMany: A -> E
+        $this->assertEquals(EloquentRelation::morphMany, $diagramData['a_s']['e_s']);
+
+        // belongsToMany: A -> I
+        $this->assertEquals(EloquentRelation::belongsToMany, $diagramData['a_s']['i_s']);
+
+        // morphToMany: A -> J
+        $this->assertEquals(EloquentRelation::morphToMany, $diagramData['a_s']['j_s']);
+
+        // morphedByMany: A -> K
+        $this->assertEquals(EloquentRelation::morphedByMany, $diagramData['a_s']['k_s']);
+
+        // belongsTo: A -> L
+        $this->assertEquals(EloquentRelation::belongsTo, $diagramData['a_s']['l_s']);
+
+        // morphTo, isSingle, noRelation: A -> null
         $this->assertArrayHasKey(null, $diagramData['a_s']);
     }
 
@@ -79,7 +68,7 @@ class RelationshipDataDiagramTest extends TestCase
     {
         $models = [
             'App\Models\User' => new ModelData(methods: [
-                'roles' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Role'),
+                'roles' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Role'),
             ]),
         ];
         // users, roles. 'users' > 'roles' is true.
@@ -87,6 +76,6 @@ class RelationshipDataDiagramTest extends TestCase
         $diagramData = $relationshipData->getDiagramData();
 
         $this->assertArrayHasKey('users', $diagramData);
-        $this->assertEquals(Relation::belongsToMany, $diagramData['users']['roles']);
+        $this->assertEquals(EloquentRelation::belongsToMany, $diagramData['users']['roles']);
     }
 }

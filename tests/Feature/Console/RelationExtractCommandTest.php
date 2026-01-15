@@ -6,7 +6,7 @@ use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 it('can extract relationships to json', function () {
     ModelScanner::shouldReceive('scan')
         ->once()
-        ->andReturn(['Model' => ['relation' => ['type' => \SchenkeIo\LaravelRelationManager\Enums\Relation::hasOne, 'related' => 'RelatedModel']]]);
+        ->andReturn(['Model' => ['relation' => ['type' => \SchenkeIo\LaravelRelationManager\Enums\EloquentRelation::hasOne, 'related' => 'RelatedModel']]]);
 
     File::shouldReceive('exists')->andReturn(false);
 

@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Process;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Writer\GetDiagram;
 
 test('getGraphvizCode returns an image tag', function () {
@@ -38,15 +38,18 @@ test('writeGraphvizFile returns false if dot command fails', function () {
 test('getDiagramCode handles morph and double relations', function () {
     $data = [
         'table1' => [
-            'table2' => Relation::morphOne,
-            'table3' => Relation::belongsToMany,
-            'table4' => Relation::hasOne,
+            'table2' => EloquentRelation::morphOne,
+            'table3' => EloquentRelation::belongsToMany,
+            'table4' => EloquentRelation::hasOne,
         ],
     ];
 
     $mermaid = GetDiagram::getMermaidCode($data, DiagramDirection::LR);
 
-    expect($mermaid)->toContain('table1 --> table2')  // morph
+    expect($mermaid)->toContain('table1 -.-> table2')  // morph
         ->and($mermaid)->toContain('table1 <==> table3') // double
-        ->and($mermaid)->toContain('table1 ==> table4'); // normal
+        ->and($mermaid)->toContain('table1 -.-> table4') // normal
+        ->and($mermaid)->toContain('table2(table2)') // poly node
+        ->and($mermaid)->toContain('classDef poly')
+        ->and($mermaid)->toContain('class table2 poly');
 });

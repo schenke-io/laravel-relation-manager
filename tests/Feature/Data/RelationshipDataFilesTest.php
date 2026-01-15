@@ -32,12 +32,12 @@ it('detects mismatched relations from mismatched_relations.json', function () {
     $currentModels = [
         'SchenkeIo\\LaravelRelationManager\\Tests\\Models\\User' => [
             'posts' => [
-                'type' => \SchenkeIo\LaravelRelationManager\Enums\Relation::hasMany,
+                'type' => \SchenkeIo\LaravelRelationManager\Enums\EloquentRelation::hasMany,
                 'related' => 'SchenkeIo\\LaravelRelationManager\\Tests\\Models\\Post',
             ],
         ],
     ];
 
     $errors = $relationshipData->validateImplementation($currentModels);
-    expect($errors)->toContain('Relation SchenkeIo\\LaravelRelationManager\\Tests\\Models\\User::posts type mismatch: expected belongsToMany, got hasMany');
+    expect($errors)->toContain('EloquentRelation SchenkeIo\\LaravelRelationManager\\Tests\\Models\\User::posts type mismatch: expected belongsToMany, got hasMany');
 });

@@ -1,18 +1,23 @@
 {
     "config": {
-        "modelPath": "/home/srv/packages/schenke-io/laravel-relation-manager/workbench/app/Models",
-        "markdownPath": "workbench/resources/md/relations.md"
+        "markdown_path": "workbench/resources/md/relations.md",
+        "model_path": "/home/srv/packages/schenke-io/laravel-relation-manager/workbench/app/Models",
+        "use_mermaid": true
     },
     "models": {
         "Workbench\\App\\Models\\Capital": {
             "methods": {
                 "country": {
                     "type": "belongsTo",
-                    "related": "Workbench\\App\\Models\\Country"
+                    "related": "Workbench\\App\\Models\\Country",
+                    "pivot_table": null,
+                    "foreign_key": "country_id"
                 },
                 "location": {
                     "type": "morphOne",
-                    "related": "Workbench\\App\\Models\\Location"
+                    "related": "Workbench\\App\\Models\\Location",
+                    "pivot_table": null,
+                    "foreign_key": "locationable_id"
                 }
             }
         },
@@ -20,23 +25,33 @@
             "methods": {
                 "tags": {
                     "type": "morphToMany",
-                    "related": "Workbench\\App\\Models\\Tag"
+                    "related": "Workbench\\App\\Models\\Tag",
+                    "pivot_table": null,
+                    "foreign_key": null
                 },
                 "region": {
                     "type": "belongsTo",
-                    "related": "Workbench\\App\\Models\\Region"
+                    "related": "Workbench\\App\\Models\\Region",
+                    "pivot_table": null,
+                    "foreign_key": "region_id"
                 },
                 "highways": {
                     "type": "belongsToMany",
-                    "related": "Workbench\\App\\Models\\Highway"
+                    "related": "Workbench\\App\\Models\\Highway",
+                    "pivot_table": "city_highway",
+                    "foreign_key": null
                 },
                 "country": {
                     "type": "hasOneThrough",
-                    "related": "Workbench\\App\\Models\\Country"
+                    "related": "Workbench\\App\\Models\\Country",
+                    "pivot_table": null,
+                    "foreign_key": "region_id"
                 },
                 "location": {
                     "type": "morphOne",
-                    "related": "Workbench\\App\\Models\\Location"
+                    "related": "Workbench\\App\\Models\\Location",
+                    "pivot_table": null,
+                    "foreign_key": "locationable_id"
                 }
             }
         },
@@ -44,19 +59,27 @@
             "methods": {
                 "capital": {
                     "type": "hasOne",
-                    "related": "Workbench\\App\\Models\\Capital"
+                    "related": "Workbench\\App\\Models\\Capital",
+                    "pivot_table": null,
+                    "foreign_key": "country_id"
                 },
                 "oldest": {
                     "type": "hasOne",
-                    "related": "Workbench\\App\\Models\\City"
+                    "related": "Workbench\\App\\Models\\City",
+                    "pivot_table": null,
+                    "foreign_key": "country_id"
                 },
                 "regions": {
                     "type": "hasMany",
-                    "related": "Workbench\\App\\Models\\Region"
+                    "related": "Workbench\\App\\Models\\Region",
+                    "pivot_table": null,
+                    "foreign_key": "country_id"
                 },
                 "cities": {
                     "type": "hasManyThrough",
-                    "related": "Workbench\\App\\Models\\City"
+                    "related": "Workbench\\App\\Models\\City",
+                    "pivot_table": null,
+                    "foreign_key": "region_id"
                 }
             }
         },
@@ -64,11 +87,15 @@
             "methods": {
                 "cities": {
                     "type": "belongsToMany",
-                    "related": "Workbench\\App\\Models\\City"
+                    "related": "Workbench\\App\\Models\\City",
+                    "pivot_table": "city_highway",
+                    "foreign_key": null
                 },
                 "locations": {
                     "type": "morphMany",
-                    "related": "Workbench\\App\\Models\\Location"
+                    "related": "Workbench\\App\\Models\\Location",
+                    "pivot_table": null,
+                    "foreign_key": "locationable_id"
                 }
             }
         },
@@ -76,7 +103,9 @@
             "methods": {
                 "locationable": {
                     "type": "morphTo",
-                    "related": null
+                    "related": "Workbench\\App\\Models\\Location",
+                    "pivot_table": null,
+                    "foreign_key": "locationable_id"
                 }
             }
         },
@@ -84,34 +113,46 @@
             "methods": {
                 "tags": {
                     "type": "morphToMany",
-                    "related": "Workbench\\App\\Models\\Tag"
+                    "related": "Workbench\\App\\Models\\Tag",
+                    "pivot_table": null,
+                    "foreign_key": null
                 },
                 "country": {
                     "type": "belongsTo",
-                    "related": "Workbench\\App\\Models\\Country"
+                    "related": "Workbench\\App\\Models\\Country",
+                    "pivot_table": null,
+                    "foreign_key": "country_id"
                 },
                 "cities": {
                     "type": "hasMany",
-                    "related": "Workbench\\App\\Models\\City"
+                    "related": "Workbench\\App\\Models\\City",
+                    "pivot_table": null,
+                    "foreign_key": "region_id"
                 },
                 "capital": {
                     "type": "hasOneThrough",
-                    "related": "Workbench\\App\\Models\\Capital"
+                    "related": "Workbench\\App\\Models\\Capital",
+                    "pivot_table": null,
+                    "foreign_key": "country_id"
                 }
             }
         },
         "Workbench\\App\\Models\\Single": {
-            "methods": {}
+            "methods": []
         },
         "Workbench\\App\\Models\\Tag": {
             "methods": {
                 "cities": {
-                    "type": "morphedByMany",
-                    "related": "Workbench\\App\\Models\\City"
+                    "type": "morphToMany",
+                    "related": "Workbench\\App\\Models\\City",
+                    "pivot_table": null,
+                    "foreign_key": null
                 },
                 "regions": {
-                    "type": "morphedByMany",
-                    "related": "Workbench\\App\\Models\\Region"
+                    "type": "morphToMany",
+                    "related": "Workbench\\App\\Models\\Region",
+                    "pivot_table": null,
+                    "foreign_key": null
                 }
             }
         }

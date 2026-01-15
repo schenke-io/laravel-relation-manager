@@ -3,7 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Data;
 
 use Illuminate\Support\Str;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use Spatie\LaravelData\Data;
 
 /**
@@ -21,7 +21,7 @@ class ModelRelationData extends Data
     public function __construct(
         public readonly string $model1,
         public readonly ?string $model2,
-        public readonly Relation $relation = Relation::noRelation,
+        public readonly EloquentRelation $relation = EloquentRelation::noRelation,
         public readonly bool $preventInverse = false,
         ?string $key1 = null,
         ?string $key2 = null,

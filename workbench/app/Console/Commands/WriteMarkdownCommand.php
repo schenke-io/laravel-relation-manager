@@ -3,9 +3,6 @@
 namespace Workbench\App\Console\Commands;
 
 use Illuminate\Console\Command;
-use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
-use SchenkeIo\LaravelRelationManager\Support\PathResolver;
-use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\PackagingTools\Markdown\MarkdownAssembler;
 
 class WriteMarkdownCommand extends Command
@@ -34,21 +31,6 @@ class WriteMarkdownCommand extends Command
 
             $assembler->addMarkdown('installation.md');
             $assembler->addMarkdown('usage.md');
-
-            /*
-             * Inject Relation Visualization
-             */
-            try {
-                $path = PathResolver::getRelationshipFilePath();
-                $relationshipData = RelationshipData::loadFromFile($path);
-                if ($relationshipData) {
-                    $writer = new GenerateMarkdownFile($relationshipData);
-                    $writer->generate('docs/relationships.md');
-                    $assembler->addText("\n\n[View Model Relationships](docs/relationships.md)\n\n");
-                }
-            } catch (\Throwable $e) {
-                $this->warn('Could not inject relation visualization: '.$e->getMessage());
-            }
 
             $assembler->addMarkdown('examples.md');
             $assembler->addMarkdown('testing.md');

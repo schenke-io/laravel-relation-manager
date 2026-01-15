@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Writer;
 use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 
 /**
  * Service to generate a markdown file containing a Mermaid diagram
@@ -90,7 +91,7 @@ class GenerateMarkdownFile
         foreach ($this->relationshipData->getDatabaseTableData() as $table => $fields) {
             $rows[] = [
                 $table,
-                implode('<br>', $fields),
+                implode(', ', $fields),
             ];
         }
 
@@ -99,21 +100,39 @@ class GenerateMarkdownFile
 
     public function getRelationshipTable(): string
     {
-        $headers = ['Model', 'Method', 'Relation', 'Related Model'];
+        $headers = ['Model', 'Method(): Relation', 'Related Model', 'Reverse Relation'];
         $rows = [];
         foreach ($this->relationshipData->models as $model => $modelData) {
             foreach ($modelData->methods as $method => $data) {
                 $type = $data->type;
                 $typeName = $type->name;
+
+                $relatedModel = 'n/a';
+                if ($type === EloquentRelation::morphTo) {
+                    $targets = $this->relationshipData->getMorphToTargets($model, $method);
+                    $relatedModel = implode(', ', array_map(fn ($t) => class_basename($t), $targets));
+                    if (empty($relatedModel)) {
+                        $relatedModel = 'n/a';
+                    }
+                } elseif ($data->related && $data->related !== 'n/a') {
+                    $relatedModel = class_basename($data->related);
+                }
+
+                $reverseRelations = $this->relationshipData->getReverseRelations($model, $method);
+                $reverseStr = implode(', ', array_map(fn ($r) => class_basename($r[0]).'::'.$r[1], $reverseRelations));
+                if (empty($reverseStr)) {
+                    $reverseStr = 'n/a';
+                }
+
                 $rows[] = [
                     class_basename($model),
-                    $method,
-                    $typeName,
-                    class_basename($data->related ?? 'n/a'),
+                    "<code>$method(): $typeName</code>",
+                    $relatedModel,
+                    $reverseStr,
                 ];
             }
         }
 
-        return GetTable::getMarkdown([$headers, $rows]);
+        return GetTable::getHtml([$headers, $rows], [0]);
     }
 }

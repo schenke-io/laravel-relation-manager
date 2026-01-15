@@ -3,7 +3,7 @@
 namespace SchenkeIo\LaravelRelationManager\Attributes;
 
 use Attribute;
-use SchenkeIo\LaravelRelationManager\Enums\Relation as RelationEnum;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation as RelationEnum;
 
 /**
  * Attribute to define a relationship on a model or method.

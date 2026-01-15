@@ -6,7 +6,7 @@ use SchenkeIo\LaravelRelationManager\Data\ConfigData;
 use SchenkeIo\LaravelRelationManager\Data\ModelData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class RelationshipDataNewMethodsTest extends TestCase
@@ -15,15 +15,15 @@ class RelationshipDataNewMethodsTest extends TestCase
     {
         $models = [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: Relation::hasMany, related: 'App\Models\Post'),
-                'profile' => new RelationData(type: Relation::hasOne, related: 'App\Models\Profile'),
-                'recentPosts' => new RelationData(type: Relation::hasManyThrough, related: 'App\Models\Post'),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
+                'profile' => new RelationData(type: EloquentRelation::hasOne, related: 'App\Models\Profile'),
+                'recentPosts' => new RelationData(type: EloquentRelation::hasManyThrough, related: 'App\Models\Post'),
             ]),
             'App\Models\Post' => new ModelData(methods: [
-                'author' => new RelationData(type: Relation::belongsTo, related: 'App\Models\User'),
+                'author' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\User'),
             ]),
             'App\Models\Guest' => new ModelData(methods: [
-                'none' => new RelationData(type: Relation::noRelation),
+                'none' => new RelationData(type: EloquentRelation::noRelation),
             ]),
         ];
 
@@ -50,15 +50,15 @@ class RelationshipDataNewMethodsTest extends TestCase
     {
         $models = [
             'App\Models\User' => new ModelData(methods: [
-                'roles' => new RelationData(type: Relation::belongsToMany, related: 'App\Models\Role'),
-                'image' => new RelationData(type: Relation::morphOne, related: 'App\Models\Image'),
+                'roles' => new RelationData(type: EloquentRelation::belongsToMany, related: 'App\Models\Role'),
+                'image' => new RelationData(type: EloquentRelation::morphOne, related: 'App\Models\Image'),
             ]),
             'App\Models\Post' => new ModelData(methods: [
-                'author' => new RelationData(type: Relation::belongsTo, related: 'App\Models\User', foreignKey: 'user_id'),
-                'tags' => new RelationData(type: Relation::morphToMany, related: 'App\Models\Tag', pivotTable: 'taggables'),
+                'author' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\User', foreignKey: 'user_id'),
+                'tags' => new RelationData(type: EloquentRelation::morphToMany, related: 'App\Models\Tag', pivotTable: 'taggables'),
             ]),
             'App\Models\Comment' => new ModelData(methods: [
-                'commentable' => new RelationData(type: Relation::morphTo),
+                'commentable' => new RelationData(type: EloquentRelation::morphTo),
             ]),
         ];
 
@@ -89,5 +89,56 @@ class RelationshipDataNewMethodsTest extends TestCase
         // for morphToMany, it should have taggable_id and taggable_type
         // Wait, I need to know what the name is. For morphToMany, it's often 'taggable'.
         // I'll need to see how I can determine this name.
+    }
+
+    public function test_get_reverse_relations()
+    {
+        $models = [
+            'App\Models\User' => new ModelData(methods: [
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: 'App\Models\Post'),
+            ]),
+            'App\Models\Post' => new ModelData(methods: [
+                'author' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\User'),
+            ]),
+        ];
+
+        $relationshipData = new RelationshipData(config: new ConfigData, models: $models);
+
+        $reverse = $relationshipData->getReverseRelations('App\Models\User', 'posts');
+        $this->assertCount(1, $reverse);
+        $this->assertEquals(['App\Models\Post', 'author'], $reverse[0]);
+
+        $reverse = $relationshipData->getReverseRelations('App\Models\Post', 'author');
+        $this->assertCount(1, $reverse);
+        $this->assertEquals(['App\Models\User', 'posts'], $reverse[0]);
+
+        // cover line 439
+        $this->assertEquals([], $relationshipData->getReverseRelations('Invalid', 'method'));
+    }
+
+    public function test_get_morph_to_targets()
+    {
+        $models = [
+            'App\Models\Post' => new ModelData(methods: [
+                'comments' => new RelationData(type: EloquentRelation::morphMany, related: 'App\Models\Comment'),
+            ]),
+            'App\Models\Video' => new ModelData(methods: [
+                'comments' => new RelationData(type: EloquentRelation::morphMany, related: 'App\Models\Comment'),
+            ]),
+            'App\Models\Comment' => new ModelData(methods: [
+                'commentable' => new RelationData(type: EloquentRelation::morphTo),
+                'notMorph' => new RelationData(type: EloquentRelation::belongsTo, related: 'App\Models\Post'),
+            ]),
+        ];
+
+        $relationshipData = new RelationshipData(config: new ConfigData, models: $models);
+
+        $targets = $relationshipData->getMorphToTargets('App\Models\Comment', 'commentable');
+        $this->assertCount(2, $targets);
+        $this->assertContains('App\Models\Post', $targets);
+        $this->assertContains('App\Models\Video', $targets);
+
+        // cover line 466
+        $this->assertEquals([], $relationshipData->getMorphToTargets('App\Models\Comment', 'notMorph'));
     }
 }

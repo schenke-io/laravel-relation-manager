@@ -2,7 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Unit\Scanner;
 
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Scanner\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Tests\Models\ReverseModel;
 use SchenkeIo\LaravelRelationManager\Tests\Models\User;
@@ -21,7 +21,7 @@ class AddReverseTest extends TestCase
 
         // check if User has the injected belongsTo relation
         $this->assertArrayHasKey('reversemodel', $results[User::class]);
-        $this->assertEquals(Relation::belongsTo, $results[User::class]['reversemodel']['type']);
+        $this->assertEquals(EloquentRelation::belongsTo, $results[User::class]['reversemodel']['type']);
         $this->assertEquals(ReverseModel::class, $results[User::class]['reversemodel']['related']);
     }
 }

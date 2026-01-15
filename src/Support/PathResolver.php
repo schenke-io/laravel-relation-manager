@@ -14,6 +14,10 @@ class PathResolver
 
     public static function getRelationshipFilePath(): string
     {
+        if ($envPath = env('LARAVEL_RELATIONSHIPS_JSON')) {
+            return (string) $envPath;
+        }
+
         $searchPaths = array_unique([base_path(), getcwd()]);
 
         foreach ($searchPaths as $searchPath) {

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\File;
 use PHPUnit\Framework\Assert;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
-use SchenkeIo\LaravelRelationManager\Enums\Relation;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
@@ -59,28 +59,28 @@ trait RelationTestTrait
 
     public function assertModelHasOne(string $model, string $relatedModel): void
     {
-        $this->assertModelHasRelation($model, $relatedModel, Relation::hasOne);
+        $this->assertModelHasRelation($model, $relatedModel, EloquentRelation::hasOne);
     }
 
     public function assertModelHasMany(string $model, string $relatedModel): void
     {
-        $this->assertModelHasRelation($model, $relatedModel, Relation::hasMany);
+        $this->assertModelHasRelation($model, $relatedModel, EloquentRelation::hasMany);
     }
 
     public function assertModelBelongsTo(string $model, string $relatedModel): void
     {
-        $this->assertModelHasRelation($model, $relatedModel, Relation::belongsTo);
+        $this->assertModelHasRelation($model, $relatedModel, EloquentRelation::belongsTo);
     }
 
     public function assertModelBelongsToMany(string $model, string $relatedModel): void
     {
-        $this->assertModelHasRelation($model, $relatedModel, Relation::belongsToMany);
+        $this->assertModelHasRelation($model, $relatedModel, EloquentRelation::belongsToMany);
     }
 
     /**
      * Asserts that a specific relationship exists between two models.
      */
-    public function assertModelHasRelation(string $model, string $relatedModel, Relation $relation): void
+    public function assertModelHasRelation(string $model, string $relatedModel, EloquentRelation $relation): void
     {
         Assert::assertThat(
             new ModelRelationData($model, $relatedModel, $relation),

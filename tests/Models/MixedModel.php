@@ -4,7 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use SchenkeIo\LaravelRelationManager\Attributes\Relation;
-use SchenkeIo\LaravelRelationManager\Enums\Relation as RelationEnum;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation as RelationEnum;
 
 class MixedModel extends Model
 {
