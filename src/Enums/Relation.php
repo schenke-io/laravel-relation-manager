@@ -2,35 +2,39 @@
 
 namespace SchenkeIo\LaravelRelationManager\Enums;
 
-use ArchTech\Enums\From;
 use Illuminate\Database\Eloquent\Relations as EloquentRelations;
-use Illuminate\Support\Str;
-use SchenkeIo\LaravelRelationManager\Data\ClassData;
 
-enum Relation
+/**
+ * Enum representing various Laravel relationship types and providing
+ * utility methods for inverse relationships, syntax mapping, and more.
+ */
+enum Relation: string
 {
-    use From;
+    use EnumHelper;
 
-    case noRelation;
-    case hasOne;  // inverse:  belongsTo
-    case hasMany;  // inverse: belongsTo
-    case hasOneThrough;
-    case hasManyThrough;
-    case belongsToMany; // inverse belongsToMany
-    case belongsTo;
-    case isSingle;
+    case noRelation = 'noRelation';
+    case hasOne = 'hasOne';  // inverse:  belongsTo
+    case hasMany = 'hasMany';  // inverse: belongsTo
+    case hasOneThrough = 'hasOneThrough';
+    case hasManyThrough = 'hasManyThrough';
+    case belongsToMany = 'belongsToMany'; // inverse belongsToMany
+    case belongsTo = 'belongsTo';
+    case isSingle = 'isSingle';
 
-    case morphTo;
-    case morphOne;
-    case morphMany;
-    case morphToMany;
+    case morphTo = 'morphTo';
+    case morphOne = 'morphOne';
+    case morphMany = 'morphMany';
+    case morphToMany = 'morphToMany';
 
-    case morphedByMany; // returns as MorphToMany, so not visble, is used in tha Moprh class
+    case morphedByMany = 'morphedByMany'; // returns as MorphToMany, so not visble, is used in tha Moprh class
     /*
      * when a relation is made with extra filter, like hasOneThrough, it has not any table keys
      */
-    case hasOneIndirect;
+    case hasOneIndirect = 'hasOneIndirect';
 
+    /**
+     * Map a short relation class name (e.g., 'HasMany') to its corresponding Enum case.
+     */
     public static function fromRelationName(string $relationName): self
     {
         return match ($relationName) {
@@ -69,6 +73,11 @@ enum Relation
         };
     }
 
+    /**
+     * Get the inverse relationship type for the current relation.
+     *
+     * @param  bool  $preventInverse  If true, returns noRelation.
+     */
     public function inverse(bool $preventInverse = false): self
     {
         if ($preventInverse) {
@@ -76,9 +85,12 @@ enum Relation
         } else {
             return match ($this) {
                 self::hasOne, self::hasMany => self::belongsTo,
+                self::belongsTo => self::hasMany, // default to hasMany
                 self::belongsToMany => self::belongsToMany,
                 self::morphOne, self::morphMany => self::morphTo,
+                self::morphTo => self::morphMany, // default to morphMany
                 self::morphToMany => self::morphedByMany,
+                self::morphedByMany => self::morphToMany,
                 default => self::noRelation
             };
         }
@@ -128,7 +140,7 @@ enum Relation
         return match ($this) {
             self::hasOne, self::hasOneIndirect => EloquentRelations\HasOne::class,
             self::hasMany => EloquentRelations\HasMany::class,
-            self::belongsToMany => EloquentRelations\BelongsToMany::class,
+            self::belongsToMany, self::morphedByMany => EloquentRelations\BelongsToMany::class,
             self::hasOneThrough => EloquentRelations\HasOneThrough::class,
             self::hasManyThrough => EloquentRelations\HasManyThrough::class,
             self::belongsTo => EloquentRelations\BelongsTo::class,
@@ -138,67 +150,6 @@ enum Relation
             self::morphMany => EloquentRelations\MorphMany::class,
             default => null,
         };
-    }
-
-    /**
-     * @param  array<string, array<string|null, Relation>>  $tables
-     */
-    public function setTableLinks(
-        string $modelName1,
-        string $modelName2,
-        array &$tables,
-        bool $withExtraPivotTables): void
-    {
-        $modelName1 = ClassData::take($modelName1)->getShortName();
-        $modelName2 = ClassData::take($modelName2)->getShortName();
-
-        $tableName1 = Str::snake(Str::plural($modelName1));
-        $tableName2 = Str::snake(Str::plural($modelName2));
-
-        $names = [Str::snake($modelName1), Str::snake($modelName2)];
-        sort($names);
-        $pivotTable = implode('_', $names);
-        $morphPivotTable = Str::snake($modelName2).'able';
-        switch ($this) {
-            case self::hasOne:
-            case self::hasMany:
-            case self::morphOne:
-            case self::morphMany:
-                $tables[$tableName2][$tableName1] = $this;
-                break;
-            case self::hasOneThrough:
-            case self::hasManyThrough:
-            case self::hasOneIndirect:
-                // no link
-                break;
-            case self::belongsToMany:
-
-                if ($withExtraPivotTables) {
-                    $tables[$pivotTable][$tableName1] = $this;
-                    $tables[$pivotTable][$tableName2] = $this;
-                } else {
-                    /*
-                     * it is called from both ends of the relationship so
-                     * we decide to use it only once here
-                     */
-                    if ($tableName1 > $tableName2) {
-                        $tables[$tableName1][$tableName2] = $this;
-                    }
-                }
-                break;
-            case self::morphToMany:
-                // todo: morphToMany
-                break;
-
-            case self::belongsTo:
-                $tables[$tableName1][$tableName2] = $this;
-                break;
-            case self::morphTo:
-            case self::isSingle:
-            case self::noRelation:
-                $tables[$tableName1][null] = $this;
-                break;
-        }
     }
 
     public function isMorph(): bool

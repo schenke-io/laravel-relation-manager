@@ -16,12 +16,10 @@ class LaravelRelationManagerServiceProviderTest extends TestCase
     public function test_configure_package()
     {
         $mockPackage = Mockery::mock(Package::class);
-        $mockPackage->shouldReceive('name')->once();
-        $mockPackage->shouldReceive('hasConfigFile')->once();
-        $mockPackage->shouldReceive('hasInstallCommand')->once();
+        $mockPackage->shouldReceive('name')->with('laravel-relation-manager')->once()->andReturnSelf();
+        $mockPackage->shouldReceive('hasCommands')->once()->andReturnSelf();
 
         $provider = new LaravelRelationManagerServiceProvider($this->app);
-        $provider->register();
         $provider->configurePackage($mockPackage);
     }
 }

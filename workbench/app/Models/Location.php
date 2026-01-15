@@ -9,6 +9,9 @@ class Location extends Model
 {
     public $timestamps = false;
 
+    /**
+     * @return MorphTo<Model, $this>
+     */
     public function locationable(): MorphTo
     {
         return $this->morphTo();

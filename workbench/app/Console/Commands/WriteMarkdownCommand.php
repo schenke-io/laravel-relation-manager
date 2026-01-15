@@ -3,49 +3,64 @@
 namespace Workbench\App\Console\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use SchenkeIo\LaravelRelationManager\Enums\ConfigKey;
-use SchenkeIo\PackagingTools\Badges\BadgeStyle;
-use SchenkeIo\PackagingTools\Badges\MakeBadge;
+use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
+use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\PackagingTools\Markdown\MarkdownAssembler;
 
 class WriteMarkdownCommand extends Command
 {
     protected $signature = 'write:markdown';
 
-    protected $description = 'write trait files';
+    protected $description = 'Assembles the README.md from markdown fragments';
 
-    /**
-     * @throws FileNotFoundException
-     */
     public function handle(): void
     {
-        $mda = new MarkdownAssembler('workbench/resources/md');
-        $mda->addMarkdown('header.md');
-        $mda->addTableOfContents();
-        $mda->addMarkdown('installation.md');
+        $this->info('Assembling README.md...');
 
-        $mda->addMarkdown('configuration.md');
+        try {
+            $assembler = new MarkdownAssembler('workbench/resources/md');
 
-        $table = [explode(',', 'key,definition,type')];
-        foreach (ConfigKey::cases() as $case) {
-            $table[] = [
-                $case->value,
-                $case->definition(),
-                $case->type()->name,
-            ];
+            $assembler->addText('# Laravel Relation Manager');
+
+            $assembler->storeVersionBadge();
+            $assembler->storeTestBadge('run-tests.yml');
+            $assembler->storeDownloadBadge();
+            $assembler->storeLocalBadge('Coverage', '.github/coverage.svg');
+            $assembler->storeLocalBadge('PHPStan', '.github/phpstan.svg');
+            $assembler->addBadges();
+            $assembler->addMarkdown('header.md');
+            $assembler->addTableOfContents();
+
+            $assembler->addMarkdown('installation.md');
+            $assembler->addMarkdown('usage.md');
+
+            /*
+             * Inject Relation Visualization
+             */
+            try {
+                $path = PathResolver::getRelationshipFilePath();
+                $relationshipData = RelationshipData::loadFromFile($path);
+                if ($relationshipData) {
+                    $writer = new GenerateMarkdownFile($relationshipData);
+                    $writer->generate('docs/relationships.md');
+                    $assembler->addText("\n\n[View Model Relationships](docs/relationships.md)\n\n");
+                }
+            } catch (\Throwable $e) {
+                $this->warn('Could not inject relation visualization: '.$e->getMessage());
+            }
+
+            $assembler->addMarkdown('examples.md');
+            $assembler->addMarkdown('testing.md');
+
+            $assembler->addText('---');
+            $assembler->addText('README generated at '.date('Y-m-d H:i:s').' using [packaging-tools](https://github.com/schenke-io/packaging-tools)');
+
+            $assembler->writeMarkdown('README.md');
+
+            $this->info('README.md generated successfully.');
+        } catch (\Exception $e) {
+            $this->error('Error: '.$e->getMessage());
         }
-        $mda->addTableFromArray($table);
-
-        $mda->addMarkdown('usage.md');
-        $mda->addMarkdown('footer.md');
-        $mda->writeMarkdown('README.md');
-        $this->info('Markdown files written successfully.');
-
-        MakeBadge::makeCoverageBadge('build/coverage/clover.xml', '32CD32')
-            ->store('.github/coverage.svg', BadgeStyle::Flat);
-        MakeBadge::makePhpStanBadge('phpstan.neon')
-            ->store('.github/phpstan.svg', BadgeStyle::Flat);
-
     }
 }

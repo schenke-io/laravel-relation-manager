@@ -2,42 +2,47 @@
 
 namespace SchenkeIo\LaravelRelationManager\Phpunit;
 
-use SchenkeIo\LaravelRelationManager\Data\ClassData;
+use PHPUnit\Framework\Constraint\Constraint;
 use SchenkeIo\LaravelRelationManager\Data\ModelRelationData;
-use SchenkeIo\LaravelRelationManager\Exceptions\LaravelNotLoadedException;
+use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 
-// https://github.com/AntonioPrimera/phpunit-custom-assertions/blob/master/src/Constraints/FoldersExistConstraint.php
-
-class RelationshipExistsConstraint extends BaseConstraint
+/**
+ * PHPUnit constraint to verify that a specific relationship exists on a model.
+ */
+class RelationshipExistsConstraint extends Constraint
 {
-    /**
-     * @param  ModelRelationData  $other
-     *
-     * @throws LaravelNotLoadedException
-     * @throws \Exception
-     */
+    protected string $error = '';
+
     protected function matches(mixed $other): bool
     {
-        if ($other->model2 === null) {
-            return false;  // let it fail when not complete
-        }
-        $otherClass = $other->relation->getClass();
-        if ($otherClass !== null) {
-            $this->expectation = ClassData::getRelationExpectation(
-                $other->model1,
-                class_basename($otherClass),
-                $other->model2
-            );
+        if (! ($other instanceof ModelRelationData)) {
+            return false;
         }
 
-        return $this->expectation == '';
+        $models = ModelScanner::scan();
+        $model1 = $other->model1;
+        $model2 = $other->model2;
+        $relation = $other->relation;
+
+        if (! isset($models[$model1])) {
+            $this->error = "Model $model1 not found";
+
+            return false;
+        }
+
+        foreach ($models[$model1] as $relName => $relData) {
+            if ($relData['type'] === $relation && $relData['related'] === $model2) {
+                return true;
+            }
+        }
+
+        $this->error = "Relationship $relation->name with $model2 not found in $model1";
+
+        return false;
     }
 
-    /**
-     * Returns a string representation of the object.
-     */
     public function toString(): string
     {
-        return 'correct definition of a relationship';
+        return $this->error;
     }
 }

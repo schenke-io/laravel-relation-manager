@@ -11,7 +11,8 @@ testbench.yaml
 node_modules
 
 .badita.yaml
-
+.junie
+GEMINI.md
 
 .phpunit.result.cache
 

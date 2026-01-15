@@ -11,6 +11,8 @@ class Tag extends Model
 
     /**
      * Get all the cities that are assigned this tag.
+     *
+     * @return MorphToMany<City, $this>
      */
     public function cities(): MorphToMany
     {
@@ -19,6 +21,8 @@ class Tag extends Model
 
     /**
      * Get all the regions that are assigned this tag.
+     *
+     * @return MorphToMany<Region, $this>
      */
     public function regions(): MorphToMany
     {

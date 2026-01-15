@@ -2,7 +2,10 @@
 
 namespace SchenkeIo\LaravelRelationManager\Writer;
 
-final class GetTable
+/**
+ * Utility class to generate HTML or Markdown tables from data arrays.
+ */
+final readonly class GetTable
 {
     /**
      * @param  array{0: list<string>, 1: list<list<string>>}  $table
@@ -16,5 +19,20 @@ final class GetTable
         }
 
         return "<table>\n$html\n</table>\n";
+    }
+
+    /**
+     * @param  array{0: list<string>, 1: list<list<string>>}  $table
+     */
+    public static function getMarkdown(array $table): string
+    {
+        [$headers, $tableRows] = $table;
+        $markdown = '| '.implode(' | ', $headers)." |\n";
+        $markdown .= '| '.implode(' | ', array_fill(0, count($headers), '---'))." |\n";
+        foreach ($tableRows as $row) {
+            $markdown .= '| '.implode(' | ', $row)." |\n";
+        }
+
+        return $markdown;
     }
 }

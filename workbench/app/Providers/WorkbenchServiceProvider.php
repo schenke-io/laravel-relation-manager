@@ -2,30 +2,40 @@
 
 namespace Workbench\App\Providers;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
-use Workbench\App\Console\Commands\RunTestProjectManagerCommand;
-use Workbench\App\Console\Commands\WriteMainFilesCommand;
 
 class WorkbenchServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
-    public function register(): void
-    {
-        // overwrite the default
-        $config = $this->app->make('config');
-        $config->set('relation-manager', require __DIR__.'/../../config/relation-manager.php');
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap services.
      */
-    public function boot(): void
+    public function boot(): void {}
+
+    public function packageBooted(): void
     {
-        $this->commands([
-            RunTestProjectManagerCommand::class,
-            WriteMainFilesCommand::class,
-        ]);
+        if ($this->app->runningInConsole()) {
+            $argv = $_SERVER['argv'] ?? [];
+            $commandString = implode(' ', $argv);
+
+            if (str_contains($commandString, 'workbench:build') || str_contains($commandString, 'build')) {
+                $dbPath = $this->app->databasePath('database.sqlite');
+                if (! file_exists($dbPath)) {
+                    if (! is_dir(dirname($dbPath))) {
+                        mkdir(dirname($dbPath), 0755, true);
+                    }
+                    touch($dbPath);
+                }
+                Artisan::call('migrate:fresh', [
+                    '--seed' => true,
+                    '--seeder' => 'Workbench\Database\Seeders\DatabaseSeeder',
+                ]);
+            }
+        }
     }
 }

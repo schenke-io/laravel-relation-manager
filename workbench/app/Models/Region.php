@@ -10,6 +10,9 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Region extends Model
 {
+    /**
+     * @return MorphToMany<Tag, $this>
+     */
     public function tags(): MorphToMany
     {
         return $this->morphToMany(Tag::class, 'taggable');
@@ -17,16 +20,25 @@ class Region extends Model
 
     public $timestamps = false;
 
+    /**
+     * @return BelongsTo<Country, $this>
+     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
 
+    /**
+     * @return HasMany<City, $this>
+     */
     public function cities(): HasMany
     {
         return $this->hasMany(City::class);
     }
 
+    /**
+     * @return HasOneThrough<Capital, Country, $this>
+     */
     public function capital(): HasOneThrough
     {
         return $this->hasOneThrough(Capital::class, Country::class);

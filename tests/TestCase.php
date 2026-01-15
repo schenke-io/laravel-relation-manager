@@ -4,21 +4,17 @@ namespace SchenkeIo\LaravelRelationManager\Tests;
 
 use Illuminate\Contracts\Config\Repository;
 use Orchestra\Testbench\TestCase as Orchestra;
-use SchenkeIo\LaravelRelationManager\Tests\Application\TestProjectTest;
+use SchenkeIo\LaravelRelationManager\LaravelRelationManagerServiceProvider;
 
 use function Orchestra\Testbench\workbench_path;
 
 class TestCase extends Orchestra
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     protected function getPackageProviders($app): array
     {
         return [
-
+            \Spatie\LaravelData\LaravelDataServiceProvider::class,
+            LaravelRelationManagerServiceProvider::class,
         ];
     }
 
@@ -32,13 +28,6 @@ class TestCase extends Orchestra
                 'database' => ':memory:',
                 'prefix' => '',
             ]);
-            $config->set('relation-manager.modelNameSpace', 'Workbench\App\Models');
-            $config->set('relation-manager.modelDirectory', workbench_path('app/Models'));
-            $config->set('relation-manager.projectTestClass', TestProjectTest::class);
-            $config->set('relation-manager.extendedTestClass', TestCase::class);
-            $config->set('relation-manager.markdownFile', workbench_path('docs/relations.md'));
-            $config->set('relation-manager.testCommand', 'composer test');
-
         });
     }
 

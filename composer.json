@@ -15,10 +15,8 @@
     ],
     "require": {
         "php": "^8.2",
-        "archtechx/enums": "^1.1",
         "illuminate/contracts": "^10.0|^11.0|^12.0",
-        "nette/php-generator": "^4.1.6",
-        "spatie/laravel-data": "^3.12|^4.13",
+        "spatie/laravel-data": "^4.18",
         "spatie/laravel-package-tools": "^1.0"
     },
     "require-dev": {
@@ -34,7 +32,10 @@
     "autoload": {
         "psr-4": {
             "SchenkeIo\\LaravelRelationManager\\": "src/"
-        }
+        },
+        "files": [
+            "src/Pest/Expectations.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -62,13 +63,8 @@
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "pint": "vendor/bin/pint",
-        "write-class": [
-            "vendor/bin/testbench write:main-files",
-            "vendor/bin/testbench run:test-project"
-        ],
         "release": [
             "@pint",
-            "@write-class",
             "@analyse",
             "@coverage",
             "@markdown"
@@ -88,7 +84,11 @@
         "low": "composer update --prefer-lowest --prefer-dist",
         "stable": "composer update --prefer-stable --prefer-dist",
         "coverage": "vendor/bin/pest --coverage",
-        "markdown": "vendor/bin/testbench write:markdown",
+        "markdown": [
+            "vendor/bin/testbench relation:draw",
+            "vendor/bin/testbench write:markdown"
+        ],
+
         "check": [
             "@pint",
             "@test",

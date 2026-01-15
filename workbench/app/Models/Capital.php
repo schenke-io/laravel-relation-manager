@@ -10,11 +10,17 @@ class Capital extends Model
 {
     public $timestamps = false;
 
+    /**
+     * @return BelongsTo<Country, $this>
+     */
     public function country(): BelongsTo
     {
         return $this->belongsTo(Country::class);
     }
 
+    /**
+     * @return MorphOne<Location, $this>
+     */
     public function location(): MorphOne
     {
         return $this->morphOne(Location::class, 'locationable');

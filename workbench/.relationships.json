@@ -1,0 +1,119 @@
+{
+    "config": {
+        "modelPath": "/home/srv/packages/schenke-io/laravel-relation-manager/workbench/app/Models",
+        "markdownPath": "workbench/resources/md/relations.md"
+    },
+    "models": {
+        "Workbench\\App\\Models\\Capital": {
+            "methods": {
+                "country": {
+                    "type": "belongsTo",
+                    "related": "Workbench\\App\\Models\\Country"
+                },
+                "location": {
+                    "type": "morphOne",
+                    "related": "Workbench\\App\\Models\\Location"
+                }
+            }
+        },
+        "Workbench\\App\\Models\\City": {
+            "methods": {
+                "tags": {
+                    "type": "morphToMany",
+                    "related": "Workbench\\App\\Models\\Tag"
+                },
+                "region": {
+                    "type": "belongsTo",
+                    "related": "Workbench\\App\\Models\\Region"
+                },
+                "highways": {
+                    "type": "belongsToMany",
+                    "related": "Workbench\\App\\Models\\Highway"
+                },
+                "country": {
+                    "type": "hasOneThrough",
+                    "related": "Workbench\\App\\Models\\Country"
+                },
+                "location": {
+                    "type": "morphOne",
+                    "related": "Workbench\\App\\Models\\Location"
+                }
+            }
+        },
+        "Workbench\\App\\Models\\Country": {
+            "methods": {
+                "capital": {
+                    "type": "hasOne",
+                    "related": "Workbench\\App\\Models\\Capital"
+                },
+                "oldest": {
+                    "type": "hasOne",
+                    "related": "Workbench\\App\\Models\\City"
+                },
+                "regions": {
+                    "type": "hasMany",
+                    "related": "Workbench\\App\\Models\\Region"
+                },
+                "cities": {
+                    "type": "hasManyThrough",
+                    "related": "Workbench\\App\\Models\\City"
+                }
+            }
+        },
+        "Workbench\\App\\Models\\Highway": {
+            "methods": {
+                "cities": {
+                    "type": "belongsToMany",
+                    "related": "Workbench\\App\\Models\\City"
+                },
+                "locations": {
+                    "type": "morphMany",
+                    "related": "Workbench\\App\\Models\\Location"
+                }
+            }
+        },
+        "Workbench\\App\\Models\\Location": {
+            "methods": {
+                "locationable": {
+                    "type": "morphTo",
+                    "related": null
+                }
+            }
+        },
+        "Workbench\\App\\Models\\Region": {
+            "methods": {
+                "tags": {
+                    "type": "morphToMany",
+                    "related": "Workbench\\App\\Models\\Tag"
+                },
+                "country": {
+                    "type": "belongsTo",
+                    "related": "Workbench\\App\\Models\\Country"
+                },
+                "cities": {
+                    "type": "hasMany",
+                    "related": "Workbench\\App\\Models\\City"
+                },
+                "capital": {
+                    "type": "hasOneThrough",
+                    "related": "Workbench\\App\\Models\\Capital"
+                }
+            }
+        },
+        "Workbench\\App\\Models\\Single": {
+            "methods": {}
+        },
+        "Workbench\\App\\Models\\Tag": {
+            "methods": {
+                "cities": {
+                    "type": "morphedByMany",
+                    "related": "Workbench\\App\\Models\\City"
+                },
+                "regions": {
+                    "type": "morphedByMany",
+                    "related": "Workbench\\App\\Models\\Region"
+                }
+            }
+        }
+    }
+}

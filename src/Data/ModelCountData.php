@@ -5,7 +5,8 @@ namespace SchenkeIo\LaravelRelationManager\Data;
 use Spatie\LaravelData\Data;
 
 /**
- * used in Phpunit/Constraints
+ * Data object to store the count of a specific model,
+ * primarily used within PHPUnit constraints for testing.
  */
 class ModelCountData extends Data
 {

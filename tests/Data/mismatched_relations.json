@@ -1,0 +1,15 @@
+{
+    "config": {
+        "modelPath": "tests/Models"
+    },
+    "models": {
+        "SchenkeIo\\LaravelRelationManager\\Tests\\Models\\User": {
+            "methods": {
+                "posts": {
+                    "type": "belongsToMany",
+                    "related": "SchenkeIo\\LaravelRelationManager\\Tests\\Models\\Post"
+                }
+            }
+        }
+    }
+}

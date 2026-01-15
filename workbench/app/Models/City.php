@@ -13,26 +13,41 @@ class City extends Model
 {
     public $timestamps = false;
 
+    /**
+     * @return MorphToMany<Tag, $this>
+     */
     public function tags(): MorphToMany
     {
         return $this->morphToMany(Tag::class, 'taggable');
     }
 
+    /**
+     * @return BelongsTo<Region, $this>
+     */
     public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
     }
 
+    /**
+     * @return BelongsToMany<Highway, $this>
+     */
     public function highways(): BelongsToMany
     {
         return $this->belongsToMany(Highway::class);
     }
 
+    /**
+     * @return HasOneThrough<Country, Region, $this>
+     */
     public function country(): HasOneThrough
     {
         return $this->hasOneThrough(Country::class, Region::class);
     }
 
+    /**
+     * @return MorphOne<Location, $this>
+     */
     public function location(): MorphOne
     {
         return $this->morphOne(Location::class, 'locationable');

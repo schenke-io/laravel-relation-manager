@@ -1,0 +1,16 @@
+{
+    "config": {
+        "modelPath": "tests/Models"
+    },
+    "models": {
+        "SchenkeIo\\LaravelRelationManager\\Tests\\Models\\User": {
+            "methods": {
+                "posts": {
+                    "type": "hasMany",
+                    "related": "SchenkeIo\\LaravelRelationManager\\Tests\\Models\\Post"
+                }
+            }
+        }
+    }
+    "missing_comma_here": true
+}

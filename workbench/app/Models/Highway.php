@@ -10,11 +10,17 @@ class Highway extends Model
 {
     public $timestamps = false;
 
+    /**
+     * @return BelongsToMany<City, $this>
+     */
     public function cities(): BelongsToMany
     {
         return $this->belongsToMany(City::class);
     }
 
+    /**
+     * @return MorphMany<Location, $this>
+     */
     public function locations(): MorphMany
     {
         return $this->morphMany(Location::class, 'locationable');

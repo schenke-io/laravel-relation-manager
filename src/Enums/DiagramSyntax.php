@@ -2,14 +2,17 @@
 
 namespace SchenkeIo\LaravelRelationManager\Enums;
 
+/**
+ * Enum defining the output syntax for diagrams (currently Mermaid and Dot).
+ */
 enum DiagramSyntax
 {
     case Mermaid;
     case Dot;
 
-    public function start(DiagramDirection $diagrammDirection): string
+    public function start(DiagramDirection $diagramDirection): string
     {
-        $direction = $diagrammDirection->name;
+        $direction = $diagramDirection->name;
 
         return match ($this) {
             DiagramSyntax::Mermaid => "```mermaid\nflowchart $direction\n",

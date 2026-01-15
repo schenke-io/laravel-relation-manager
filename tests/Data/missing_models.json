@@ -1,0 +1,10 @@
+{
+    "config": {
+        "modelPath": "tests/Models"
+    },
+    "models": {
+        "SchenkeIo\\LaravelRelationManager\\Tests\\Models\\NonExistent": {
+            "methods": {}
+        }
+    }
+}
