@@ -19,7 +19,6 @@ class LaravelRelationManagerServiceProvider extends PackageServiceProvider
                 Console\RelationExtractCommand::class,
                 Console\RelationVerifyCommand::class,
                 Console\RelationDrawCommand::class,
-                \Workbench\App\Console\Commands\WriteMarkdownCommand::class,
             ]);
     }
 

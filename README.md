@@ -320,7 +320,7 @@ This will automatically register three tests in your Pest file:
 
 ---
 
-README generated at 2026-01-18 21:19:41 using [packaging-tools](https://github.com/schenke-io/packaging-tools)
+README generated at 2026-01-18 21:28:24 using [packaging-tools](https://github.com/schenke-io/packaging-tools)
 
 
 ---
