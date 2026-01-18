@@ -3,6 +3,7 @@
 namespace Workbench\App\Console\Commands;
 
 use Illuminate\Console\Command;
+use SchenkeIo\PackagingTools\Badges\MakeBadge;
 use SchenkeIo\PackagingTools\Markdown\MarkdownAssembler;
 
 class WriteMarkdownCommand extends Command
@@ -13,6 +14,7 @@ class WriteMarkdownCommand extends Command
 
     public function handle(): void
     {
+        MakeBadge::auto();
         $this->info('Assembling README.md...');
 
         try {
@@ -20,25 +22,20 @@ class WriteMarkdownCommand extends Command
 
             $assembler->addText('# Laravel Relation Manager');
 
-            $assembler->storeVersionBadge();
-            $assembler->storeTestBadge('run-tests.yml');
-            $assembler->storeDownloadBadge();
-            $assembler->storeLocalBadge('Coverage', '.github/coverage.svg');
-            $assembler->storeLocalBadge('PHPStan', '.github/phpstan.svg');
-            $assembler->addBadges();
-            $assembler->addMarkdown('header.md');
-            $assembler->addTableOfContents();
+            $assembler->badges()
+                ->version()
+                ->test('run-tests.yml')
+                ->download();
 
-            $assembler->addMarkdown('installation.md');
-            $assembler->addMarkdown('usage.md');
-
-            $assembler->addMarkdown('examples.md');
-            $assembler->addMarkdown('testing.md');
-
-            $assembler->addText('---');
-            $assembler->addText('README generated at '.date('Y-m-d H:i:s').' using [packaging-tools](https://github.com/schenke-io/packaging-tools)');
-
-            $assembler->writeMarkdown('README.md');
+            $assembler->addMarkdown('header.md')
+                ->addTableOfContents()
+                ->addMarkdown('installation.md')
+                ->addMarkdown('usage.md')
+                ->addMarkdown('examples.md')
+                ->addMarkdown('testing.md')
+                ->addText('---')
+                ->addText('README generated at '.date('Y-m-d H:i:s').' using [packaging-tools](https://github.com/schenke-io/packaging-tools)')
+                ->writeMarkdown('README.md');
 
             $this->info('README.md generated successfully.');
         } catch (\Exception $e) {

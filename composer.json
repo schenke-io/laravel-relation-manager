@@ -14,20 +14,20 @@
         }
     ],
     "require": {
-        "php": "^8.2",
-        "illuminate/contracts": "^10.0|^11.0|^12.0",
+        "php": "^8.3",
+        "illuminate/contracts": "^12.0",
         "spatie/laravel-data": "^4.18",
-        "spatie/laravel-package-tools": "^1.0"
+        "spatie/laravel-package-tools": "^1.90"
     },
     "require-dev": {
-        "larastan/larastan": "^2.0|^3.0",
+        "larastan/larastan": "^3.0",
         "laravel/pint": "^1.21",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^8.5",
-        "orchestra/testbench": "^9.5|^10.0",
+        "orchestra/testbench": "^10.5",
         "pestphp/pest": "^3.7",
         "spatie/laravel-ray": "^1.26",
-        "schenke-io/packaging-tools": "^v0.0"
+        "schenke-io/packaging-tools": "^v0.1"
     },
     "autoload": {
         "psr-4": {
