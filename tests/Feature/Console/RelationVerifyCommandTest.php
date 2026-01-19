@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 
+beforeEach(function () {
+    File::shouldReceive('isFile')->andReturn(true)->byDefault();
+    File::shouldReceive('isDirectory')->andReturn(false)->byDefault();
+});
+
 it('passes when relationships are in sync', function () {
     ModelScanner::shouldReceive('scan')->once()->andReturn([]);
     ModelScanner::shouldReceive('getDatabaseColumns')->once()->andReturn([]);

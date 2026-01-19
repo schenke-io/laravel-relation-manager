@@ -29,7 +29,7 @@ trait RelationTestTrait
      */
     public function assertRelationshipJsonExistsAndIsValid(?string $relationshipJsonPath = null): void
     {
-        $path = $relationshipJsonPath ? base_path($relationshipJsonPath) : PathResolver::getRelationshipFilePath();
+        $path = $relationshipJsonPath ? PathResolver::getRealBasePath($relationshipJsonPath) : PathResolver::getRelationshipFilePath();
         Assert::assertTrue(File::exists($path), "Relationship JSON file not found at: $path");
         $relationshipData = RelationshipData::loadFromFile($path);
         Assert::assertNotNull($relationshipData, 'Relationship JSON file is not valid');
@@ -47,7 +47,7 @@ trait RelationTestTrait
         ?string $modelDirectory = null,
         bool $strict = false
     ): void {
-        $path = $relationshipJsonPath ? base_path($relationshipJsonPath) : PathResolver::getRelationshipFilePath();
+        $path = $relationshipJsonPath ? PathResolver::getRealBasePath($relationshipJsonPath) : PathResolver::getRelationshipFilePath();
         $currentModels = ModelScanner::scan($modelDirectory);
         $relationshipData = RelationshipData::loadFromFile($path);
         Assert::assertNotNull($relationshipData, 'Relationship JSON file is not valid');

@@ -1,9 +1,9 @@
 [![Coverage](workbench/resources/md/svg/coverage.svg)]()
 [![PHPStan](workbench/resources/md/svg/phpstan.svg)]()
+[![Version](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager?style=flat)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
+[![Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager?style=flat)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
+[![Tests](https://github.com/schenke-io/laravel-relation-manager/actions/workflows/run-tests.yml/badge.svg)](https://github.com/schenke-io/laravel-relation-manager/actions/workflows/run-tests.yml)
 [![License](https://img.shields.io/github/license/schenke-io/laravel-relation-manager?style=flat)](https://github.com/schenke-io/laravel-relation-manager/blob/main/LICENSE.md)
-[![Latest Version](https://img.shields.io/packagist/v/schenke-io/laravel-relation-manager?style=flat)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
-[![Tests](https://github.com/schenke-io/laravel-relation-manager/actions/workflows/run-tests.yml/badge.svg?branch=main)](https://github.com/schenke-io/laravel-relation-manager/actions/workflows/run-tests.yml)
-[![Total Downloads](https://img.shields.io/packagist/dt/schenke-io/laravel-relation-manager?style=flat)](https://packagist.org/packages/schenke-io/laravel-relation-manager)
 
 <!--
 ********************************************************************************
@@ -17,7 +17,11 @@
 *                                                                              *
 ********************************************************************************
 -->
-# Laravel Relation Manager
+# Schenke Io Laravel Relation Manager
+
+> Allow to plan, document and test model relations in Laravel
+
+<img src="workbench/resources/md/cover.png" alt="cover" />
 
 Developing complex Laravel applications with many models can be difficult.
 **Laravel Relation Manager** helps by bringing all your model relationships
@@ -25,9 +29,7 @@ together. It creates tests to make sure they work and documents them for
 easy reference. This saves you time, improves code quality,
 and keeps your project organized.
 
-![](workbench/resources/cover.png)
-
-* [Laravel Relation Manager](#laravel-relation-manager)
+* [Schenke Io Laravel Relation Manager](#schenke-io-laravel-relation-manager)
   * [Installation](#installation)
   * [Workflow](#workflow)
     * [The Draw Command](#the-draw-command)
@@ -317,10 +319,6 @@ This will automatically register three tests in your Pest file:
 1. `test('laravel environment', ...)`
 2. `test('relationship json exists and is valid', ...)`
 3. `test('models match json state', ...)`
-
----
-
-README generated at 2026-01-18 21:28:24 using [packaging-tools](https://github.com/schenke-io/packaging-tools)
 
 
 ---

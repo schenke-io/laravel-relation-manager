@@ -10,6 +10,7 @@ use SchenkeIo\LaravelRelationManager\Data\ModelData;
 use SchenkeIo\LaravelRelationManager\Data\RelationData;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
 use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 use SchenkeIo\LaravelRelationManager\Writer\GenerateMarkdownFile;
 use SchenkeIo\LaravelRelationManager\Writer\GetDiagram;
@@ -41,7 +42,7 @@ class GenerateMarkdownFileTest extends TestCase
 
     public function test_generate_uses_mermaid_by_default()
     {
-        File::shouldReceive('put')->with('test.md', Mockery::on(function ($content) {
+        File::shouldReceive('put')->with(PathResolver::getRealBasePath('test.md'), Mockery::on(function ($content) {
             return str_contains($content, 'mermaid');
         }))->andReturn(true);
 
@@ -54,7 +55,7 @@ class GenerateMarkdownFileTest extends TestCase
     public function test_generate_uses_graphviz_when_configured()
     {
         Process::fake();
-        File::shouldReceive('put')->with('test.md', Mockery::on(function ($content) {
+        File::shouldReceive('put')->with(PathResolver::getRealBasePath('test.md'), Mockery::on(function ($content) {
             return str_contains($content, "<img src='".GetDiagram::GRAPHVIZ_BASENAME.".png'");
         }))->andReturn(true);
         File::shouldReceive('put')->with(Mockery::on(fn ($path) => str_ends_with($path, '.dot')), Mockery::any())->andReturn(true);
@@ -71,7 +72,7 @@ class GenerateMarkdownFileTest extends TestCase
         Process::fake([
             'dot *' => Process::result('error', exitCode: 1),
         ]);
-        File::shouldReceive('put')->with('test.md', Mockery::on(function ($content) {
+        File::shouldReceive('put')->with(PathResolver::getRealBasePath('test.md'), Mockery::on(function ($content) {
             return str_contains($content, 'Graphviz generation failed');
         }))->andReturn(true);
         File::shouldReceive('put')->with(Mockery::on(fn ($path) => str_ends_with($path, '.dot')), Mockery::any())->andReturn(true);

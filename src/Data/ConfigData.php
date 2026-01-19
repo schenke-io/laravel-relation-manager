@@ -2,6 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Data;
 
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 use Spatie\LaravelData\Attributes\MapName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Mappers\SnakeCaseMapper;
@@ -38,8 +39,8 @@ class ConfigData extends Data
         ?bool $useMermaid = null,
         ?bool $showIntermediateTables = null,
     ) {
-        $this->markdownPath = $markdownPath ?: base_path('RELATIONS.md');
-        $this->modelPath = $modelPath ?: 'app/Models';
+        $this->markdownPath = PathResolver::makePathRelative($markdownPath ?: PathResolver::getRealBasePath('RELATIONS.md'));
+        $this->modelPath = PathResolver::makePathRelative($modelPath ?: 'app/Models');
         $this->useMermaid = $useMermaid ?? true;
         $this->showIntermediateTables = $showIntermediateTables ?? false;
     }

@@ -1,9 +1,16 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
+
+beforeEach(function () {
+    File::shouldReceive('isFile')->andReturn(true)->byDefault();
+    File::shouldReceive('isDirectory')->andReturn(false)->byDefault();
+});
 
 it('fails if .relationships.json is missing', function () {
     File::shouldReceive('exists')->andReturn(false);
+    File::shouldReceive('isFile')->andReturn(false);
 
     $this->artisan('relation:draw')
         ->expectsOutput('.relationships.json not found. Run relation:extract first.')
@@ -12,6 +19,8 @@ it('fails if .relationships.json is missing', function () {
 
 it('can draw to specified filename', function () {
     File::shouldReceive('exists')->andReturn(true);
+    File::shouldReceive('isFile')->andReturn(true);
+    File::shouldReceive('isDirectory')->andReturn(false);
     File::shouldReceive('get')->andReturn(json_encode([
         'models' => [
             'App\Models\User' => [
@@ -22,7 +31,7 @@ it('can draw to specified filename', function () {
 
     File::shouldReceive('put')
         ->once()
-        ->with('test.md', Mockery::any())
+        ->with(PathResolver::getRealBasePath('test.md'), Mockery::any())
         ->andReturn(true);
 
     $this->artisan('relation:draw test.md')
@@ -39,7 +48,7 @@ it('can draw to filename from config', function () {
 
     File::shouldReceive('put')
         ->once()
-        ->with('config_path.md', Mockery::any())
+        ->with(PathResolver::getRealBasePath('config_path.md'), Mockery::any())
         ->andReturn(true);
 
     $this->artisan('relation:draw')

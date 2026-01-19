@@ -20,21 +20,13 @@ class WriteMarkdownCommand extends Command
         try {
             $assembler = new MarkdownAssembler('workbench/resources/md');
 
-            $assembler->addText('# Laravel Relation Manager');
-
-            $assembler->badges()
-                ->version()
-                ->test('run-tests.yml')
-                ->download();
-
-            $assembler->addMarkdown('header.md')
+            $assembler->autoHeader()
+                ->addMarkdown('header.md')
                 ->addTableOfContents()
                 ->addMarkdown('installation.md')
                 ->addMarkdown('usage.md')
                 ->addMarkdown('examples.md')
                 ->addMarkdown('testing.md')
-                ->addText('---')
-                ->addText('README generated at '.date('Y-m-d H:i:s').' using [packaging-tools](https://github.com/schenke-io/packaging-tools)')
                 ->writeMarkdown('README.md');
 
             $this->info('README.md generated successfully.');

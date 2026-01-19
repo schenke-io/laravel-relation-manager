@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Scanner;
 
 use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Scanner\ModelScanner;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 use SchenkeIo\LaravelRelationManager\Tests\Models\User;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
@@ -12,14 +13,15 @@ class ModelScannerDiscoveryTest extends TestCase
     public function test_scan_finds_directory_via_base_path()
     {
         $jsonPath = 'relative/path';
+        $relFile = PathResolver::getRealBasePath('.relationships.json');
 
-        File::shouldReceive('exists')->andReturn(true);
-        File::shouldReceive('get')->andReturn(json_encode([
+        File::shouldReceive('exists')->with($relFile)->andReturn(true);
+        File::shouldReceive('get')->with($relFile)->andReturn(json_encode([
             'config' => ['modelPath' => $jsonPath],
         ]));
 
         File::shouldReceive('isDirectory')->with($jsonPath)->andReturn(false);
-        File::shouldReceive('isDirectory')->with(base_path($jsonPath))->andReturn(true);
+        File::shouldReceive('isDirectory')->with(PathResolver::getRealBasePath($jsonPath))->andReturn(true);
         File::shouldReceive('allFiles')->andReturn([]);
 
         $scanner = new ModelScanner;

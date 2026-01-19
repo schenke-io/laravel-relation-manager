@@ -50,6 +50,10 @@
             "providers": [
                 "SchenkeIo\\LaravelRelationManager\\LaravelRelationManagerServiceProvider"
             ]
+        },
+        "laravel-relation-manager--": {
+            "path": "",
+            "models": "app/Models"
         }
     },
     "scripts": {
@@ -88,7 +92,6 @@
             "vendor/bin/testbench relation:draw",
             "vendor/bin/testbench write:markdown"
         ],
-
         "check": [
             "@pint",
             "@test",

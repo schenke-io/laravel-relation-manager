@@ -4,6 +4,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Phpunit;
 
 use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Phpunit\AbstractRelationTest;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class ConcreteTest extends AbstractRelationTest
@@ -18,15 +19,15 @@ class AbstractRelationTestTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        File::put(base_path($this->jsonPath), json_encode([
+        File::put(PathResolver::getRealBasePath($this->jsonPath), json_encode([
             'models' => [],
         ]));
     }
 
     protected function tearDown(): void
     {
-        if (File::exists(base_path($this->jsonPath))) {
-            File::delete(base_path($this->jsonPath));
+        if (File::exists(PathResolver::getRealBasePath($this->jsonPath))) {
+            File::delete(PathResolver::getRealBasePath($this->jsonPath));
         }
         parent::tearDown();
     }
@@ -76,7 +77,7 @@ class AbstractRelationTestTest extends TestCase
                 ],
             ],
         ];
-        File::put(base_path($this->jsonPath), json_encode($json));
+        File::put(PathResolver::getRealBasePath($this->jsonPath), json_encode($json));
 
         $test = new ConcreteTest('test');
         $test->test_laravel_environment();

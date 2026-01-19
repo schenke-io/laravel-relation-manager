@@ -3,15 +3,19 @@
 use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Pest\RelationTestBridge;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
 /*
- * We use a relative path that will be passed to base_path()
- * but we don't call base_path() here.
+ * We use a relative path that will be passed to getRealBasePath()
+ * but we don't call it here.
  */
 RelationTestBridge::all('dummy_relationships.json');
 
 beforeEach(function () {
-    $path = base_path('dummy_relationships.json');
+    $path = PathResolver::getRealBasePath('dummy_relationships.json');
+
+    File::shouldReceive('isFile')->andReturn(true)->byDefault();
+    File::shouldReceive('isDirectory')->andReturn(false)->byDefault();
 
     File::shouldReceive('exists')
         ->with($path)

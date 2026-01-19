@@ -4,5 +4,3 @@ Developing complex Laravel applications with many models can be difficult.
 together. It creates tests to make sure they work and documents them for
 easy reference. This saves you time, improves code quality,
 and keeps your project organized.
-
-![](workbench/resources/cover.png)

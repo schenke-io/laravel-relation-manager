@@ -2,6 +2,12 @@
 
 use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
+
+beforeEach(function () {
+    File::shouldReceive('isFile')->andReturn(true)->byDefault();
+    File::shouldReceive('isDirectory')->andReturn(false)->byDefault();
+});
 
 it('can extract relationships to json', function () {
     ModelScanner::shouldReceive('scan')
@@ -12,7 +18,7 @@ it('can extract relationships to json', function () {
 
     File::shouldReceive('put')
         ->once()
-        ->with(base_path('.relationships.json'), Mockery::any())
+        ->with(PathResolver::getRealBasePath('.relationships.json'), Mockery::any())
         ->andReturn(true);
 
     $this->artisan('relation:extract')
@@ -39,6 +45,8 @@ it('fails when export fails', function () {
 });
 
 it('fails if scanner throws exception', function () {
+    File::shouldReceive('exists')->andReturn(false);
+
     ModelScanner::shouldReceive('scan')
         ->once()
         ->andThrow(new \Exception('Scanner error'));

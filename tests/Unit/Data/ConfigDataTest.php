@@ -18,3 +18,14 @@ test('ConfigData accepts custom values', function () {
     expect($config->markdownPath)->toBe('CUSTOM.md')
         ->and($config->modelPath)->toBe('src/Models');
 });
+
+test('ConfigData converts absolute paths to relative', function () {
+    $base = \SchenkeIo\LaravelRelationManager\Support\PathResolver::getRealBasePath();
+    $config = new ConfigData(
+        markdownPath: $base.'/docs/RELATIONS.md',
+        modelPath: $base.'/src/Models'
+    );
+
+    expect($config->markdownPath)->toBe('docs/RELATIONS.md')
+        ->and($config->modelPath)->toBe('src/Models');
+});

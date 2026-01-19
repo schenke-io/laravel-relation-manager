@@ -6,24 +6,35 @@ The package can be configured through the `.relationships.json` file or via `com
 
 The package uses a centralized path discovery for its primary data file, `.relationships.json`. The following order is used to resolve the path:
 
-1.  **Environment Variable**: Checks for `LARAVEL_RELATIONSHIPS_JSON` in your `.env` file.
-2.  **Project Root**: Checks for `.relationships.json` in the root of your project.
-3.  **composer.json**: Checked for `extra.laravel-relation-manager.path`.
-4.  **Workbench**: Checked for `workbench/.relationships.json`.
+1.  **Project Root**: Checks for `.relationships.json` in the root of your project.
+2.  **composer.json**: Checked for `extra.laravel-relation-manager.path`.
+3.  **Workbench**: Checked for `workbench/.relationships.json` (if developed as a package).
 
-#### Customizing Path in `composer.json`
+#### Customizing Paths in `composer.json`
 
-You can customize the path to your relationships file in your `composer.json`. This is particularly useful for package development:
+You can customize the paths in your `composer.json`. This is particularly useful for package development:
 
 ```json
 {
     "extra": {
         "laravel-relation-manager": {
-            "path": "custom/path/to/relationships.json"
+            "path": "custom/path/to/relationships.json",
+            "models": "src/Domain/Models"
         }
     }
 }
 ```
+
+### Model Discovery
+
+The directory to scan for Eloquent models is resolved in the following order:
+
+1.  **.relationships.json**: The `model_path` setting in the `config` section.
+2.  **composer.json**: The `extra.laravel-relation-manager.models` setting.
+3.  **Auth Configuration**: The model class defined in `config('auth.providers.users.model')`.
+4.  **Defaults**:
+    - **App Mode**: `app/Models` (detected by presence of `/app` and `/public`).
+    - **Package Mode**: `src/Models` (detected by presence of `/src` and `/workbench`).
 
 ### General Settings
 

@@ -1,8 +1,9 @@
 {
     "config": {
         "markdown_path": "workbench/resources/md/relations.md",
-        "model_path": "/home/srv/packages/schenke-io/laravel-relation-manager/workbench/app/Models",
-        "use_mermaid": true
+        "model_path": "workbench/app/Models",
+        "use_mermaid": true,
+        "show_intermediate_tables": false
     },
     "models": {
         "Workbench\\App\\Models\\Capital": {

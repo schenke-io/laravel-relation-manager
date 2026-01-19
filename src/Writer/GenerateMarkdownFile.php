@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\File;
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
 use SchenkeIo\LaravelRelationManager\Enums\DiagramDirection;
 use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
 /**
  * Service to generate a markdown file containing a Mermaid diagram
@@ -20,6 +21,7 @@ class GenerateMarkdownFile
 
     public function generate(string $filename, DiagramDirection $direction = DiagramDirection::LR): bool
     {
+        $filename = PathResolver::getRealBasePath($filename);
         $this->errors = [];
         $markdown = "# Relationships\n\n";
 
