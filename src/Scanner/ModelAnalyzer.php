@@ -41,7 +41,7 @@ class ModelAnalyzer
         $relations = [];
 
         foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->getDeclaringClass()->getName() !== $this->className) {
+            if ($method->getDeclaringClass()->getName() === Model::class) {
                 continue;
             }
             if ($method->getNumberOfParameters() > 0) {
