@@ -27,7 +27,7 @@
         "orchestra/testbench": "^10.5",
         "pestphp/pest": "^3.7",
         "spatie/laravel-ray": "^1.26",
-        "schenke-io/packaging-tools": "^v0.1"
+        "schenke-io/packaging-tools": "^v0.2"
     },
     "autoload": {
         "psr-4": {
