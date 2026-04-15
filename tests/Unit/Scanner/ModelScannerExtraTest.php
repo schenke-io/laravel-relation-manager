@@ -3,15 +3,19 @@
 namespace SchenkeIo\LaravelRelationManager\Tests\Unit\Scanner;
 
 use Illuminate\Support\Facades\File;
+use SchenkeIo\LaravelRelationManager\Exceptions\LaravelRelationManagerException;
 use SchenkeIo\LaravelRelationManager\Scanner\ModelScanner;
+use SchenkeIo\LaravelRelationManager\Tests\Models\MixedModel;
+use SchenkeIo\LaravelRelationManager\Tests\Models\NotAModel;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
+use Symfony\Component\Finder\SplFileInfo;
 
 class ModelScannerExtraTest extends TestCase
 {
     public function test_scan_throws_exception_if_directory_missing()
     {
         File::shouldReceive('isDirectory')->andReturn(false);
-        $this->expectException(\SchenkeIo\LaravelRelationManager\Exceptions\LaravelRelationManagerException::class);
+        $this->expectException(LaravelRelationManagerException::class);
         $scanner = new ModelScanner;
         $scanner->scan('non-existent');
     }
@@ -20,7 +24,7 @@ class ModelScannerExtraTest extends TestCase
     {
         File::shouldReceive('isDirectory')->andReturn(true);
         File::shouldReceive('allFiles')->andReturn([
-            new \Symfony\Component\Finder\SplFileInfo('test.txt', 'relative', 'test.txt'),
+            new SplFileInfo('test.txt', 'relative', 'test.txt'),
         ]);
         File::shouldReceive('get')->andReturn('not php code');
         $scanner = new ModelScanner;
@@ -31,7 +35,7 @@ class ModelScannerExtraTest extends TestCase
     {
         File::shouldReceive('isDirectory')->andReturn(true);
         File::shouldReceive('allFiles')->andReturn([
-            new \Symfony\Component\Finder\SplFileInfo('NotAModel.php', '', 'NotAModel.php'),
+            new SplFileInfo('NotAModel.php', '', 'NotAModel.php'),
         ]);
         File::shouldReceive('get')->andReturn('<?php echo "hello";');
 
@@ -44,14 +48,14 @@ class ModelScannerExtraTest extends TestCase
         $scanner = new ModelScanner;
         $results = $scanner->scan(__DIR__.'/../../Models');
 
-        $this->assertArrayHasKey(\SchenkeIo\LaravelRelationManager\Tests\Models\MixedModel::class, $results);
-        $mixed = $results[\SchenkeIo\LaravelRelationManager\Tests\Models\MixedModel::class];
+        $this->assertArrayHasKey(MixedModel::class, $results);
+        $mixed = $results[MixedModel::class];
 
         $this->assertArrayNotHasKey('methodWithParam', $mixed);
         $this->assertArrayNotHasKey('methodWithInvalidAttribute', $mixed);
         $this->assertArrayNotHasKey('methodThatThrows', $mixed);
         $this->assertArrayNotHasKey('notARelation', $mixed);
-        $this->assertArrayNotHasKey(\SchenkeIo\LaravelRelationManager\Tests\Models\NotAModel::class, $results);
+        $this->assertArrayNotHasKey(NotAModel::class, $results);
     }
 
     public function test_get_database_columns_handles_exception()

@@ -1,6 +1,7 @@
 <?php
 
 use SchenkeIo\LaravelRelationManager\Data\RelationshipData;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 
 it('can load valid_relationships.json', function () {
     $path = realpath(__DIR__.'/../../Data/valid_relationships.json');
@@ -32,7 +33,7 @@ it('detects mismatched relations from mismatched_relations.json', function () {
     $currentModels = [
         'SchenkeIo\\LaravelRelationManager\\Tests\\Models\\User' => [
             'posts' => [
-                'type' => \SchenkeIo\LaravelRelationManager\Enums\EloquentRelation::hasMany,
+                'type' => EloquentRelation::hasMany,
                 'related' => 'SchenkeIo\\LaravelRelationManager\\Tests\\Models\\Post',
             ],
         ],

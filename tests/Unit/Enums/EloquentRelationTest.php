@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 
 it('maps relation names to enum cases', function () {
@@ -65,7 +66,7 @@ it('knows if it is a direct relation', function () {
 });
 
 it('can get relation class', function () {
-    expect(EloquentRelation::hasMany->getClass())->toBe(\Illuminate\Database\Eloquent\Relations\HasMany::class)
+    expect(EloquentRelation::hasMany->getClass())->toBe(HasMany::class)
         ->and(EloquentRelation::noRelation->getClass())->toBeNull();
 });
 

@@ -20,3 +20,25 @@ GEMINI.md
 /workbench/docs/diagram.*
 
 .packaging-tools.neon
+/node_modules
+npm-debug.log
+yarn-error.log
+/app/storage
+/public/storage
+/public/hot
+/public/build
+/storage/pail
+/.junie
+/.gemini
+/.vscode
+/.ai
+auth.json
+.env
+.output.txt
+/__old
+/_old
+.run
+CLAUDE.md
+.CLAUDE.md
+.GEMINI.md
+AGENTS.md

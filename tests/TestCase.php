@@ -5,6 +5,7 @@ namespace SchenkeIo\LaravelRelationManager\Tests;
 use Illuminate\Contracts\Config\Repository;
 use Orchestra\Testbench\TestCase as Orchestra;
 use SchenkeIo\LaravelRelationManager\LaravelRelationManagerServiceProvider;
+use Spatie\LaravelData\LaravelDataServiceProvider;
 
 use function Orchestra\Testbench\workbench_path;
 
@@ -13,7 +14,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
-            \Spatie\LaravelData\LaravelDataServiceProvider::class,
+            LaravelDataServiceProvider::class,
             LaravelRelationManagerServiceProvider::class,
         ];
     }

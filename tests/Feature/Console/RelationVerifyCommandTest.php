@@ -59,7 +59,7 @@ it('fails if scanner fails', function () {
     File::shouldReceive('exists')->andReturn(true);
     File::shouldReceive('get')->andReturn(json_encode(['models' => []]));
 
-    ModelScanner::shouldReceive('scan')->andThrow(new \Exception('Scan failed'));
+    ModelScanner::shouldReceive('scan')->andThrow(new Exception('Scan failed'));
 
     $this->artisan('relation:verify')
         ->expectsOutput('Verifying relationships...')

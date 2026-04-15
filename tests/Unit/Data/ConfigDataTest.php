@@ -1,6 +1,7 @@
 <?php
 
 use SchenkeIo\LaravelRelationManager\Data\ConfigData;
+use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
 test('ConfigData has default values', function () {
     $config = new ConfigData;
@@ -20,7 +21,7 @@ test('ConfigData accepts custom values', function () {
 });
 
 test('ConfigData converts absolute paths to relative', function () {
-    $base = \SchenkeIo\LaravelRelationManager\Support\PathResolver::getRealBasePath();
+    $base = PathResolver::getRealBasePath();
     $config = new ConfigData(
         markdownPath: $base.'/docs/RELATIONS.md',
         modelPath: $base.'/src/Models'

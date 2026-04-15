@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Process;
 use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
 beforeEach(function () {
@@ -76,8 +77,8 @@ it('shows warnings when graphviz generation fails', function () {
         'models' => [],
     ]));
 
-    \Illuminate\Support\Facades\Process::fake([
-        'dot *' => \Illuminate\Support\Facades\Process::result('error', exitCode: 1),
+    Process::fake([
+        'dot *' => Process::result('error', exitCode: 1),
     ]);
 
     File::shouldReceive('put')->andReturn(true);

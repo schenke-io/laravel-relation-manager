@@ -2,6 +2,7 @@
 
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature;
 
+use PHPUnit\Framework\ExpectationFailedException;
 use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Tests\Models\Post;
@@ -86,7 +87,7 @@ class PestExpectationsTest extends TestCase
             User::class => [],
         ]);
 
-        $this->expectException(\PHPUnit\Framework\ExpectationFailedException::class);
+        $this->expectException(ExpectationFailedException::class);
         expect(User::class)->toHasMany(Post::class);
     }
 
@@ -94,7 +95,7 @@ class PestExpectationsTest extends TestCase
     {
         ModelScanner::shouldReceive('scan')->andReturn([]);
 
-        $this->expectException(\PHPUnit\Framework\ExpectationFailedException::class);
+        $this->expectException(ExpectationFailedException::class);
         expect(User::class)->toHasMany(Post::class);
     }
 }

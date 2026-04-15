@@ -80,7 +80,7 @@ it('getModelPath finds path via auth model', function () {
     File::shouldReceive('exists')->andReturn(false);
 
     // Mock auth model to a real class
-    config(['auth.providers.users.model' => \SchenkeIo\LaravelRelationManager\Support\PathResolver::class]);
+    config(['auth.providers.users.model' => PathResolver::class]);
 
     $path = PathResolver::getModelPath();
     expect($path)->toBe(dirname((new ReflectionClass(PathResolver::class))->getFileName()));

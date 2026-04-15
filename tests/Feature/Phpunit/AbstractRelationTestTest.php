@@ -3,8 +3,12 @@
 namespace SchenkeIo\LaravelRelationManager\Tests\Feature\Phpunit;
 
 use Illuminate\Support\Facades\File;
+use PHPUnit\Framework\ExpectationFailedException;
 use SchenkeIo\LaravelRelationManager\Phpunit\AbstractRelationTest;
 use SchenkeIo\LaravelRelationManager\Support\PathResolver;
+use SchenkeIo\LaravelRelationManager\Tests\Models\Post;
+use SchenkeIo\LaravelRelationManager\Tests\Models\Role;
+use SchenkeIo\LaravelRelationManager\Tests\Models\User;
 use SchenkeIo\LaravelRelationManager\Tests\TestCase;
 
 class ConcreteTest extends AbstractRelationTest
@@ -41,7 +45,7 @@ class AbstractRelationTestTest extends TestCase
             protected bool $strict = true;
         };
 
-        $this->expectException(\PHPUnit\Framework\ExpectationFailedException::class);
+        $this->expectException(ExpectationFailedException::class);
         $test->test_models_match_json_state();
     }
 
@@ -49,29 +53,29 @@ class AbstractRelationTestTest extends TestCase
     {
         $json = [
             'models' => [
-                \SchenkeIo\LaravelRelationManager\Tests\Models\User::class => [
+                User::class => [
                     'posts' => [
                         'type' => 'hasMany',
-                        'related' => \SchenkeIo\LaravelRelationManager\Tests\Models\Post::class,
+                        'related' => Post::class,
                         'foreignKey' => 'user_id',
                     ],
                     'roles' => [
                         'type' => 'belongsToMany',
-                        'related' => \SchenkeIo\LaravelRelationManager\Tests\Models\Role::class,
+                        'related' => Role::class,
                         'pivotTable' => 'role_user',
                     ],
                 ],
-                \SchenkeIo\LaravelRelationManager\Tests\Models\Post::class => [
+                Post::class => [
                     'author' => [
                         'type' => 'belongsTo',
-                        'related' => \SchenkeIo\LaravelRelationManager\Tests\Models\User::class,
+                        'related' => User::class,
                         'foreignKey' => 'author_id',
                     ],
                 ],
-                \SchenkeIo\LaravelRelationManager\Tests\Models\Role::class => [
+                Role::class => [
                     'users' => [
                         'type' => 'belongsToMany',
-                        'related' => \SchenkeIo\LaravelRelationManager\Tests\Models\User::class,
+                        'related' => User::class,
                         'pivotTable' => 'role_user',
                     ],
                 ],

@@ -187,7 +187,7 @@ test('it detects related model not being an Eloquent model', function () {
         config: new ConfigData,
         models: [
             'App\Models\User' => new ModelData(methods: [
-                'posts' => new RelationData(type: EloquentRelation::hasMany, related: \stdClass::class),
+                'posts' => new RelationData(type: EloquentRelation::hasMany, related: stdClass::class),
             ]),
         ]
     );

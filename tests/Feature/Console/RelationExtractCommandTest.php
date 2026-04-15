@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\File;
+use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 use SchenkeIo\LaravelRelationManager\Facades\ModelScanner;
 use SchenkeIo\LaravelRelationManager\Support\PathResolver;
 
@@ -12,7 +13,7 @@ beforeEach(function () {
 it('can extract relationships to json', function () {
     ModelScanner::shouldReceive('scan')
         ->once()
-        ->andReturn(['Model' => ['relation' => ['type' => \SchenkeIo\LaravelRelationManager\Enums\EloquentRelation::hasOne, 'related' => 'RelatedModel']]]);
+        ->andReturn(['Model' => ['relation' => ['type' => EloquentRelation::hasOne, 'related' => 'RelatedModel']]]);
 
     File::shouldReceive('exists')->andReturn(false);
 
@@ -49,7 +50,7 @@ it('fails if scanner throws exception', function () {
 
     ModelScanner::shouldReceive('scan')
         ->once()
-        ->andThrow(new \Exception('Scanner error'));
+        ->andThrow(new Exception('Scanner error'));
 
     $this->artisan('relation:extract')
         ->expectsOutput('Scanning models...')

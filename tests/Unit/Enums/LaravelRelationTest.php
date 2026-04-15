@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use SchenkeIo\LaravelRelationManager\Enums\EloquentRelation;
 
 test('it can map from relation name', function () {
@@ -60,7 +61,7 @@ test('it knows if it is a direct relation', function () {
 });
 
 test('it returns class', function () {
-    expect(EloquentRelation::hasOne->getClass())->toBe(\Illuminate\Database\Eloquent\Relations\HasOne::class)
+    expect(EloquentRelation::hasOne->getClass())->toBe(HasOne::class)
         ->and(EloquentRelation::noRelation->getClass())->toBeNull();
 });
 
@@ -84,4 +85,4 @@ test('it returns null for invalid name via EnumHelper tryFrom', function () {
 
 test('it throws error for invalid name via EnumHelper from', function () {
     EloquentRelation::from('XX');
-})->throws(\ValueError::class);
+})->throws(ValueError::class);
