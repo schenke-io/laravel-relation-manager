@@ -12,6 +12,9 @@ use Spatie\LaravelPackageTools\PackageServiceProvider;
  */
 class LaravelRelationManagerServiceProvider extends PackageServiceProvider
 {
+    /**
+     * Configure the package with its name and registered commands.
+     */
     public function configurePackage(Package $package): void
     {
         $package->name('laravel-relation-manager')
@@ -22,6 +25,9 @@ class LaravelRelationManagerServiceProvider extends PackageServiceProvider
             ]);
     }
 
+    /**
+     * Register singleton services after the package is registered.
+     */
     public function packageRegistered(): void
     {
         $this->app->singleton(ModelScanner::class, function () {

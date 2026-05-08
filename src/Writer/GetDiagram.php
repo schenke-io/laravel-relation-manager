@@ -23,6 +23,9 @@ readonly class GetDiagram
         return self::getDiagramCode(DiagramSyntax::Mermaid, $databaseData, $diagramDirection);
     }
 
+    /**
+     * Get the HTML code for displaying a Graphviz diagram image.
+     */
     public static function getGraphvizCode(): string
     {
         return "<img src='".self::GRAPHVIZ_BASENAME.".png' alt='".self::GRAPHVIZ_BASENAME."' />";

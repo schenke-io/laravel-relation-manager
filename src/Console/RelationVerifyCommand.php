@@ -17,6 +17,9 @@ class RelationVerifyCommand extends Command
 
     protected $description = 'Compares .relationships.json with the current model state';
 
+    /**
+     * Execute the console command to verify relationships.
+     */
     public function handle(): int
     {
         $this->info('Verifying relationships...');

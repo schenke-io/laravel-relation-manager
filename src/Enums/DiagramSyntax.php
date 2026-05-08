@@ -10,6 +10,9 @@ enum DiagramSyntax
     case Mermaid;
     case Dot;
 
+    /**
+     * Get the starting string for the diagram syntax.
+     */
     public function start(DiagramDirection $diagramDirection): string
     {
         $direction = $diagramDirection->name;
@@ -20,6 +23,9 @@ enum DiagramSyntax
         };
     }
 
+    /**
+     * Get the string for a polymorphic relationship.
+     */
     public function morph(int|string $table1, int|string $table2): string
     {
         return match ($this) {
@@ -28,6 +34,9 @@ enum DiagramSyntax
         };
     }
 
+    /**
+     * Get the string for a normal relationship.
+     */
     public function normal(int|string $table1, int|string $table2): string
     {
         return match ($this) {
@@ -36,6 +45,9 @@ enum DiagramSyntax
         };
     }
 
+    /**
+     * Get the string for a many-to-many (double) relationship.
+     */
     public function double(int|string $table1, int|string $table2): string
     {
         return match ($this) {
@@ -44,6 +56,9 @@ enum DiagramSyntax
         };
     }
 
+    /**
+     * Get the ending string for the diagram syntax.
+     */
     public function end(): string
     {
         return match ($this) {

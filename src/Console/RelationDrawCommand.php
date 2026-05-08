@@ -18,6 +18,9 @@ class RelationDrawCommand extends Command
 
     protected $description = 'Generates markdown/diagrams from .relationships.json';
 
+    /**
+     * Execute the console command to generate diagrams.
+     */
     public function handle(): int
     {
         $path = PathResolver::getRelationshipFilePath();

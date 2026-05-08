@@ -20,6 +20,9 @@ class RelationExtractCommand extends Command
 
     protected $description = 'Scans models and writes to .relationships.json';
 
+    /**
+     * Execute the console command to extract relationships.
+     */
     public function handle(): int
     {
         $path = PathResolver::getRelationshipFilePath();
