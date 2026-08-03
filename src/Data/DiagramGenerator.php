@@ -28,7 +28,7 @@ class DiagramGenerator
     /**
      * Prepares relationship data for diagram generation.
      *
-     * @return array<string, array<string|null, EloquentRelation>> A map of table connections.
+     * @return array<string, array<string, EloquentRelation>> A map of table connections.
      */
     public function getDiagramData(?bool $withExtraPivotTables = null): array
     {
@@ -84,7 +84,7 @@ class DiagramGenerator
                     case EloquentRelation::morphTo:
                     case EloquentRelation::isSingle:
                     case EloquentRelation::noRelation:
-                        $tables[$tableName1][null] = $type;
+                        $tables[$tableName1][''] = $type;
                         break;
                 }
             }

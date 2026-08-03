@@ -60,8 +60,8 @@ class RelationshipDataDiagramTest extends TestCase
         // belongsTo: A -> L
         $this->assertEquals(EloquentRelation::belongsTo, $diagramData['a_s']['l_s']);
 
-        // morphTo, isSingle, noRelation: A -> null
-        $this->assertArrayHasKey(null, $diagramData['a_s']);
+        // morphTo, isSingle, noRelation: A -> ''
+        $this->assertArrayHasKey('', $diagramData['a_s']);
     }
 
     public function test_belongs_to_many_diagram_data()
